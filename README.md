@@ -4,7 +4,7 @@
 
 ### HTTP POST Commands for S-Play's playback.
 Enum CONTROL_COMMANDS below presents the list of available playback commands.
-They can be sent using HTTP POST requests to the device IP on the`55555` port and path`/api/`.
+They can be sent using HTTP POST requests to the device IP on the`55555` port and path`/api`.
 
 e.g. URL: ` http://192.168.1.13:55555/api`
 
@@ -13,7 +13,6 @@ Request can be tested using **curl**:
 ``
 curl --header "Content-Type: application/json" -d "{\"command\":8}" http://localhost:55555/api --output -
 ``
-> `Good to know`: RECORD only works on Dynamic Cues.
 
 ### Definitions
 
@@ -68,7 +67,7 @@ enum PLAYLIST_STATUS_TYPES {
     PLAYLIST_STATUS_PLAYING                = 1,     // The playlist in Playing.
     PLAYLIST_STATUS_PAUSED                 = 2,     // The playlist in Paused.
     PLAYLIST_STATUS_STOPPED                = 3,     // The playlist in Stopped.
-    PLAYLIST_STATUS_RECORD                 = 4,     // Futhure
+    PLAYLIST_STATUS_RECORD                 = 4,     // The playlist in Recording.
     PLAYLIST_STATUS_ERROR                  = 5      // Error in playlist's last action.
 };
 ```
@@ -84,7 +83,9 @@ enum UPDATE_SETTINGS_TYPES {
     UPDATE_SETTINGS_OUTPUT                 = 4,     // Output configuration is changed
     UPDATE_SETTINGS_SERIAL_DEVICE          = 5,     // Serial device configuration is changed
     UPDATE_SETTINGS_OSC_DEVICE             = 6      // OSC configuration is changed
+    UPDATE_SETTINGS_NETWORK                = 7,     // Update network config
 };
+
 ```
 
 #### Trigger Kind Names
@@ -124,13 +125,13 @@ enum TRIGGER_TYPE {
 #### ET Status of All Playlists
 This will return all the playlist IDs and its status and playing time.
 If playlist is waiting any trigger, it has trigger information.
-#### Request
+##### Request
 ```json
     {
         "command": GET_RUNNING_PLAYLIST_COMMAND
     }
 ```
-#### Response
+##### Response
 The playlist 6 is stopped and playlist 4 is playing. We use the response object array to send playlist, as shown below.
 ```json
 {
@@ -222,13 +223,13 @@ The playlist 6 is stopped and playlist 4 is playing. We use the response object 
 
 #### STOP RECORD
 This command will stop to record DMX frame from device. This will return the latest record time.
-#### Request
+##### Request
 ```json
     {
         "command": STOP_RECORD_COMMAND,
     }
 ```
-#### Response
+##### Response
 ```json
     {
         "result": true,
@@ -242,7 +243,7 @@ If playlist is currently PAUSED - it will be RESUMED, with PLAY
 Playlist must be in STOP state, to be started from the beginning.
 Playlist will Loop for 4 times more, after initial Play has ended. So, in total it plays for 5 times.
 Playlist will STOP, once it reaches the end of final loop.
-#### Request
+##### Request
 ```json
     {
         "command": PLAY_COMMAND,
@@ -250,7 +251,7 @@ Playlist will STOP, once it reaches the end of final loop.
         "loop_count": 4
     }
 ```
-#### Response
+##### Response
 It should return playlist status.
 ```json
     {
@@ -262,14 +263,14 @@ It should return playlist status.
 This will perform PAUSE action, and return current state, timing and current cue of the playlist in question.
 If playlist is PLAYING - it will be PAUSED.
 If playlist is PAUSED - it will be RESUMED
-#### Request
+##### Request
 ```json
     {
         "command": PAUSE_COMMAND,
         "playlist_id": 25
     }
 ```
-#### Response
+##### Response
 ```json
     {
         "result": true
@@ -280,14 +281,14 @@ If playlist is PAUSED - it will be RESUMED
 This will perform STOP action, and return current state, timing and current cue of the playlist in question.
 Playlist will STOP immediately.
 If Playlist is already Stopped, ignore STOP action.
-#### Request
+##### Request
 ```json
     {
         "command": STOP_COMMAND,
         "playlist_id": 25
     }
 ```
-#### Response
+##### Response
 ```json
     {
         "result": true
@@ -295,7 +296,7 @@ If Playlist is already Stopped, ignore STOP action.
 ```
 
 #### GET INTENSITY OF CUE TRACK on PlaylistID 25
-#### Request
+##### Request
 Get the intensity of special playlist.
 ```json
     {
@@ -304,7 +305,7 @@ Get the intensity of special playlist.
         "cue_track_id": 3
     }
 ```
-#### Response - Playlist ID 25 is PLAYING Cue ID 5, current time is 450.5 sec (playlist begins at 0)
+##### Response - Playlist ID 25 is PLAYING Cue ID 5, current time is 450.5 sec (playlist begins at 0)
 This will return
 ```json
     {
@@ -317,7 +318,7 @@ This will return
 This will update MASTER INTENSITY, and return current state, timing and current cue of the playlist in question.
 Once the Fader Level is set, it must be maintained for this Playlist, even if the Playlist is stopped.
 So a future PLAY, will use the last known Fader Level.
-#### Request
+##### Request
 It will return intensity value of track on playlist set by this command.
 ```json
     {
@@ -327,7 +328,7 @@ It will return intensity value of track on playlist set by this command.
         "fader_level": 75
     }
 ```
-#### Response - Playlist ID 25 is PLAYING Cue ID 5, current time is 450.5 sec (playlist begins at 0)
+##### Response - Playlist ID 25 is PLAYING Cue ID 5, current time is 450.5 sec (playlist begins at 0)
 It will return playlist's status.
 ```json
     {
@@ -364,14 +365,14 @@ It will return playlist's status.
 
 #### GET PLAYLIST INTENSITY on PlaylistID 25
 Get the intensity of special playlist.
-#### Request
+##### Request
 ```json
     {
         "command": GET_PLAYLIST_INTENSITY_COMMAND,
         "playlist_id": 25
     }
 ```
-#### Response
+##### Response
 It will return intensity of special playlist.
 ```json
     {
@@ -384,7 +385,7 @@ It will return intensity of special playlist.
 This will update MASTER INTENSITY, and return current state, timing and current cue of the playlist in question.
 Once the Fader Level is set, it must be maintained for this Playlist, even if the Playlist is stopped.
 So a future PLAY, will use the last known Fader Level.
-#### Request
+##### Request
 ```json
     {
         "command": SET_PLAYLIST_INTENSITY_COMMAND,
@@ -393,7 +394,7 @@ So a future PLAY, will use the last known Fader Level.
     }
 ```
 
-#### Response
+##### Response
 Playlist ID 25 is PLAYING Cue ID 4 and 32, current time is 450.5 sec (playlist begins at 0)
 ```json
     {
@@ -430,14 +431,14 @@ Playlist ID 25 is PLAYING Cue ID 4 and 32, current time is 450.5 sec (playlist b
 
 #### UPDATE PLAYLIST
 Update the properties of playlist with given filename and its time elements.
-#### Request
+##### Request
 ```json
     {
         "command": UPDATE_PLAYLIST_COMMAND,
         "playlist_filename": "playlist2.json",
     }
 ```
-#### Response
+##### Response
 It should return true.
 ```json
     {
@@ -447,14 +448,14 @@ It should return true.
 
 #### DELETE PLAYLIST
 Remove the playlist from active list (e.g. from PlayAll).
-#### Request
+##### Request
 ```json
     {
         "command": DELETE_PLAYLIST_COMMAND,
         "playlist_id": 3,
     }
 ```
-#### Response
+##### Response
 It should return true.
 ```json
     {
@@ -464,14 +465,14 @@ It should return true.
 
 #### UPDATE SETTINGS
 Update configuration and system parameters from database.
-#### Request
+##### Request
 ```json
     {
         "command": UPDATE_SETTINGS_COMMAND,
         "command_type": UPDATE_SETTINGS_NTP
     }
 ```
-#### Response
+##### Response
 It should return true.
 ```json
     {
@@ -480,14 +481,14 @@ It should return true.
 ```
 ###  PLAY ALL PLAYLISTS
 Play all playlist in playlist storage.
-#### Request
+##### Request
 ```json
     {
         "command": PLAY_ALL_PLAYLISTS_COMMAND
     }
 ```
 
-#### Response
+##### Response
 It should return true on success.
 ```json
     {
@@ -497,13 +498,13 @@ It should return true on success.
 
 #### PAUSE ALL PLAYLISTS
 Pause all running playlists.
-#### Request
+##### Request
 ```json
     {
         "command": PAUSE_ALL_PLAYLISTS_COMMAND
     }
 ```
-#### Response
+##### Response
 It should return true on success.
 ```json
     {
@@ -513,13 +514,13 @@ It should return true on success.
 
 #### STOP ALL PLAYLISTS
 Stop all playing or paused playlist.
-#### Request
+##### Request
 ```json
     {
         "command": STOP_ALL_PLAYLISTS_COMMAND
     }
 ```
-#### Response
+##### Response
 It should return true on success.
 ```json
     {
@@ -529,14 +530,14 @@ It should return true on success.
 
 #### PLAY_CUE_COMMAND (not implemented)
 Preview static or dynamic cue for the given cue id
-#### Request
+##### Request
 ```json
     {
         "command": PLAY_CUE_COMMAND,
         "cue": 1
     }
 ```
-#### Response
+##### Response
 It should return cue previewing status.
 ```json
     {
@@ -547,13 +548,13 @@ It should return cue previewing status.
 
 #### STOP_CUE_COMMAND (not implemented)
 Stop previewing cue. and then the output should be stopped.
-#### Request
+##### Request
 ```json
     {
         "command": STOP_CUE_COMMAND,
     }
 ```
-#### Response
+##### Response
 It should return cue preview status.
 ```json
     {
@@ -564,7 +565,7 @@ It should return cue preview status.
 
 #### SET_PLAYLIST_TIME_POSITION on PlaylistID 25
 Send request with needed timeline position for playlist playing currently, the position is set with current_time as float which represents seconds (ms after dot) and playlist_id
-#### Request
+##### Request
 ```json
     {
         "command": SET_PLAYLIST_TIME_POSITION,
@@ -572,7 +573,7 @@ Send request with needed timeline position for playlist playing currently, the p
         "position": 10.55
     }
 ```
-#### Response
+##### Response
 ```json
     {
         "result": true
@@ -581,14 +582,14 @@ Send request with needed timeline position for playlist playing currently, the p
 
 #### SET_MASTER_INTENSITY 
 Set overall S-Play output intensity (Master Fader) with 50% brightness, doesn't persist after power cycle
-#### Request
+##### Request
 ```json
     {
         "command": SET_MASTER_INTENSITY,
         "intensity": 0.5,
     }
 ```
-#### Response
+##### Response
 ```json
     {
         "result": true
@@ -596,14 +597,14 @@ Set overall S-Play output intensity (Master Fader) with 50% brightness, doesn't 
 ```
 #### OSC_MESSAGE 
 Send OSC message to Playback to trigger existing OSC triggers
-#### Request
+##### Request
 ```json
     {
         "command": OSC_MESSAGE,
         "address": "/test"
     }
 ```
-#### Response
+##### Response
 ```json
     {
         "result": true
