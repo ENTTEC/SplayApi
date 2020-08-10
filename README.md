@@ -1,6 +1,11 @@
 # SplayApi
 ## S-Play HTTP API description
-**S-Play firmware version 1.2.5**
+
+This HTTP API allows for control over the ENTTEC S-Play (SKU: 70092), playback engine. To use this API to its full extent first record cues and make playlists using the S-Plays inbuilt web interface.
+
+ENTTEC recommend that the S-Plays IP is set to be static before communicating using this API.
+
+To ensure this API functions as intended, ensure you are running a software version of at least **v1.2.5**.
 
 ### HTTP POST Commands for S-Play's playback.
 Enum CONTROL_COMMANDS below presents the list of available playback commands.
@@ -20,18 +25,18 @@ curl --header "Content-Type: application/json" -d "{\"command\":8}" http://local
 All playback control commands supported by the device
 ```c++
 enum CONTROL_COMMANDS {
-    PLAY_COMMAND = 0, // Play playlist already made by user
+    PLAY_COMMAND = 0, // Play playlist on the device
     PAUSE_COMMAND = 1, // Pause the playing playlist
     STOP_COMMAND = 2, // Stop the playlist is in PAUSE or PLAY status.
     STATUS_COMMAND = 3, // Get the status of playlist or cue in playlist
     CHECK_FILE_COMMAND = 4, // Check the recording exists, or data is not empty
-    PLAY_ALL_PLAYLISTS_COMMAND = 5, // Play all playlist already made by user
+    PLAY_ALL_PLAYLISTS_COMMAND = 5, // Play all playlists on the device
     PAUSE_ALL_PLAYLISTS_COMMAND = 6, // Pause all playing playlists
     STOP_ALL_PLAYLISTS_COMMAND = 7, // Stop all playlists is in PAUSE or PLAY status.
     GET_RUNNING_PLAYLIST_COMMAND = 8, // Get status of all currently playing playlists
-    SET_PLAYLIST_INTENSITY_COMMAND = 9, // Output intensity (Master Fader) of the given playlist, doesn't persist after stop
+    SET_PLAYLIST_INTENSITY_COMMAND = 9, // Output intensity (Master Fader) of the given playlist, persists until power cycle
     GET_PLAYLIST_INTENSITY_COMMAND = 10, // Return the intensity of given playlist (not implemented)
-    SET_TRACK_INTENSITY_COMMAND = 11, // Master Fader is the Output Intensity (not implemented)
+    SET_TRACK_INTENSITY_COMMAND = 11, // Output intensity of particular track in the given playlist (not implemented)
     GET_TRACK_INTENSITY_COMMAND = 12, // Return the current Intensity (not implemented)
     CAPTURE_DMX_FRAME_COMMAND = 13, // Static frame recording (not implemented)
     RECORD_DMX_FRAME_COMMAND = 14, // Dynamic frame recording (not implemented)
@@ -44,7 +49,7 @@ enum CONTROL_COMMANDS {
 
     SET_PLAYLIST_TIME_POSITION_COMMAND = 22,
 
-    SET_MASTER_INTENSITY = 24, // Set overall S-Play output intensity (Master Fader), doesn't persist after power cycle
+    SET_MASTER_INTENSITY = 24, // Set overall S-Play output intensity (Master Fader), persists until power cycle
     OSC_MESSAGE = 25, // Send OSC message to Playback to trigger existing OSC triggers
 }
 ```
@@ -88,7 +93,7 @@ enum UPDATE_SETTINGS_TYPES {
 
 ```
 
-#### Trigger Kind Names
+#### Trigger Type Names
 Indicate what device do you wait to trigger from.
 ```c++
 #define TRIGGER_TYPENAME_OSC               "osc"    // value: "string command"
@@ -96,14 +101,14 @@ Indicate what device do you wait to trigger from.
 #define TRIGGER_TYPENAME_DMX               "dmx"    // value: { "channel_number": 0~511, "threshold": 0~255 }
 ```
 
-#### Event Kind Names
+#### Event Type Names
 Indicate event target device to implement event action
 ```c++
 #define EVENT_TYPE_RELAY                   "relay"  // value: { "relay_number": 0~.., "value": 0~1 }
 #define EVENT_TYPE_RS232                   "rs232"  // value: "string"
 ```
 
-#### Trigger Kinds
+#### Trigger Types
 Indicate what device do you wait to trigger from.
 ```c++
 enum TRIGGER_TYPE {
@@ -314,8 +319,8 @@ This will return
     }
 ```
 
-#### SET INTENSITY OF CUE TRACK on PlaylistID 25
-This will update MASTER INTENSITY, and return current state, timing and current cue of the playlist in question.
+#### SET INTENSITY OF CUE TRACK on PlaylistID 25 (not implemented)
+This will update output intensity of particular track in the given playlist
 Once the Fader Level is set, it must be maintained for this Playlist, even if the Playlist is stopped.
 So a future PLAY, will use the last known Fader Level.
 ##### Request
@@ -325,7 +330,7 @@ It will return intensity value of track on playlist set by this command.
         "command": SET_TRACK_INTENSITY_COMMAND,
         "playlist_id": 25,
         "cue_track_id": 2,
-        "fader_level": 75
+        "intensity": 75
     }
 ```
 ##### Response - Playlist ID 25 is PLAYING Cue ID 5, current time is 450.5 sec (playlist begins at 0)
@@ -363,7 +368,7 @@ It will return playlist's status.
     }
 ```
 
-#### GET PLAYLIST INTENSITY on PlaylistID 25
+#### GET PLAYLIST INTENSITY on PlaylistID 25 (not implemented)
 Get the intensity of special playlist.
 ##### Request
 ```json
@@ -382,8 +387,8 @@ It will return intensity of special playlist.
 ```
 
 #### SET PLAYLIST INTENSITY on PlaylistID 25
-This will update MASTER INTENSITY, and return current state, timing and current cue of the playlist in question.
-Once the Fader Level is set, it must be maintained for this Playlist, even if the Playlist is stopped.
+This will update MASTER INTENSITY of the given playlist.
+Once the Fader Level is set, it must be maintained for this Playlist, even if the Playlist is stopped, until power cycle.
 So a future PLAY, will use the last known Fader Level.
 ##### Request
 ```json
@@ -395,37 +400,9 @@ So a future PLAY, will use the last known Fader Level.
 ```
 
 ##### Response
-Playlist ID 25 is PLAYING Cue ID 4 and 32, current time is 450.5 sec (playlist begins at 0)
 ```json
     {
         "result": true,
-        "status": PLAYLIST_STATUS_PLAYING,
-        "fader_level": 75,
-        "current_time": 450500,
-        "cues": [
-            {
-                "id": 1508908097837,
-                "cue_id": 4,
-                "status": PLAYLIST_STATUS_PLAYING,
-                "fader_level": 75,
-                "current_time": 450500
-            },
-            {
-                "id": 1508908097837,
-                "cue_id": 32,
-                "status": PLAYLIST_STATUS_PLAYING,
-                "fader_level": 100,
-                "current_time": 450500
-            }
-        ],
-        "triggers" : [
-            {
-                "id": 2353465365,
-                "trigger_id": 2,
-                "trigger_type": 1,
-                "waiting_string": "Start"
-            }
-        ]
     }
 ```
 
@@ -580,7 +557,7 @@ Send request with needed timeline position for playlist playing currently, the p
     }
 ```
 
-#### SET_MASTER_INTENSITY 
+#### SET_MASTER_INTENSITY
 Set overall S-Play output intensity (Master Fader) with 50% brightness, doesn't persist after power cycle
 ##### Request
 ```json
@@ -595,7 +572,7 @@ Set overall S-Play output intensity (Master Fader) with 50% brightness, doesn't 
         "result": true
     }
 ```
-#### OSC_MESSAGE 
+#### OSC_MESSAGE
 Send OSC message to Playback to trigger existing OSC triggers
 ##### Request
 ```json
