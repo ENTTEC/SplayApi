@@ -143,6 +143,7 @@ The playlist 6 is stopped and playlist 4 is playing. We use the response object 
     "playlists":[
         {
             "current_time": 0,
+            "duration": 3000,
             "intensity": 100.0,
             "name": "Art",
             "notification_message": "",
@@ -190,7 +191,8 @@ The playlist 6 is stopped and playlist 4 is playing. We use the response object 
 
         },
         {
-            "current_time":0,
+            "current_time": 1500,
+            "duration": 5000,
             "intensity":100.0,
             "name":"Art",
             "notification_message":"",
