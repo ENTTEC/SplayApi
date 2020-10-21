@@ -1,0 +1,37 @@
+namespace SplayApi;
+
+enum COMMAND:uint8 {
+    PLAY_COMMAND = 0,
+    PAUSE_COMMAND = 1,
+    STOP_COMMAND = 2,
+    STATUS_COMMAND = 3,
+    CHECK_FILE_COMMAND = 4, // Check the recording exists, or data is not empty
+    PLAY_ALL_PLAYLISTS_COMMAND = 5,
+    PAUSE_ALL_PLAYLISTS_COMMAND = 6,
+    STOP_ALL_PLAYLISTS_COMMAND = 7,
+    GET_RUNNING_PLAYLIST_COMMAND = 8,
+    SET_PLAYLIST_INTENSITY_COMMAND = 9, // Master Fader is the Output Intensity, to be saved for each play list
+    GET_PLAYLIST_INTENSITY_COMMAND = 10, // Return the current Intensity
+    SET_TRACK_INTENSITY_COMMAND = 11, // Master Fader is the Output Intensity, to be saved for each play list
+    GET_TRACK_INTENSITY_COMMAND = 12, // Return the current Intensity
+    CAPTURE_DMX_FRAME_COMMAND = 13, // Staic frame recording
+    RECORD_DMX_FRAME_COMMAND = 14, // Dynamic frame recording
+    STOP_RECORD_COMMAND = 15,
+    PLAY_CUE_COMMAND = 16,
+    STOP_CUE_COMMAND = 17,
+    UPDATE_PLAYLIST_COMMAND = 18,
+    DELETE_PLAYLIST_COMMAND = 19,
+    UPDATE_SETTINGS_COMMAND = 20,
+    DUMP_DMX_DATA = 21,
+    SET_PLAYLIST_TIME_POSITION_COMMAND = 22,
+    SET_WEBSOCKET_INPUT_COMMAND = 23,
+    SET_MASTER_INTENSITY = 24,
+    OSC_MESSAGE = 25,
+
+    GET_SCHEDULES_COMMAND = 30,
+    UPDATE_SCHEDULE_COMMAND = 31, // Update schedule to file already exist.
+    DELETE_SCHEDULE_COMMAND = 32, // Delete schedule. it will be removed from database and storage.
+    ENABLE_SCHEDULE_COMMAND = 33, // Change the Schedule Settings
+    UPDATE_STORAGE_PATH = 34, // Update storage path using internal DB check for BASE_PATH setting
+    NOT_SET_COMMAND = 255,
+};

@@ -1,0 +1,15 @@
+namespace SplayApi;
+
+enum CUE_TYPE:uint8 {
+    CUE_TYPE_STATIC,
+    CUE_TYPE_DYNAMIC,
+    CUE_TYPE_EFFECT,
+}
+
+table Cue {
+    id:int;
+    type:CUE_TYPE;
+    name:string;
+    duration:uint32;
+    frames:string; /// json description based on type
+}

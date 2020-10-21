@@ -1,0 +1,21 @@
+
+include "PlaylistApi.fbs";
+include "Cue.fbs";
+
+namespace SplayApi;
+
+table Header {
+	token:string;
+}
+
+// important! only append to this list
+union Message {
+
+}
+
+table Request {
+  header:Header;
+  message:Message;
+}
+
+root_type Request;
