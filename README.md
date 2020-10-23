@@ -19,6 +19,12 @@ Request can be tested using **curl**:
 curl --header "Content-Type: application/json" -d "{\"command\":8}" http://localhost:55555/api --output -
 ``
 
+### Development
+After clone run the command inside repo's dir to automatically execute `flatc` compilation to cpp & js for all *.fbs files:
+``
+git config --local core.hooksPath .githooks/
+``
+
 ### Definitions
 
 #### SplayEngine Commands
