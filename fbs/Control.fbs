@@ -1,43 +1,42 @@
 namespace SplayApi;
 
 enum TRIGGER_TYPE:uint8 {
-    TRIGGER_TYPE_NONE = 0,
-    TRIGGER_TYPE_OSC,
-    TRIGGER_TYPE_RS232,
-    TRIGGER_TYPE_IO,
-    TRIGGER_TYPE_ARTNET,
-    TRIGGER_TYPE_DMX,
-    TRIGGER_TYPE_SACN,
-    TRIGGER_TYPE_POWERUP
+  TRIGGER_TYPE_NONE = 0,
+  TRIGGER_TYPE_OSC,
+  TRIGGER_TYPE_RS232,
+  TRIGGER_TYPE_IO,
+  TRIGGER_TYPE_ARTNET,
+  TRIGGER_TYPE_DMX,
+  TRIGGER_TYPE_SACN,
+  TRIGGER_TYPE_POWERUP
 }
 
 enum EVENT_TYPE:uint8 {
-    EVENT_TYPE_NONE = 0,
-    EVENT_TYPE_RS232,
-    EVENT_TYPE_IO,
-    EVENT_TYPE_ARTNET,
-    EVENT_TYPE_DMX,
-    EVENT_TYPE_SACN,
-    EVENT_TYPE_OSC,
+  EVENT_TYPE_NONE = 0,
+  EVENT_TYPE_RS232,
+  EVENT_TYPE_IO,
+  EVENT_TYPE_ARTNET,
+  EVENT_TYPE_DMX,
+  EVENT_TYPE_SACN,
+  EVENT_TYPE_OSC,
 }
 
 table Trigger {
-    id:int;
-    name:string;
-    type:TRIGGER_TYPE;
-    active:bool;
-    param:string;
-    command:string;
-    position:uint32;
+  id:int;
+  name:string;
+  type:TRIGGER_TYPE;
+  active:bool;
+  param:string;
+  command:string;
+  position:uint32;
 }
 
-
 table Event {
-    id:int;
-    name:string;
-    type:EVENT_TYPE;
-    active:bool;
-    param:string;
-    command:string;
-    position:uint32;
+  id:int;
+  name:string;
+  type:EVENT_TYPE;
+  active:bool;
+  param:string;
+  command:string;
+  position:uint32;
 }
