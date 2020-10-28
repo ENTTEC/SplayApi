@@ -1,3 +1,7 @@
+
+include "Common.fbs";
+include "Control.fbs";
+
 namespace SplayApi;
 
 enum CUE_TYPE:uint8 {
@@ -6,10 +10,44 @@ enum CUE_TYPE:uint8 {
   CUE_TYPE_EFFECT,
 }
 
+table CueConfig{
+  ch_start:uint16 = 0;
+  ch_stop:uint16 = 511;
+  source:UNIVERSE_TYPE;
+  rec_control:bool; // use trigger to start and stop recording
+  trigger:Trigger;
+}
+
+table StaticFrameArray{
+  frame:[uint8];
+}
+
+table StaticFrame {
+  frames:[StaticFrameArray]; // array of 512 uint8 arrays
+}
+
+table DynamicFrame {
+}
+
+table EffectRainbowFrame {
+  pixel_order:PIXEL_ORDER;
+  leds_offset:uint16;
+  number_of_leds:uint16;
+  beats_per_min:uint16;
+  universes:[uint16];
+}
+
+union Frame{
+  StaticFrame,
+  DynamicFrame,
+  EffectRainbowFrame
+}
+
 table Cue {
   id:int;
   type:CUE_TYPE;
   name:string;
   duration:uint32;
-  frames:string; // json description based on type
+  frame:Frame;
+  config:CueConfig;
 }
