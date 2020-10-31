@@ -51,3 +51,20 @@ table Cue {
   frame:Frame;
   config:CueConfig;
 }
+
+table GetCueReq {
+  command:COMMAND = GET_CUE_COMMAND;
+  cue_id:int;
+}
+
+table GetCueRes {
+  cue:Cue;
+}
+
+table GetAllCuesReq {
+  command:COMMAND = GET_ALL_CUES_COMMAND;
+}
+
+table GetAllCuesRes {
+  cues:[Cue];
+}

@@ -23,6 +23,10 @@ union Body {
   GetAllPlaylistsReq,
   GetPlaylistRes,
   GetAllPlaylistsRes,
+  GetCueReq,
+  GetCueRes,
+  GetAllCuesReq,
+  GetAllCuesRes
 }
 
 table Message {
