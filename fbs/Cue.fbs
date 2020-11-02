@@ -1,4 +1,4 @@
-
+include "Command.fbs";
 include "Common.fbs";
 include "Control.fbs";
 

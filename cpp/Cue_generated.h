@@ -6,6 +6,7 @@
 
 #include "flatbuffers/flatbuffers.h"
 
+#include "Command_generated.h"
 #include "Common_generated.h"
 #include "Control_generated.h"
 
@@ -28,6 +29,18 @@ struct EffectRainbowFrameBuilder;
 
 struct Cue;
 struct CueBuilder;
+
+struct GetCueReq;
+struct GetCueReqBuilder;
+
+struct GetCueRes;
+struct GetCueResBuilder;
+
+struct GetAllCuesReq;
+struct GetAllCuesReqBuilder;
+
+struct GetAllCuesRes;
+struct GetAllCuesResBuilder;
 
 enum CUE_TYPE {
   CUE_TYPE_CUE_TYPE_STATIC = 0,
@@ -581,6 +594,196 @@ inline flatbuffers::Offset<Cue> CreateCueDirect(
       frame_type,
       frame,
       config);
+}
+
+struct GetCueReq FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef GetCueReqBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COMMAND = 4,
+    VT_CUE_ID = 6
+  };
+  SplayApi::COMMAND command() const {
+    return static_cast<SplayApi::COMMAND>(GetField<uint8_t>(VT_COMMAND, 28));
+  }
+  int32_t cue_id() const {
+    return GetField<int32_t>(VT_CUE_ID, 0);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_COMMAND) &&
+           VerifyField<int32_t>(verifier, VT_CUE_ID) &&
+           verifier.EndTable();
+  }
+};
+
+struct GetCueReqBuilder {
+  typedef GetCueReq Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_command(SplayApi::COMMAND command) {
+    fbb_.AddElement<uint8_t>(GetCueReq::VT_COMMAND, static_cast<uint8_t>(command), 28);
+  }
+  void add_cue_id(int32_t cue_id) {
+    fbb_.AddElement<int32_t>(GetCueReq::VT_CUE_ID, cue_id, 0);
+  }
+  explicit GetCueReqBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  GetCueReqBuilder &operator=(const GetCueReqBuilder &);
+  flatbuffers::Offset<GetCueReq> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<GetCueReq>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<GetCueReq> CreateGetCueReq(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    SplayApi::COMMAND command = SplayApi::COMMAND_GET_CUE_COMMAND,
+    int32_t cue_id = 0) {
+  GetCueReqBuilder builder_(_fbb);
+  builder_.add_cue_id(cue_id);
+  builder_.add_command(command);
+  return builder_.Finish();
+}
+
+struct GetCueRes FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef GetCueResBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CUE = 4
+  };
+  const SplayApi::Cue *cue() const {
+    return GetPointer<const SplayApi::Cue *>(VT_CUE);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_CUE) &&
+           verifier.VerifyTable(cue()) &&
+           verifier.EndTable();
+  }
+};
+
+struct GetCueResBuilder {
+  typedef GetCueRes Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_cue(flatbuffers::Offset<SplayApi::Cue> cue) {
+    fbb_.AddOffset(GetCueRes::VT_CUE, cue);
+  }
+  explicit GetCueResBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  GetCueResBuilder &operator=(const GetCueResBuilder &);
+  flatbuffers::Offset<GetCueRes> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<GetCueRes>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<GetCueRes> CreateGetCueRes(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<SplayApi::Cue> cue = 0) {
+  GetCueResBuilder builder_(_fbb);
+  builder_.add_cue(cue);
+  return builder_.Finish();
+}
+
+struct GetAllCuesReq FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef GetAllCuesReqBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COMMAND = 4
+  };
+  SplayApi::COMMAND command() const {
+    return static_cast<SplayApi::COMMAND>(GetField<uint8_t>(VT_COMMAND, 29));
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_COMMAND) &&
+           verifier.EndTable();
+  }
+};
+
+struct GetAllCuesReqBuilder {
+  typedef GetAllCuesReq Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_command(SplayApi::COMMAND command) {
+    fbb_.AddElement<uint8_t>(GetAllCuesReq::VT_COMMAND, static_cast<uint8_t>(command), 29);
+  }
+  explicit GetAllCuesReqBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  GetAllCuesReqBuilder &operator=(const GetAllCuesReqBuilder &);
+  flatbuffers::Offset<GetAllCuesReq> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<GetAllCuesReq>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<GetAllCuesReq> CreateGetAllCuesReq(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    SplayApi::COMMAND command = SplayApi::COMMAND_GET_ALL_CUES_COMMAND) {
+  GetAllCuesReqBuilder builder_(_fbb);
+  builder_.add_command(command);
+  return builder_.Finish();
+}
+
+struct GetAllCuesRes FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef GetAllCuesResBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CUES = 4
+  };
+  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>> *cues() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>> *>(VT_CUES);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_CUES) &&
+           verifier.VerifyVector(cues()) &&
+           verifier.VerifyVectorOfTables(cues()) &&
+           verifier.EndTable();
+  }
+};
+
+struct GetAllCuesResBuilder {
+  typedef GetAllCuesRes Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_cues(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>>> cues) {
+    fbb_.AddOffset(GetAllCuesRes::VT_CUES, cues);
+  }
+  explicit GetAllCuesResBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  GetAllCuesResBuilder &operator=(const GetAllCuesResBuilder &);
+  flatbuffers::Offset<GetAllCuesRes> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<GetAllCuesRes>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<GetAllCuesRes> CreateGetAllCuesRes(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>>> cues = 0) {
+  GetAllCuesResBuilder builder_(_fbb);
+  builder_.add_cues(cues);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<GetAllCuesRes> CreateGetAllCuesResDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<flatbuffers::Offset<SplayApi::Cue>> *cues = nullptr) {
+  auto cues__ = cues ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::Cue>>(*cues) : 0;
+  return SplayApi::CreateGetAllCuesRes(
+      _fbb,
+      cues__);
 }
 
 inline bool VerifyFrame(flatbuffers::Verifier &verifier, const void *obj, Frame type) {

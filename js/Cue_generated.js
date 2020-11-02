@@ -917,5 +917,407 @@ SplayApi.Cue.createCue = function(builder, id, type, nameOffset, duration, frame
   return SplayApi.Cue.endCue(builder);
 }
 
+/**
+ * @constructor
+ */
+SplayApi.GetCueReq = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {SplayApi.GetCueReq}
+ */
+SplayApi.GetCueReq.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.GetCueReq=} obj
+ * @returns {SplayApi.GetCueReq}
+ */
+SplayApi.GetCueReq.getRootAsGetCueReq = function(bb, obj) {
+  return (obj || new SplayApi.GetCueReq).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.GetCueReq=} obj
+ * @returns {SplayApi.GetCueReq}
+ */
+SplayApi.GetCueReq.getSizePrefixedRootAsGetCueReq = function(bb, obj) {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new SplayApi.GetCueReq).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {SplayApi.COMMAND}
+ */
+SplayApi.GetCueReq.prototype.command = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.GET_CUE_COMMAND;
+};
+
+/**
+ * @returns {number}
+ */
+SplayApi.GetCueReq.prototype.cueId = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.readInt32(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+SplayApi.GetCueReq.startGetCueReq = function(builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {SplayApi.COMMAND} command
+ */
+SplayApi.GetCueReq.addCommand = function(builder, command) {
+  builder.addFieldInt8(0, command, SplayApi.COMMAND.GET_CUE_COMMAND);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} cueId
+ */
+SplayApi.GetCueReq.addCueId = function(builder, cueId) {
+  builder.addFieldInt32(1, cueId, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.GetCueReq.endGetCueReq = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {NS14796042768305698587.SplayApi.COMMAND} command
+ * @param {number} cueId
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.GetCueReq.createGetCueReq = function(builder, command, cueId) {
+  SplayApi.GetCueReq.startGetCueReq(builder);
+  SplayApi.GetCueReq.addCommand(builder, command);
+  SplayApi.GetCueReq.addCueId(builder, cueId);
+  return SplayApi.GetCueReq.endGetCueReq(builder);
+}
+
+/**
+ * @constructor
+ */
+SplayApi.GetCueRes = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {SplayApi.GetCueRes}
+ */
+SplayApi.GetCueRes.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.GetCueRes=} obj
+ * @returns {SplayApi.GetCueRes}
+ */
+SplayApi.GetCueRes.getRootAsGetCueRes = function(bb, obj) {
+  return (obj || new SplayApi.GetCueRes).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.GetCueRes=} obj
+ * @returns {SplayApi.GetCueRes}
+ */
+SplayApi.GetCueRes.getSizePrefixedRootAsGetCueRes = function(bb, obj) {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new SplayApi.GetCueRes).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {SplayApi.Cue=} obj
+ * @returns {SplayApi.Cue|null}
+ */
+SplayApi.GetCueRes.prototype.cue = function(obj) {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? (obj || new SplayApi.Cue).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+SplayApi.GetCueRes.startGetCueRes = function(builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} cueOffset
+ */
+SplayApi.GetCueRes.addCue = function(builder, cueOffset) {
+  builder.addFieldOffset(0, cueOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.GetCueRes.endGetCueRes = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} cueOffset
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.GetCueRes.createGetCueRes = function(builder, cueOffset) {
+  SplayApi.GetCueRes.startGetCueRes(builder);
+  SplayApi.GetCueRes.addCue(builder, cueOffset);
+  return SplayApi.GetCueRes.endGetCueRes(builder);
+}
+
+/**
+ * @constructor
+ */
+SplayApi.GetAllCuesReq = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {SplayApi.GetAllCuesReq}
+ */
+SplayApi.GetAllCuesReq.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.GetAllCuesReq=} obj
+ * @returns {SplayApi.GetAllCuesReq}
+ */
+SplayApi.GetAllCuesReq.getRootAsGetAllCuesReq = function(bb, obj) {
+  return (obj || new SplayApi.GetAllCuesReq).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.GetAllCuesReq=} obj
+ * @returns {SplayApi.GetAllCuesReq}
+ */
+SplayApi.GetAllCuesReq.getSizePrefixedRootAsGetAllCuesReq = function(bb, obj) {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new SplayApi.GetAllCuesReq).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {SplayApi.COMMAND}
+ */
+SplayApi.GetAllCuesReq.prototype.command = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.GET_ALL_CUES_COMMAND;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+SplayApi.GetAllCuesReq.startGetAllCuesReq = function(builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {SplayApi.COMMAND} command
+ */
+SplayApi.GetAllCuesReq.addCommand = function(builder, command) {
+  builder.addFieldInt8(0, command, SplayApi.COMMAND.GET_ALL_CUES_COMMAND);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.GetAllCuesReq.endGetAllCuesReq = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {NS14796042768305698587.SplayApi.COMMAND} command
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.GetAllCuesReq.createGetAllCuesReq = function(builder, command) {
+  SplayApi.GetAllCuesReq.startGetAllCuesReq(builder);
+  SplayApi.GetAllCuesReq.addCommand(builder, command);
+  return SplayApi.GetAllCuesReq.endGetAllCuesReq(builder);
+}
+
+/**
+ * @constructor
+ */
+SplayApi.GetAllCuesRes = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {SplayApi.GetAllCuesRes}
+ */
+SplayApi.GetAllCuesRes.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.GetAllCuesRes=} obj
+ * @returns {SplayApi.GetAllCuesRes}
+ */
+SplayApi.GetAllCuesRes.getRootAsGetAllCuesRes = function(bb, obj) {
+  return (obj || new SplayApi.GetAllCuesRes).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.GetAllCuesRes=} obj
+ * @returns {SplayApi.GetAllCuesRes}
+ */
+SplayApi.GetAllCuesRes.getSizePrefixedRootAsGetAllCuesRes = function(bb, obj) {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new SplayApi.GetAllCuesRes).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {number} index
+ * @param {SplayApi.Cue=} obj
+ * @returns {SplayApi.Cue}
+ */
+SplayApi.GetAllCuesRes.prototype.cues = function(index, obj) {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? (obj || new SplayApi.Cue).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
+};
+
+/**
+ * @returns {number}
+ */
+SplayApi.GetAllCuesRes.prototype.cuesLength = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+SplayApi.GetAllCuesRes.startGetAllCuesRes = function(builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} cuesOffset
+ */
+SplayApi.GetAllCuesRes.addCues = function(builder, cuesOffset) {
+  builder.addFieldOffset(0, cuesOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {Array.<flatbuffers.Offset>} data
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.GetAllCuesRes.createCuesVector = function(builder, data) {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} numElems
+ */
+SplayApi.GetAllCuesRes.startCuesVector = function(builder, numElems) {
+  builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.GetAllCuesRes.endGetAllCuesRes = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} cuesOffset
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.GetAllCuesRes.createGetAllCuesRes = function(builder, cuesOffset) {
+  SplayApi.GetAllCuesRes.startGetAllCuesRes(builder);
+  SplayApi.GetAllCuesRes.addCues(builder, cuesOffset);
+  return SplayApi.GetAllCuesRes.endGetAllCuesRes(builder);
+}
+
 // Exports for Node.js and RequireJS
 this.SplayApi = SplayApi;

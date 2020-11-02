@@ -36,6 +36,17 @@ enum COMMAND:uint8 {
   UPDATE_SCHEDULE_COMMAND = 31, // Update schedule to file already exist.
   DELETE_SCHEDULE_COMMAND = 32, // Delete schedule. it will be removed from database and storage.
   ENABLE_SCHEDULE_COMMAND = 33, // Change the Schedule Settings
+
   UPDATE_STORAGE_PATH = 34, // Update storage path using internal DB check for BASE_PATH setting
+
+  GET_EVENT_COMMAND = 36,
+  GET_ALL_EVENTS_COMMAND = 37,
+  UPDATE_EVENT_COMMAND = 38,
+  DELETE_EVENT_COMMAND = 39,
+  GET_TRIGGER_COMMAND = 40,
+  GET_ALL_TRIGGERS_COMMAND = 41,
+  UPDATE_TRIGGER_COMMAND = 42,
+  DELETE_TRIGGER_COMMAND = 43,
+
   NOT_SET_COMMAND = 255,
 }
