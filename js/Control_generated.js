@@ -142,25 +142,16 @@ SplayApi.Trigger.prototype.active = function() {
  * @param {flatbuffers.Encoding=} optionalEncoding
  * @returns {string|Uint8Array|null}
  */
-SplayApi.Trigger.prototype.param = function(optionalEncoding) {
+SplayApi.Trigger.prototype.value = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 12);
-  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
-};
-
-/**
- * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array|null}
- */
-SplayApi.Trigger.prototype.command = function(optionalEncoding) {
-  var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
 /**
  * @returns {number}
  */
-SplayApi.Trigger.prototype.position = function() {
-  var offset = this.bb.__offset(this.bb_pos, 16);
+SplayApi.Trigger.prototype.start = function() {
+  var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
 
@@ -168,7 +159,7 @@ SplayApi.Trigger.prototype.position = function() {
  * @param {flatbuffers.Builder} builder
  */
 SplayApi.Trigger.startTrigger = function(builder) {
-  builder.startObject(7);
+  builder.startObject(6);
 };
 
 /**
@@ -205,26 +196,18 @@ SplayApi.Trigger.addActive = function(builder, active) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} paramOffset
+ * @param {flatbuffers.Offset} valueOffset
  */
-SplayApi.Trigger.addParam = function(builder, paramOffset) {
-  builder.addFieldOffset(4, paramOffset, 0);
+SplayApi.Trigger.addValue = function(builder, valueOffset) {
+  builder.addFieldOffset(4, valueOffset, 0);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} commandOffset
+ * @param {number} start
  */
-SplayApi.Trigger.addCommand = function(builder, commandOffset) {
-  builder.addFieldOffset(5, commandOffset, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {number} position
- */
-SplayApi.Trigger.addPosition = function(builder, position) {
-  builder.addFieldInt32(6, position, 0);
+SplayApi.Trigger.addStart = function(builder, start) {
+  builder.addFieldInt32(5, start, 0);
 };
 
 /**
@@ -242,20 +225,18 @@ SplayApi.Trigger.endTrigger = function(builder) {
  * @param {flatbuffers.Offset} nameOffset
  * @param {SplayApi.TRIGGER_TYPE} type
  * @param {boolean} active
- * @param {flatbuffers.Offset} paramOffset
- * @param {flatbuffers.Offset} commandOffset
- * @param {number} position
+ * @param {flatbuffers.Offset} valueOffset
+ * @param {number} start
  * @returns {flatbuffers.Offset}
  */
-SplayApi.Trigger.createTrigger = function(builder, id, nameOffset, type, active, paramOffset, commandOffset, position) {
+SplayApi.Trigger.createTrigger = function(builder, id, nameOffset, type, active, valueOffset, start) {
   SplayApi.Trigger.startTrigger(builder);
   SplayApi.Trigger.addId(builder, id);
   SplayApi.Trigger.addName(builder, nameOffset);
   SplayApi.Trigger.addType(builder, type);
   SplayApi.Trigger.addActive(builder, active);
-  SplayApi.Trigger.addParam(builder, paramOffset);
-  SplayApi.Trigger.addCommand(builder, commandOffset);
-  SplayApi.Trigger.addPosition(builder, position);
+  SplayApi.Trigger.addValue(builder, valueOffset);
+  SplayApi.Trigger.addStart(builder, start);
   return SplayApi.Trigger.endTrigger(builder);
 }
 
@@ -341,25 +322,16 @@ SplayApi.Event.prototype.active = function() {
  * @param {flatbuffers.Encoding=} optionalEncoding
  * @returns {string|Uint8Array|null}
  */
-SplayApi.Event.prototype.param = function(optionalEncoding) {
+SplayApi.Event.prototype.value = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 12);
-  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
-};
-
-/**
- * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array|null}
- */
-SplayApi.Event.prototype.command = function(optionalEncoding) {
-  var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
 /**
  * @returns {number}
  */
-SplayApi.Event.prototype.position = function() {
-  var offset = this.bb.__offset(this.bb_pos, 16);
+SplayApi.Event.prototype.start = function() {
+  var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
 
@@ -367,7 +339,7 @@ SplayApi.Event.prototype.position = function() {
  * @param {flatbuffers.Builder} builder
  */
 SplayApi.Event.startEvent = function(builder) {
-  builder.startObject(7);
+  builder.startObject(6);
 };
 
 /**
@@ -404,26 +376,18 @@ SplayApi.Event.addActive = function(builder, active) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} paramOffset
+ * @param {flatbuffers.Offset} valueOffset
  */
-SplayApi.Event.addParam = function(builder, paramOffset) {
-  builder.addFieldOffset(4, paramOffset, 0);
+SplayApi.Event.addValue = function(builder, valueOffset) {
+  builder.addFieldOffset(4, valueOffset, 0);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} commandOffset
+ * @param {number} start
  */
-SplayApi.Event.addCommand = function(builder, commandOffset) {
-  builder.addFieldOffset(5, commandOffset, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {number} position
- */
-SplayApi.Event.addPosition = function(builder, position) {
-  builder.addFieldInt32(6, position, 0);
+SplayApi.Event.addStart = function(builder, start) {
+  builder.addFieldInt32(5, start, 0);
 };
 
 /**
@@ -441,20 +405,18 @@ SplayApi.Event.endEvent = function(builder) {
  * @param {flatbuffers.Offset} nameOffset
  * @param {SplayApi.EVENT_TYPE} type
  * @param {boolean} active
- * @param {flatbuffers.Offset} paramOffset
- * @param {flatbuffers.Offset} commandOffset
- * @param {number} position
+ * @param {flatbuffers.Offset} valueOffset
+ * @param {number} start
  * @returns {flatbuffers.Offset}
  */
-SplayApi.Event.createEvent = function(builder, id, nameOffset, type, active, paramOffset, commandOffset, position) {
+SplayApi.Event.createEvent = function(builder, id, nameOffset, type, active, valueOffset, start) {
   SplayApi.Event.startEvent(builder);
   SplayApi.Event.addId(builder, id);
   SplayApi.Event.addName(builder, nameOffset);
   SplayApi.Event.addType(builder, type);
   SplayApi.Event.addActive(builder, active);
-  SplayApi.Event.addParam(builder, paramOffset);
-  SplayApi.Event.addCommand(builder, commandOffset);
-  SplayApi.Event.addPosition(builder, position);
+  SplayApi.Event.addValue(builder, valueOffset);
+  SplayApi.Event.addStart(builder, start);
   return SplayApi.Event.endEvent(builder);
 }
 

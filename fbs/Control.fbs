@@ -26,9 +26,8 @@ table Trigger {
   name:string;
   type:TRIGGER_TYPE;
   active:bool;
-  param:string;
-  command:string;
-  position:uint32;
+  value:string; // json or string with details depending on type
+  start:uint32;
 }
 
 table Event {
@@ -36,7 +35,6 @@ table Event {
   name:string;
   type:EVENT_TYPE;
   active:bool;
-  param:string;
-  command:string;
-  position:uint32;
+  value:string; // json or string with details depending on type
+  start:uint32;
 }

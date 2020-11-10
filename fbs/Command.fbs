@@ -5,7 +5,7 @@ enum COMMAND:uint8 {
   PAUSE_PLAYLIST_COMMAND = 1,
   STOP_PLAYLIST_COMMAND = 2,
   GET_PLAYLIST_COMMAND = 3, // Get full information about playlist with Tracks, Triggers & Events
-  CHECK_FILE_COMMAND = 4, // Check the recording exists, or data is not empty
+  UPDATE_PLAYLISTS_ORDER_COMMAND = 4, // Update playlists by ids with given orders
   PLAY_ALL_PLAYLISTS_COMMAND = 5,
   PAUSE_ALL_PLAYLISTS_COMMAND = 6,
   STOP_ALL_PLAYLISTS_COMMAND = 7,

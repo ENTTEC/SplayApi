@@ -31,6 +31,9 @@ struct GetPlaylistReqBuilder;
 struct GetPlaylistRes;
 struct GetPlaylistResBuilder;
 
+struct UpdatePlaylistReq;
+struct UpdatePlaylistReqBuilder;
+
 struct GetAllPlaylistsReq;
 struct GetAllPlaylistsReqBuilder;
 
@@ -581,6 +584,59 @@ inline flatbuffers::Offset<GetPlaylistRes> CreateGetPlaylistRes(
     flatbuffers::Offset<SplayApi::Playlist> playlist = 0) {
   GetPlaylistResBuilder builder_(_fbb);
   builder_.add_playlist(playlist);
+  return builder_.Finish();
+}
+
+struct UpdatePlaylistReq FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef UpdatePlaylistReqBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COMMAND = 4,
+    VT_PLAYLIST = 6
+  };
+  SplayApi::COMMAND command() const {
+    return static_cast<SplayApi::COMMAND>(GetField<uint8_t>(VT_COMMAND, 18));
+  }
+  const SplayApi::Playlist *playlist() const {
+    return GetPointer<const SplayApi::Playlist *>(VT_PLAYLIST);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_COMMAND) &&
+           VerifyOffset(verifier, VT_PLAYLIST) &&
+           verifier.VerifyTable(playlist()) &&
+           verifier.EndTable();
+  }
+};
+
+struct UpdatePlaylistReqBuilder {
+  typedef UpdatePlaylistReq Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_command(SplayApi::COMMAND command) {
+    fbb_.AddElement<uint8_t>(UpdatePlaylistReq::VT_COMMAND, static_cast<uint8_t>(command), 18);
+  }
+  void add_playlist(flatbuffers::Offset<SplayApi::Playlist> playlist) {
+    fbb_.AddOffset(UpdatePlaylistReq::VT_PLAYLIST, playlist);
+  }
+  explicit UpdatePlaylistReqBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  UpdatePlaylistReqBuilder &operator=(const UpdatePlaylistReqBuilder &);
+  flatbuffers::Offset<UpdatePlaylistReq> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<UpdatePlaylistReq>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<UpdatePlaylistReq> CreateUpdatePlaylistReq(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    SplayApi::COMMAND command = SplayApi::COMMAND_UPDATE_PLAYLIST_COMMAND,
+    flatbuffers::Offset<SplayApi::Playlist> playlist = 0) {
+  UpdatePlaylistReqBuilder builder_(_fbb);
+  builder_.add_playlist(playlist);
+  builder_.add_command(command);
   return builder_.Finish();
 }
 

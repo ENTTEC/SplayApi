@@ -1094,6 +1094,113 @@ SplayApi.GetPlaylistRes.createGetPlaylistRes = function(builder, playlistOffset)
 /**
  * @constructor
  */
+SplayApi.UpdatePlaylistReq = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {SplayApi.UpdatePlaylistReq}
+ */
+SplayApi.UpdatePlaylistReq.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.UpdatePlaylistReq=} obj
+ * @returns {SplayApi.UpdatePlaylistReq}
+ */
+SplayApi.UpdatePlaylistReq.getRootAsUpdatePlaylistReq = function(bb, obj) {
+  return (obj || new SplayApi.UpdatePlaylistReq).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.UpdatePlaylistReq=} obj
+ * @returns {SplayApi.UpdatePlaylistReq}
+ */
+SplayApi.UpdatePlaylistReq.getSizePrefixedRootAsUpdatePlaylistReq = function(bb, obj) {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new SplayApi.UpdatePlaylistReq).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {SplayApi.COMMAND}
+ */
+SplayApi.UpdatePlaylistReq.prototype.command = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.UPDATE_PLAYLIST_COMMAND;
+};
+
+/**
+ * @param {SplayApi.Playlist=} obj
+ * @returns {SplayApi.Playlist|null}
+ */
+SplayApi.UpdatePlaylistReq.prototype.playlist = function(obj) {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? (obj || new SplayApi.Playlist).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+SplayApi.UpdatePlaylistReq.startUpdatePlaylistReq = function(builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {SplayApi.COMMAND} command
+ */
+SplayApi.UpdatePlaylistReq.addCommand = function(builder, command) {
+  builder.addFieldInt8(0, command, SplayApi.COMMAND.UPDATE_PLAYLIST_COMMAND);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} playlistOffset
+ */
+SplayApi.UpdatePlaylistReq.addPlaylist = function(builder, playlistOffset) {
+  builder.addFieldOffset(1, playlistOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.UpdatePlaylistReq.endUpdatePlaylistReq = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {NS14796042768305698587.SplayApi.COMMAND} command
+ * @param {flatbuffers.Offset} playlistOffset
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.UpdatePlaylistReq.createUpdatePlaylistReq = function(builder, command, playlistOffset) {
+  SplayApi.UpdatePlaylistReq.startUpdatePlaylistReq(builder);
+  SplayApi.UpdatePlaylistReq.addCommand(builder, command);
+  SplayApi.UpdatePlaylistReq.addPlaylist(builder, playlistOffset);
+  return SplayApi.UpdatePlaylistReq.endUpdatePlaylistReq(builder);
+}
+
+/**
+ * @constructor
+ */
 SplayApi.GetAllPlaylistsReq = function() {
   /**
    * @type {flatbuffers.ByteBuffer}

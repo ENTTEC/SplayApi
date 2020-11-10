@@ -65,6 +65,11 @@ table GetPlaylistRes {
   playlist:Playlist;
 }
 
+table UpdatePlaylistReq {
+  command:COMMAND = UPDATE_PLAYLIST_COMMAND;
+  playlist:Playlist;
+}
+
 table GetAllPlaylistsReq {
   command:COMMAND = GET_ALL_PLAYLISTS_COMMAND;
 }

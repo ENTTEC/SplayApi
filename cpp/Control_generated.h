@@ -114,9 +114,8 @@ struct Trigger FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_NAME = 6,
     VT_TYPE = 8,
     VT_ACTIVE = 10,
-    VT_PARAM = 12,
-    VT_COMMAND = 14,
-    VT_POSITION = 16
+    VT_VALUE = 12,
+    VT_START = 14
   };
   int32_t id() const {
     return GetField<int32_t>(VT_ID, 0);
@@ -130,14 +129,11 @@ struct Trigger FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   bool active() const {
     return GetField<uint8_t>(VT_ACTIVE, 0) != 0;
   }
-  const flatbuffers::String *param() const {
-    return GetPointer<const flatbuffers::String *>(VT_PARAM);
+  const flatbuffers::String *value() const {
+    return GetPointer<const flatbuffers::String *>(VT_VALUE);
   }
-  const flatbuffers::String *command() const {
-    return GetPointer<const flatbuffers::String *>(VT_COMMAND);
-  }
-  uint32_t position() const {
-    return GetField<uint32_t>(VT_POSITION, 0);
+  uint32_t start() const {
+    return GetField<uint32_t>(VT_START, 0);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -146,11 +142,9 @@ struct Trigger FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            verifier.VerifyString(name()) &&
            VerifyField<uint8_t>(verifier, VT_TYPE) &&
            VerifyField<uint8_t>(verifier, VT_ACTIVE) &&
-           VerifyOffset(verifier, VT_PARAM) &&
-           verifier.VerifyString(param()) &&
-           VerifyOffset(verifier, VT_COMMAND) &&
-           verifier.VerifyString(command()) &&
-           VerifyField<uint32_t>(verifier, VT_POSITION) &&
+           VerifyOffset(verifier, VT_VALUE) &&
+           verifier.VerifyString(value()) &&
+           VerifyField<uint32_t>(verifier, VT_START) &&
            verifier.EndTable();
   }
 };
@@ -171,14 +165,11 @@ struct TriggerBuilder {
   void add_active(bool active) {
     fbb_.AddElement<uint8_t>(Trigger::VT_ACTIVE, static_cast<uint8_t>(active), 0);
   }
-  void add_param(flatbuffers::Offset<flatbuffers::String> param) {
-    fbb_.AddOffset(Trigger::VT_PARAM, param);
+  void add_value(flatbuffers::Offset<flatbuffers::String> value) {
+    fbb_.AddOffset(Trigger::VT_VALUE, value);
   }
-  void add_command(flatbuffers::Offset<flatbuffers::String> command) {
-    fbb_.AddOffset(Trigger::VT_COMMAND, command);
-  }
-  void add_position(uint32_t position) {
-    fbb_.AddElement<uint32_t>(Trigger::VT_POSITION, position, 0);
+  void add_start(uint32_t start) {
+    fbb_.AddElement<uint32_t>(Trigger::VT_START, start, 0);
   }
   explicit TriggerBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -198,13 +189,11 @@ inline flatbuffers::Offset<Trigger> CreateTrigger(
     flatbuffers::Offset<flatbuffers::String> name = 0,
     SplayApi::TRIGGER_TYPE type = SplayApi::TRIGGER_TYPE_TRIGGER_TYPE_NONE,
     bool active = false,
-    flatbuffers::Offset<flatbuffers::String> param = 0,
-    flatbuffers::Offset<flatbuffers::String> command = 0,
-    uint32_t position = 0) {
+    flatbuffers::Offset<flatbuffers::String> value = 0,
+    uint32_t start = 0) {
   TriggerBuilder builder_(_fbb);
-  builder_.add_position(position);
-  builder_.add_command(command);
-  builder_.add_param(param);
+  builder_.add_start(start);
+  builder_.add_value(value);
   builder_.add_name(name);
   builder_.add_id(id);
   builder_.add_active(active);
@@ -218,21 +207,18 @@ inline flatbuffers::Offset<Trigger> CreateTriggerDirect(
     const char *name = nullptr,
     SplayApi::TRIGGER_TYPE type = SplayApi::TRIGGER_TYPE_TRIGGER_TYPE_NONE,
     bool active = false,
-    const char *param = nullptr,
-    const char *command = nullptr,
-    uint32_t position = 0) {
+    const char *value = nullptr,
+    uint32_t start = 0) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
-  auto param__ = param ? _fbb.CreateString(param) : 0;
-  auto command__ = command ? _fbb.CreateString(command) : 0;
+  auto value__ = value ? _fbb.CreateString(value) : 0;
   return SplayApi::CreateTrigger(
       _fbb,
       id,
       name__,
       type,
       active,
-      param__,
-      command__,
-      position);
+      value__,
+      start);
 }
 
 struct Event FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -242,9 +228,8 @@ struct Event FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_NAME = 6,
     VT_TYPE = 8,
     VT_ACTIVE = 10,
-    VT_PARAM = 12,
-    VT_COMMAND = 14,
-    VT_POSITION = 16
+    VT_VALUE = 12,
+    VT_START = 14
   };
   int32_t id() const {
     return GetField<int32_t>(VT_ID, 0);
@@ -258,14 +243,11 @@ struct Event FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   bool active() const {
     return GetField<uint8_t>(VT_ACTIVE, 0) != 0;
   }
-  const flatbuffers::String *param() const {
-    return GetPointer<const flatbuffers::String *>(VT_PARAM);
+  const flatbuffers::String *value() const {
+    return GetPointer<const flatbuffers::String *>(VT_VALUE);
   }
-  const flatbuffers::String *command() const {
-    return GetPointer<const flatbuffers::String *>(VT_COMMAND);
-  }
-  uint32_t position() const {
-    return GetField<uint32_t>(VT_POSITION, 0);
+  uint32_t start() const {
+    return GetField<uint32_t>(VT_START, 0);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -274,11 +256,9 @@ struct Event FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            verifier.VerifyString(name()) &&
            VerifyField<uint8_t>(verifier, VT_TYPE) &&
            VerifyField<uint8_t>(verifier, VT_ACTIVE) &&
-           VerifyOffset(verifier, VT_PARAM) &&
-           verifier.VerifyString(param()) &&
-           VerifyOffset(verifier, VT_COMMAND) &&
-           verifier.VerifyString(command()) &&
-           VerifyField<uint32_t>(verifier, VT_POSITION) &&
+           VerifyOffset(verifier, VT_VALUE) &&
+           verifier.VerifyString(value()) &&
+           VerifyField<uint32_t>(verifier, VT_START) &&
            verifier.EndTable();
   }
 };
@@ -299,14 +279,11 @@ struct EventBuilder {
   void add_active(bool active) {
     fbb_.AddElement<uint8_t>(Event::VT_ACTIVE, static_cast<uint8_t>(active), 0);
   }
-  void add_param(flatbuffers::Offset<flatbuffers::String> param) {
-    fbb_.AddOffset(Event::VT_PARAM, param);
+  void add_value(flatbuffers::Offset<flatbuffers::String> value) {
+    fbb_.AddOffset(Event::VT_VALUE, value);
   }
-  void add_command(flatbuffers::Offset<flatbuffers::String> command) {
-    fbb_.AddOffset(Event::VT_COMMAND, command);
-  }
-  void add_position(uint32_t position) {
-    fbb_.AddElement<uint32_t>(Event::VT_POSITION, position, 0);
+  void add_start(uint32_t start) {
+    fbb_.AddElement<uint32_t>(Event::VT_START, start, 0);
   }
   explicit EventBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -326,13 +303,11 @@ inline flatbuffers::Offset<Event> CreateEvent(
     flatbuffers::Offset<flatbuffers::String> name = 0,
     SplayApi::EVENT_TYPE type = SplayApi::EVENT_TYPE_EVENT_TYPE_NONE,
     bool active = false,
-    flatbuffers::Offset<flatbuffers::String> param = 0,
-    flatbuffers::Offset<flatbuffers::String> command = 0,
-    uint32_t position = 0) {
+    flatbuffers::Offset<flatbuffers::String> value = 0,
+    uint32_t start = 0) {
   EventBuilder builder_(_fbb);
-  builder_.add_position(position);
-  builder_.add_command(command);
-  builder_.add_param(param);
+  builder_.add_start(start);
+  builder_.add_value(value);
   builder_.add_name(name);
   builder_.add_id(id);
   builder_.add_active(active);
@@ -346,21 +321,18 @@ inline flatbuffers::Offset<Event> CreateEventDirect(
     const char *name = nullptr,
     SplayApi::EVENT_TYPE type = SplayApi::EVENT_TYPE_EVENT_TYPE_NONE,
     bool active = false,
-    const char *param = nullptr,
-    const char *command = nullptr,
-    uint32_t position = 0) {
+    const char *value = nullptr,
+    uint32_t start = 0) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
-  auto param__ = param ? _fbb.CreateString(param) : 0;
-  auto command__ = command ? _fbb.CreateString(command) : 0;
+  auto value__ = value ? _fbb.CreateString(value) : 0;
   return SplayApi::CreateEvent(
       _fbb,
       id,
       name__,
       type,
       active,
-      param__,
-      command__,
-      position);
+      value__,
+      start);
 }
 
 }  // namespace SplayApi
