@@ -16,7 +16,7 @@ e.g. URL: ` http://192.168.1.13:55555/api`
 Request can be tested using **curl**:
 
 ``
-curl --header "Content-Type: application/json" -d "{\"command\":8}" http://localhost:55555/api --output -
+curl --header "Content-Type: application/json" -d "{\"command\":8}" http://192.168.1.13:55555/api --output -
 ``
 
 ### Definitions
