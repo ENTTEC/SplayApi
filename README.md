@@ -20,7 +20,7 @@ curl --header "Content-Type: application/json" -d "{\"command\":8}" http://192.1
 ``
 
 ### Development
-After clone run the command inside repo's dir to automatically execute `flatc` compilation (v1.2.0) to cpp & js for all *.fbs files:
+After clone run the command inside repo's dir to automatically execute `flatc` compilation (v1.12.0) to cpp & js for all *.fbs files:
 ``
 git config --local core.hooksPath .githooks/
 ``
