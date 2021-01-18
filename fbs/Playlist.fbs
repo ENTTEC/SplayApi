@@ -1,0 +1,79 @@
+//------------------------------------------------------------------
+// Project:SPlay
+// Purpose:FlatBuffers schema definition file to define HTTP API
+// for Playlists control on SPlay Engine
+// Description:
+// Defines types and format of messages for communication between
+// C++ SPlay Engine and JS fronted or any thirdparty HTTP client.
+//------------------------------------------------------------------
+
+include "Control.fbs";
+include "Command.fbs";
+include "Cue.fbs";
+
+namespace SplayApi;
+
+enum PLAYLIST_STATUS_TYPE:uint8 {
+  PLAYLIST_STATUS_IDLE,
+  PLAYLIST_STATUS_PLAYING,
+  PLAYLIST_STATUS_PAUSED,
+  PLAYLIST_STATUS_STOPPED,
+  PLAYLIST_STATUS_RECORD,
+  PLAYLIST_STATUS_ERROR
+}
+
+table Playlist {
+  playlist_id:int;
+  status:PLAYLIST_STATUS_TYPE;
+  current_time:uint32;
+  duration:uint32;
+  intensity:float;
+  name:string;
+  waiting_triggers:bool;
+  notification_message:string;
+  start_trigger:Trigger;
+  stop_trigger:Trigger;
+  triggers:[Trigger];
+  events:[Event];
+  track1:[Cue];
+  track2:[Cue];
+  track3:[Cue];
+  track4:[Cue];
+}
+
+table PlayPlaylistReq {
+  command:COMMAND = PLAY_COMMAND;
+  playlist_id:int;
+}
+
+table PausePlaylistReq {
+  command:COMMAND = PAUSE_COMMAND;
+  playlist_id:int;
+}
+
+table StopPlaylistReq {
+  command:COMMAND = STOP_COMMAND;
+  playlist_id:int;
+}
+
+table GetPlaylistReq {
+  command:COMMAND = GET_PLAYLIST_COMMAND;
+  playlist_id:int;
+}
+
+table GetPlaylistRes {
+  playlist:Playlist;
+}
+
+table UpdatePlaylistReq {
+  command:COMMAND = UPDATE_PLAYLIST_COMMAND;
+  playlist:Playlist;
+}
+
+table GetAllPlaylistsReq {
+  command:COMMAND = GET_ALL_PLAYLISTS_COMMAND;
+}
+
+table GetAllPlaylistsRes {
+  playlists:[Playlist];
+}

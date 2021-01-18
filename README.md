@@ -19,6 +19,12 @@ Request can be tested using **curl**:
 curl --header "Content-Type: application/json" -d "{\"command\":8}" http://192.168.1.13:55555/api --output -
 ``
 
+### Development
+After clone run the command inside repo's dir to automatically execute `flatc` compilation (v1.2.0) to cpp & js for all *.fbs files:
+``
+git config --local core.hooksPath .githooks/
+``
+
 ### Definitions
 
 #### SplayEngine Commands
@@ -28,53 +34,48 @@ enum CONTROL_COMMANDS {
     PLAY_COMMAND = 0, // Play playlist on the device
     PAUSE_COMMAND = 1, // Pause the playing playlist
     STOP_COMMAND = 2, // Stop the playlist is in PAUSE or PLAY status.
-    STATUS_COMMAND = 3, // Get the status of playlist or cue in playlist
-    CHECK_FILE_COMMAND = 4, // Check the recording exists, or data is not empty
+    GET_PLAYLIST_COMMAND = 3, // Get full information about playlist with Tracks, Triggers & Events
+    UPDATE_PLAYLISTS_ORDER_COMMAND = 4, // Update playlists by ids with given orders
     PLAY_ALL_PLAYLISTS_COMMAND = 5, // Play all playlists on the device
     PAUSE_ALL_PLAYLISTS_COMMAND = 6, // Pause all playing playlists
     STOP_ALL_PLAYLISTS_COMMAND = 7, // Stop all playlists is in PAUSE or PLAY status.
-    GET_RUNNING_PLAYLIST_COMMAND = 8, // Get status of all currently playing playlists
+    GET_ALL_PLAYLISTS_COMMAND = 8, // Get status of all currently playing playlists
     SET_PLAYLIST_INTENSITY_COMMAND = 9, // Output intensity (Master Fader) of the given playlist, persists until power cycle
     GET_PLAYLIST_INTENSITY_COMMAND = 10, // Return the intensity of given playlist (not implemented)
     SET_TRACK_INTENSITY_COMMAND = 11, // Output intensity of particular track in the given playlist (not implemented)
     GET_TRACK_INTENSITY_COMMAND = 12, // Return the current Intensity (not implemented)
     CAPTURE_DMX_FRAME_COMMAND = 13, // Static frame recording (not implemented)
     RECORD_DMX_FRAME_COMMAND = 14, // Dynamic frame recording (not implemented)
-    STOP_RECORD_COMMAND = 15, // Stop current recording
-    PLAY_CUE_COMMAND = 16, // Play given cue (not implemented)
-    STOP_CUE_COMMAND = 17, // Stop given cue (not implemented)
-    UPDATE_PLAYLIST_COMMAND = 18,
-    DELETE_PLAYLIST_COMMAND = 19,
-    UPDATE_SETTINGS_COMMAND = 20,
-
-    SET_PLAYLIST_TIME_POSITION_COMMAND = 22,
-
+    STOP_RECORD_COMMAND = 15, // Stop any recording
+    PLAY_CUE_COMMAND = 16, // Stop current recording | Deprecate on Flatbuffer update for PLAY_CUE_COMMAND_FUTURE
+    STOP_CUE_COMMAND = 17, // Play given cue (not implemented) | Deprecate on Flatbuffer update for STOP_CUE_COMMAND_FUTURE
+    UPDATE_PLAYLIST_COMMAND = 18, // Update Playlist with json struct as gets from GET_PLAYLIST_COMMAND
+    DELETE_PLAYLIST_COMMAND = 19, // Delete Playlist
+    UPDATE_SETTINGS_COMMAND = 20, // (not implemented)
+    OSC_MESSAGE = 21, // Accepts messages to implement as OSC input
+    SET_PLAYLIST_TIME_POSITION_COMMAND = 22, // Set playback position of a playlist
+    SET_WEBSOCKET_INPUT_COMMAND = 23, // Sets universe to monitor in Cue recording
     SET_MASTER_INTENSITY = 24, // Set overall S-Play output intensity (Master Fader), persists until power cycle
-    OSC_MESSAGE = 25, // Send OSC message to Playback to trigger existing OSC triggers
+    
+    PLAY_CUE_COMMAND_FUTURE = 25, // Send OSC message to Playback to trigger existing OSC triggers
+    PAUSE_CUE_COMMAND = 26,
+    STOP_CUE_COMMAND_FUTURE = 27,
+    GET_CUE_COMMAND = 28,
+    GET_ALL_CUES_COMMAND = 29,
 }
 ```
-#### GetStatus Command Sub-Commands
-Here are definition of Sub-Commands that used by STATUS_COMMAND, CAPTURE_DMX_FRAME_COMMAND and RECORD_DMX_FRAME_COMMAND comm}and.
-```c++
-enum COMMAND_TYPES {
-    PLAYLIST_COMMAND                       = 0,     // Target is playlist.
-    CUE_COMMAND                            = 1,     // Target is cue.
-    ARTNET_COMMAND                         = 2,     // Capture or record from ArtNet device.
-    SACN_COMMAND                           = 3,     // Capture or record from sACN device.
-    DMX_COMMAND                            = 4      // Capture or record from DMX device.
-};
-```
 
-#### Playlist Status
+#### Playlist Statuses
 ```c++
 enum PLAYLIST_STATUS_TYPES {
-    PLAYLIST_STATUS_IDLE                   = 0,     // Idle Status, No Action.
-    PLAYLIST_STATUS_PLAYING                = 1,     // The playlist in Playing.
-    PLAYLIST_STATUS_PAUSED                 = 2,     // The playlist in Paused.
-    PLAYLIST_STATUS_STOPPED                = 3,     // The playlist in Stopped.
-    PLAYLIST_STATUS_RECORD                 = 4,     // The playlist in Recording.
-    PLAYLIST_STATUS_ERROR                  = 5      // Error in playlist's last action.
+    PLAYLIST_STATUS_IDLE,
+    PLAYLIST_STATUS_PLAYING,
+    PLAYLIST_STATUS_PAUSED,
+    PLAYLIST_STATUS_STOPPED,
+    PLAYLIST_STATUS_STOPPING,
+    PLAYLIST_STATUS_ERROR
 };
+
 ```
 
 #### Setting Command Sub-Command
@@ -93,33 +94,34 @@ enum UPDATE_SETTINGS_TYPES {
 
 ```
 
-#### Trigger Type Names
-Indicate what device do you wait to trigger from.
-```c++
-#define TRIGGER_TYPENAME_OSC               "osc"    // value: "string command"
-#define TRIGGER_TYPENAME_RS232             "rs232"  // value: "string command"
-#define TRIGGER_TYPENAME_DMX               "dmx"    // value: { "channel_number": 0~511, "threshold": 0~255 }
-```
-
 #### Event Type Names
-Indicate event target device to implement event action
+Indicate what type of event is sent.
 ```c++
-#define EVENT_TYPE_RELAY                   "relay"  // value: { "relay_number": 0~.., "value": 0~1 }
-#define EVENT_TYPE_RS232                   "rs232"  // value: "string"
+enum EVENT_TYPE {
+    EVENT_TYPE_NONE = 0,
+    EVENT_TYPE_RS232,
+    EVENT_TYPE_IO,
+    EVENT_TYPE_ARTNET,
+    EVENT_TYPE_DMX,
+    EVENT_TYPE_SACN,
+    EVENT_TYPE_OSC,
+    END_EVENT_TYPE
+};
 ```
 
 #### Trigger Types
 Indicate what device do you wait to trigger from.
 ```c++
 enum TRIGGER_TYPE {
-    TRIGGER_TYPE_NONE = 0,
+    TRIGGER_TYPE_NONE = 0, // currently in playlist jsons it is -1
     TRIGGER_TYPE_OSC,
     TRIGGER_TYPE_RS232,
     TRIGGER_TYPE_IO,
     TRIGGER_TYPE_ARTNET,
     TRIGGER_TYPE_DMX,
     TRIGGER_TYPE_SACN,
-    TRIGGER_TYPE_POWERUP
+    TRIGGER_TYPE_POWERUP,
+    END_TRIGGER_TYPE
 };
 ```
 

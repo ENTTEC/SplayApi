@@ -1,0 +1,37 @@
+
+include "Playlist.fbs";
+include "Cue.fbs";
+
+namespace SplayApi;
+
+table StatusRes {
+  result:bool;
+  error:string;
+}
+
+table Header {
+	token:string;
+}
+
+// important! only append to this list
+union Body {
+  StatusRes,
+  PlayPlaylistReq,
+  PausePlaylistReq,
+  StopPlaylistReq,
+  GetPlaylistReq,
+  GetAllPlaylistsReq,
+  GetPlaylistRes,
+  GetAllPlaylistsRes,
+  GetCueReq,
+  GetCueRes,
+  GetAllCuesReq,
+  GetAllCuesRes
+}
+
+table Message {
+  header:Header;
+  body:Body;
+}
+
+root_type Message;

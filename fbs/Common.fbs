@@ -1,0 +1,18 @@
+
+namespace SplayApi;
+
+enum UNIVERSE_TYPE:uint8 {
+  DMX_TYPE,
+  ARTNET_TYPE,
+  SACN_TYPE,
+  NONE_TYPE
+}
+
+/// Don't change order
+enum PIXEL_ORDER:uint8 {
+    RGB, RBG, GRB, GBR, BRG, BGR,
+    RGBW, RBGW, GRBW, GBRW, BRGW, BGRW,
+    WRGB, WRBG, WGRB, WGBR, WBRG, WBGR,
+    RWGB, RWBG, GWRB, GWBR, BWRG, BWGR,
+    RGWB, RBWG, GRWB, GBWR, BRWG, BGWR
+}
