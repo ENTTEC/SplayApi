@@ -16,7 +16,7 @@ e.g. URL: ` http://192.168.1.13:55555/api`
 Request can be tested using **curl**:
 
 ``
-curl --header "Content-Type: application/json" -d "{\"command\":8}" http://localhost:55555/api --output -
+curl --header "Content-Type: application/json" -d "{\"command\":8}" http://192.168.1.13:55555/api --output -
 ``
 
 ### Development
@@ -132,7 +132,7 @@ If playlist is waiting any trigger, it has trigger information.
 ##### Request
 ```json
     {
-        "command": GET_RUNNING_PLAYLIST_COMMAND
+        "command": 8
     }
 ```
 ##### Response
@@ -232,7 +232,7 @@ This command will stop to record DMX frame from device. This will return the lat
 ##### Request
 ```json
     {
-        "command": STOP_RECORD_COMMAND,
+        "command": 15,
     }
 ```
 ##### Response
@@ -252,7 +252,7 @@ Playlist will STOP, once it reaches the end of final loop.
 ##### Request
 ```json
     {
-        "command": PLAY_COMMAND,
+        "command": 0,
         "playlist_id": 25,
         "loop_count": 4
     }
@@ -272,7 +272,7 @@ If playlist is PAUSED - it will be RESUMED
 ##### Request
 ```json
     {
-        "command": PAUSE_COMMAND,
+        "command": 1,
         "playlist_id": 25
     }
 ```
@@ -290,7 +290,7 @@ If Playlist is already Stopped, ignore STOP action.
 ##### Request
 ```json
     {
-        "command": STOP_COMMAND,
+        "command": 2,
         "playlist_id": 25
     }
 ```
@@ -306,7 +306,7 @@ If Playlist is already Stopped, ignore STOP action.
 Get the intensity of special playlist.
 ```json
     {
-        "command": GET_TRACK_INTENSITY_COMMAND,
+        "command": 12,
         "playlist_id": 25,
         "cue_track_id": 3
     }
@@ -328,7 +328,7 @@ So a future PLAY, will use the last known Fader Level.
 It will return intensity value of track on playlist set by this command.
 ```json
     {
-        "command": SET_TRACK_INTENSITY_COMMAND,
+        "command": 11,
         "playlist_id": 25,
         "cue_track_id": 2,
         "intensity": 75
@@ -339,33 +339,6 @@ It will return playlist's status.
 ```json
     {
         "result": true,
-        "status": PLAYLIST_STATUS_PLAYING,
-        "fader_level": 75
-        "current_time": 0
-        "cues": [
-            {
-                "id": 1508908097837,
-                "cue_id": 4,
-                "status": PLAYLIST_STATUS_PLAYING,
-                "fader_level": 75,
-                "current_time": 0
-            },
-            {
-                "id": 1508908097837,
-                "cue_id": 32,
-                "status": PLAYLIST_STATUS_PLAYING,
-                "fader_level": 100,
-                "current_time": 0
-            }
-        ],
-        "triggers" : [
-            {
-                "id": 2353465365,
-                "trigger_id": 2,
-                "trigger_type": 1,
-                "waiting_string": "Start"
-            }
-        ]
     }
 ```
 
@@ -374,7 +347,7 @@ Get the intensity of special playlist.
 ##### Request
 ```json
     {
-        "command": GET_PLAYLIST_INTENSITY_COMMAND,
+        "command": 10,
         "playlist_id": 25
     }
 ```
@@ -394,7 +367,7 @@ So a future PLAY, will use the last known Fader Level.
 ##### Request
 ```json
     {
-        "command": SET_PLAYLIST_INTENSITY_COMMAND,
+        "command": 9,
         "playlist_id": 25,
         "intensity": 75
     }
@@ -412,7 +385,7 @@ Update the properties of playlist with given filename and its time elements.
 ##### Request
 ```json
     {
-        "command": UPDATE_PLAYLIST_COMMAND,
+        "command": 12,
         "playlist_filename": "playlist2.json",
     }
 ```
@@ -429,7 +402,7 @@ Remove the playlist from active list (e.g. from PlayAll).
 ##### Request
 ```json
     {
-        "command": DELETE_PLAYLIST_COMMAND,
+        "command": 19,
         "playlist_id": 3,
     }
 ```
@@ -442,12 +415,12 @@ It should return true.
 ```
 
 #### UPDATE SETTINGS
-Update configuration and system parameters from database.
+Update configuration and system parameters from database. For example NTP.
 ##### Request
 ```json
     {
-        "command": UPDATE_SETTINGS_COMMAND,
-        "command_type": UPDATE_SETTINGS_NTP
+        "command": 20,
+        "command_type": 0
     }
 ```
 ##### Response
@@ -462,7 +435,7 @@ Play all playlist in playlist storage.
 ##### Request
 ```json
     {
-        "command": PLAY_ALL_PLAYLISTS_COMMAND
+        "command": 5
     }
 ```
 
@@ -479,7 +452,7 @@ Pause all running playlists.
 ##### Request
 ```json
     {
-        "command": PAUSE_ALL_PLAYLISTS_COMMAND
+        "command": 6
     }
 ```
 ##### Response
@@ -495,7 +468,7 @@ Stop all playing or paused playlist.
 ##### Request
 ```json
     {
-        "command": STOP_ALL_PLAYLISTS_COMMAND
+        "command": 7
     }
 ```
 ##### Response
@@ -511,8 +484,8 @@ Preview static or dynamic cue for the given cue id
 ##### Request
 ```json
     {
-        "command": PLAY_CUE_COMMAND,
-        "cue": 1
+        "command": 16,
+        "cue_id": 1
     }
 ```
 ##### Response
@@ -529,7 +502,7 @@ Stop previewing cue. and then the output should be stopped.
 ##### Request
 ```json
     {
-        "command": STOP_CUE_COMMAND,
+        "command": 17,
     }
 ```
 ##### Response
@@ -546,7 +519,7 @@ Send request with needed timeline position for playlist playing currently, the p
 ##### Request
 ```json
     {
-        "command": SET_PLAYLIST_TIME_POSITION,
+        "command": 22,
         "playlist_id": 25,
         "position": 10.55
     }
@@ -563,7 +536,7 @@ Set overall S-Play output intensity (Master Fader) with 50% brightness, doesn't 
 ##### Request
 ```json
     {
-        "command": SET_MASTER_INTENSITY,
+        "command": 24,
         "intensity": 0.5,
     }
 ```
@@ -578,7 +551,7 @@ Send OSC message to Playback to trigger existing OSC triggers
 ##### Request
 ```json
     {
-        "command": OSC_MESSAGE,
+        "command": 25,
         "address": "/test"
     }
 ```
