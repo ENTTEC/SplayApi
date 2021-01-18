@@ -1,33 +1,33 @@
 namespace SplayApi;
 
 enum COMMAND:uint8 {
-  PLAY_COMMAND = 0,
-  PAUSE_COMMAND = 1,
-  STOP_COMMAND = 2,
+  PLAY_COMMAND = 0, // Play playlist on the device
+  PAUSE_COMMAND = 1, // Pause the playing playlist
+  STOP_COMMAND = 2, // Stop the playlist is in PAUSE or PLAY status.
   GET_PLAYLIST_COMMAND = 3, // Get full information about playlist with Tracks, Triggers & Events
   UPDATE_PLAYLISTS_ORDER_COMMAND = 4, // Update playlists by ids with given orders
-  PLAY_ALL_PLAYLISTS_COMMAND = 5,
-  PAUSE_ALL_PLAYLISTS_COMMAND = 6,
-  STOP_ALL_PLAYLISTS_COMMAND = 7,
-  GET_ALL_PLAYLISTS_COMMAND = 8,
-  SET_PLAYLIST_INTENSITY_COMMAND = 9, // Master Fader is the Output Intensity, to be saved for each play list
-  GET_PLAYLIST_INTENSITY_COMMAND = 10, // Return the current Intensity
-  SET_TRACK_INTENSITY_COMMAND = 11, // Master Fader is the Output Intensity, to be saved for each play list
-  GET_TRACK_INTENSITY_COMMAND = 12, // Return the current Intensity
-  CAPTURE_DMX_FRAME_COMMAND = 13, // Staic frame recording
-  RECORD_DMX_FRAME_COMMAND = 14, // Dynamic frame recording
-  STOP_RECORD_COMMAND = 15,
-  PLAY_CUE_COMMAND = 16, // Deprecate on Flatbuffer update for PLAY_CUE_COMMAND_FUTURE
-  STOP_CUE_COMMAND = 17, // Deprecate on Flatbuffer update for STOP_CUE_COMMAND_FUTURE
-  UPDATE_PLAYLIST_COMMAND = 18,
-  DELETE_PLAYLIST_COMMAND = 19,
-  UPDATE_SETTINGS_COMMAND = 20,
-  OSC_MESSAGE = 21,
-  SET_PLAYLIST_TIME_POSITION_COMMAND = 22,
-  SET_WEBSOCKET_INPUT_COMMAND = 23,
-  SET_MASTER_INTENSITY = 24,
+  PLAY_ALL_PLAYLISTS_COMMAND = 5, // Play all playlists on the device
+  PAUSE_ALL_PLAYLISTS_COMMAND = 6, // Pause all playing playlists
+  STOP_ALL_PLAYLISTS_COMMAND = 7, // Stop all playlists is in PAUSE or PLAY status.
+  GET_ALL_PLAYLISTS_COMMAND = 8, // Get status of all currently playing playlists
+  SET_PLAYLIST_INTENSITY_COMMAND = 9, // Output intensity (Master Fader) of the given playlist, persists until power cycle
+  GET_PLAYLIST_INTENSITY_COMMAND = 10, // Return the intensity of given playlist (not implemented)
+  SET_TRACK_INTENSITY_COMMAND = 11, // Output intensity of particular track in the given playlist (not implemented)
+  GET_TRACK_INTENSITY_COMMAND = 12, // Return the current Intensity (not implemented)
+  CAPTURE_DMX_FRAME_COMMAND = 13, // Static frame recording (not implemented)
+  RECORD_DMX_FRAME_COMMAND = 14, // Dynamic frame recording (not implemented)
+  STOP_RECORD_COMMAND = 15, // Stop any recording
+  PLAY_CUE_COMMAND = 16, // Stop current recording | Deprecate on Flatbuffer update for PLAY_CUE_COMMAND_FUTURE
+  STOP_CUE_COMMAND = 17, // Play given cue (not implemented) | Deprecate on Flatbuffer update for STOP_CUE_COMMAND_FUTURE
+  UPDATE_PLAYLIST_COMMAND = 18, // Update Playlist with json struct as gets from GET_PLAYLIST_COMMAND
+  DELETE_PLAYLIST_COMMAND = 19, // Delete Playlist
+  UPDATE_SETTINGS_COMMAND = 20, // (not implemented)
+  OSC_MESSAGE = 21, // Accepts messages to implement as OSC input
+  SET_PLAYLIST_TIME_POSITION_COMMAND = 22, // Set playback position of a playlist
+  SET_WEBSOCKET_INPUT_COMMAND = 23, // Sets universe to monitor in Cue recording
+  SET_MASTER_INTENSITY = 24, // Set overall S-Play output intensity (Master Fader), persists until power cycle
 
-  PLAY_CUE_COMMAND_FUTURE = 25,
+  PLAY_CUE_COMMAND_FUTURE = 25, // Send OSC message to Playback to trigger existing OSC triggers
   PAUSE_CUE_COMMAND = 26,
   STOP_CUE_COMMAND_FUTURE = 27,
   GET_CUE_COMMAND = 28,
