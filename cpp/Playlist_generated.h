@@ -380,7 +380,7 @@ struct PlayPlaylistReqBuilder {
 
 inline flatbuffers::Offset<PlayPlaylistReq> CreatePlayPlaylistReq(
     flatbuffers::FlatBufferBuilder &_fbb,
-    SplayApi::COMMAND command = SplayApi::COMMAND_PLAY_PLAYLIST_COMMAND,
+    SplayApi::COMMAND command = SplayApi::COMMAND_PLAY_COMMAND,
     int32_t playlist_id = 0) {
   PlayPlaylistReqBuilder builder_(_fbb);
   builder_.add_playlist_id(playlist_id);
@@ -432,7 +432,7 @@ struct PausePlaylistReqBuilder {
 
 inline flatbuffers::Offset<PausePlaylistReq> CreatePausePlaylistReq(
     flatbuffers::FlatBufferBuilder &_fbb,
-    SplayApi::COMMAND command = SplayApi::COMMAND_PAUSE_PLAYLIST_COMMAND,
+    SplayApi::COMMAND command = SplayApi::COMMAND_PAUSE_COMMAND,
     int32_t playlist_id = 0) {
   PausePlaylistReqBuilder builder_(_fbb);
   builder_.add_playlist_id(playlist_id);
@@ -484,7 +484,7 @@ struct StopPlaylistReqBuilder {
 
 inline flatbuffers::Offset<StopPlaylistReq> CreateStopPlaylistReq(
     flatbuffers::FlatBufferBuilder &_fbb,
-    SplayApi::COMMAND command = SplayApi::COMMAND_STOP_PLAYLIST_COMMAND,
+    SplayApi::COMMAND command = SplayApi::COMMAND_STOP_COMMAND,
     int32_t playlist_id = 0) {
   StopPlaylistReqBuilder builder_(_fbb);
   builder_.add_playlist_id(playlist_id);

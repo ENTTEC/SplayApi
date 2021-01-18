@@ -42,17 +42,17 @@ table Playlist {
 }
 
 table PlayPlaylistReq {
-  command:COMMAND = PLAY_PLAYLIST_COMMAND;
+  command:COMMAND = PLAY_COMMAND;
   playlist_id:int;
 }
 
 table PausePlaylistReq {
-  command:COMMAND = PAUSE_PLAYLIST_COMMAND;
+  command:COMMAND = PAUSE_COMMAND;
   playlist_id:int;
 }
 
 table StopPlaylistReq {
-  command:COMMAND = STOP_PLAYLIST_COMMAND;
+  command:COMMAND = STOP_COMMAND;
   playlist_id:int;
 }
 

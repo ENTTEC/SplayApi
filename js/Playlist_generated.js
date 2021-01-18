@@ -628,7 +628,7 @@ SplayApi.PlayPlaylistReq.getSizePrefixedRootAsPlayPlaylistReq = function(bb, obj
  */
 SplayApi.PlayPlaylistReq.prototype.command = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.PLAY_PLAYLIST_COMMAND;
+  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.PLAY_COMMAND;
 };
 
 /**
@@ -651,7 +651,7 @@ SplayApi.PlayPlaylistReq.startPlayPlaylistReq = function(builder) {
  * @param {SplayApi.COMMAND} command
  */
 SplayApi.PlayPlaylistReq.addCommand = function(builder, command) {
-  builder.addFieldInt8(0, command, SplayApi.COMMAND.PLAY_PLAYLIST_COMMAND);
+  builder.addFieldInt8(0, command, SplayApi.COMMAND.PLAY_COMMAND);
 };
 
 /**
@@ -734,7 +734,7 @@ SplayApi.PausePlaylistReq.getSizePrefixedRootAsPausePlaylistReq = function(bb, o
  */
 SplayApi.PausePlaylistReq.prototype.command = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.PAUSE_PLAYLIST_COMMAND;
+  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.PAUSE_COMMAND;
 };
 
 /**
@@ -757,7 +757,7 @@ SplayApi.PausePlaylistReq.startPausePlaylistReq = function(builder) {
  * @param {SplayApi.COMMAND} command
  */
 SplayApi.PausePlaylistReq.addCommand = function(builder, command) {
-  builder.addFieldInt8(0, command, SplayApi.COMMAND.PAUSE_PLAYLIST_COMMAND);
+  builder.addFieldInt8(0, command, SplayApi.COMMAND.PAUSE_COMMAND);
 };
 
 /**
@@ -840,7 +840,7 @@ SplayApi.StopPlaylistReq.getSizePrefixedRootAsStopPlaylistReq = function(bb, obj
  */
 SplayApi.StopPlaylistReq.prototype.command = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.STOP_PLAYLIST_COMMAND;
+  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.STOP_COMMAND;
 };
 
 /**
@@ -863,7 +863,7 @@ SplayApi.StopPlaylistReq.startStopPlaylistReq = function(builder) {
  * @param {SplayApi.COMMAND} command
  */
 SplayApi.StopPlaylistReq.addCommand = function(builder, command) {
-  builder.addFieldInt8(0, command, SplayApi.COMMAND.STOP_PLAYLIST_COMMAND);
+  builder.addFieldInt8(0, command, SplayApi.COMMAND.STOP_COMMAND);
 };
 
 /**
