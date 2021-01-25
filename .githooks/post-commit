@@ -5,7 +5,7 @@ then
     rm .commit
     # Run Flatbuffer compiler for cpp and js & Add generated to commit
     flatc --cpp -o cpp fbs/*.fbs
-    flatc --js -o js fbs/*.fbs
+    flatc --js --es6-js-export -o js fbs/*.fbs
     git add cpp/* js/*
     git commit --amend -C HEAD --no-verify
 fi

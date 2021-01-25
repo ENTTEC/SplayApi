@@ -112,5 +112,5 @@ SplayApi.COMMANDName = {
   '255': 'NOT_SET_COMMAND'
 };
 
-// Exports for Node.js and RequireJS
-this.SplayApi = SplayApi;
+// Exports for ECMAScript6 Modules
+export {SplayApi};

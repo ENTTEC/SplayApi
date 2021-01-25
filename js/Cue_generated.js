@@ -1319,5 +1319,5 @@ SplayApi.GetAllCuesRes.createGetAllCuesRes = function(builder, cuesOffset) {
   return SplayApi.GetAllCuesRes.endGetAllCuesRes(builder);
 }
 
-// Exports for Node.js and RequireJS
-this.SplayApi = SplayApi;
+// Exports for ECMAScript6 Modules
+export {SplayApi};

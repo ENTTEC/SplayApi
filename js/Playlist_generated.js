@@ -1405,5 +1405,5 @@ SplayApi.GetAllPlaylistsRes.createGetAllPlaylistsRes = function(builder, playlis
   return SplayApi.GetAllPlaylistsRes.endGetAllPlaylistsRes(builder);
 }
 
-// Exports for Node.js and RequireJS
-this.SplayApi = SplayApi;
+// Exports for ECMAScript6 Modules
+export {SplayApi};

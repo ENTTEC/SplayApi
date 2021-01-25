@@ -102,5 +102,5 @@ SplayApi.PIXEL_ORDERName = {
   '29': 'BGWR'
 };
 
-// Exports for Node.js and RequireJS
-this.SplayApi = SplayApi;
+// Exports for ECMAScript6 Modules
+export {SplayApi};

@@ -382,5 +382,5 @@ SplayApi.Message.createMessage = function(builder, headerOffset, bodyType, bodyO
   return SplayApi.Message.endMessage(builder);
 }
 
-// Exports for Node.js and RequireJS
-this.SplayApi = SplayApi;
+// Exports for ECMAScript6 Modules
+export {SplayApi};
