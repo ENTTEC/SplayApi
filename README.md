@@ -51,7 +51,7 @@ enum CONTROL_COMMANDS {
     STOP_CUE_COMMAND = 17, // Play given cue (not implemented) | Deprecate on Flatbuffer update for STOP_CUE_COMMAND_FUTURE
     UPDATE_PLAYLIST_COMMAND = 18, // Update Playlist with json struct as gets from GET_PLAYLIST_COMMAND
     DELETE_PLAYLIST_COMMAND = 19, // Delete Playlist
-    UPDATE_SETTINGS_COMMAND = 20, // (not implemented)
+    UPDATE_SETTING_COMMAND = 20, // (not implemented)
     OSC_MESSAGE = 21, // Accepts messages to implement as OSC input
     SET_PLAYLIST_TIME_POSITION_COMMAND = 22, // Set playback position of a playlist
     SET_WEBSOCKET_INPUT_COMMAND = 23, // Sets universe to monitor in Cue recording

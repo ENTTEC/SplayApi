@@ -16,3 +16,34 @@ enum PIXEL_ORDER:uint8 {
     RWGB, RWBG, GWRB, GWBR, BWRG, BWGR,
     RGWB, RBWG, GRWB, GBWR, BRWG, BGWR
 }
+
+enum SETTING_CATEGORIES:uint8 {
+    IS_SPARE = 0,
+    SYSTEM_NAME = 1,
+    ENABLE_LOG = 2,
+    PASSWORD = 3,
+    HELP_HINTS = 4,
+    SERIALNO = 5,
+    ENABLE_PASSWORD = 6,
+    SMTP = 7,
+    EMAIL = 8,
+    INPUT = 9,
+    OUTPUT = 10,
+    DMX = 11,
+    ARTNET = 12,
+    SACN = 13,
+    LOCATION = 14,
+    NTP = 15,
+    BASE_PATH = 16,
+    CUE_PATH = 17,
+    PLAYLIST_PATH = 18,
+    UDP = 19,
+    TCP = 20,
+    RS232C = 21,
+    OSC = 22,
+    IEEE1588_CONFIG = 23,
+    IEEE1588_ACTIVE = 24,
+    LOCK_STATUS = 25,
+    DB_VERSION = 26,
+    SIZE_OF_SETTING_CATEGORIES
+}

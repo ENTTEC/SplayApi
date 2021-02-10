@@ -102,5 +102,73 @@ SplayApi.PIXEL_ORDERName = {
   '29': 'BGWR'
 };
 
+/**
+ * @enum {number}
+ */
+SplayApi.SETTING_CATEGORIES = {
+  IS_SPARE: 0,
+  SYSTEM_NAME: 1,
+  ENABLE_LOG: 2,
+  PASSWORD: 3,
+  HELP_HINTS: 4,
+  SERIALNO: 5,
+  ENABLE_PASSWORD: 6,
+  SMTP: 7,
+  EMAIL: 8,
+  INPUT: 9,
+  OUTPUT: 10,
+  DMX: 11,
+  ARTNET: 12,
+  SACN: 13,
+  LOCATION: 14,
+  NTP: 15,
+  BASE_PATH: 16,
+  CUE_PATH: 17,
+  PLAYLIST_PATH: 18,
+  UDP: 19,
+  TCP: 20,
+  RS232C: 21,
+  OSC: 22,
+  IEEE1588_CONFIG: 23,
+  IEEE1588_ACTIVE: 24,
+  LOCK_STATUS: 25,
+  DB_VERSION: 26,
+  SIZE_OF_SETTING_CATEGORIES: 27
+};
+
+/**
+ * @enum {string}
+ */
+SplayApi.SETTING_CATEGORIESName = {
+  '0': 'IS_SPARE',
+  '1': 'SYSTEM_NAME',
+  '2': 'ENABLE_LOG',
+  '3': 'PASSWORD',
+  '4': 'HELP_HINTS',
+  '5': 'SERIALNO',
+  '6': 'ENABLE_PASSWORD',
+  '7': 'SMTP',
+  '8': 'EMAIL',
+  '9': 'INPUT',
+  '10': 'OUTPUT',
+  '11': 'DMX',
+  '12': 'ARTNET',
+  '13': 'SACN',
+  '14': 'LOCATION',
+  '15': 'NTP',
+  '16': 'BASE_PATH',
+  '17': 'CUE_PATH',
+  '18': 'PLAYLIST_PATH',
+  '19': 'UDP',
+  '20': 'TCP',
+  '21': 'RS232C',
+  '22': 'OSC',
+  '23': 'IEEE1588_CONFIG',
+  '24': 'IEEE1588_ACTIVE',
+  '25': 'LOCK_STATUS',
+  '26': 'DB_VERSION',
+  '27': 'SIZE_OF_SETTING_CATEGORIES'
+};
+
 // Exports for ECMAScript6 Modules
 export {SplayApi};
