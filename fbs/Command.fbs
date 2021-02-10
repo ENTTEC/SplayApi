@@ -14,11 +14,13 @@ enum COMMAND:uint8 {
   GET_PLAYLIST_INTENSITY_COMMAND = 10, // Return the intensity of given playlist (not implemented)
   SET_TRACK_INTENSITY_COMMAND = 11, // Output intensity of particular track in the given playlist (not implemented)
   GET_TRACK_INTENSITY_COMMAND = 12, // Return the current Intensity (not implemented)
-  CAPTURE_DMX_FRAME_COMMAND = 13, // Static frame recording (not implemented)
-  RECORD_DMX_FRAME_COMMAND = 14, // Dynamic frame recording (not implemented)
+
+  CAPTURE_DMX_FRAME_COMMAND = 13, // Static frame recording
+  RECORD_DMX_FRAME_COMMAND = 14, // Dynamic frame recording
   STOP_RECORD_COMMAND = 15, // Stop any recording
-  PLAY_CUE_COMMAND = 16, // Stop current recording | Deprecate on Flatbuffer update for PLAY_CUE_COMMAND_FUTURE
-  STOP_CUE_COMMAND = 17, // Play given cue (not implemented) | Deprecate on Flatbuffer update for STOP_CUE_COMMAND_FUTURE
+  SAVE_CUE_COMMAND = 16, // Save cue state
+  DELETE_CUE_COMMAND = 17,
+
   UPDATE_PLAYLIST_COMMAND = 18, // Update Playlist with json struct as gets from GET_PLAYLIST_COMMAND
   DELETE_PLAYLIST_COMMAND = 19, // Delete Playlist
   UPDATE_SETTING_COMMAND = 20, // (not implemented)
@@ -27,9 +29,9 @@ enum COMMAND:uint8 {
   SET_WEBSOCKET_INPUT_COMMAND = 23, // Sets universe to monitor in Cue recording
   SET_MASTER_INTENSITY = 24, // Set overall S-Play output intensity (Master Fader), persists until power cycle
 
-  PLAY_CUE_COMMAND_FUTURE = 25, // Send OSC message to Playback to trigger existing OSC triggers
-  PAUSE_CUE_COMMAND = 26,
-  STOP_CUE_COMMAND_FUTURE = 27,
+  PLAY_CUE_COMMAND = 25, // Play cue with given id
+  PAUSE_CUE_COMMAND = 26, // Pause cue with given id
+  STOP_CUE_COMMAND = 27, // Stop playback of playing cue by given id
   GET_CUE_COMMAND = 28,
   GET_ALL_CUES_COMMAND = 29,
 
