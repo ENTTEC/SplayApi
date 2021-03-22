@@ -34,11 +34,8 @@ enum COMMAND:uint8 {
   STOP_CUE_COMMAND = 27, // Stop playback of playing cue by given id
   GET_CUE_COMMAND = 28,
   GET_ALL_CUES_COMMAND = 29,
+  EXIT_CUE_EDIT_COMMAND = 30, // Frontend notifies on Cue editing finished
 
-  GET_SCHEDULES_COMMAND = 30,
-  UPDATE_SCHEDULE_COMMAND = 31, // Update schedule to file already exist.
-  DELETE_SCHEDULE_COMMAND = 32, // Delete schedule. it will be removed from database and storage.
-  ENABLE_SCHEDULE_COMMAND = 33, // Change the Schedule Settings
   UPDATE_STORAGE_PATH = 34, // Update storage path using internal DB check for BASE_PATH setting
 
   GET_EVENT_COMMAND = 36,
@@ -55,6 +52,11 @@ enum COMMAND:uint8 {
 
   UDP_MESSAGE = 50, // Accepts messages to interpret as UDP input
   OSC_MESSAGE = 51, // Accepts messages to interpret as OSC input
+
+  GET_SCHEDULES_COMMAND = 60,
+  UPDATE_SCHEDULE_COMMAND = 61, // Update schedule to file already exist.
+  DELETE_SCHEDULE_COMMAND = 62, // Delete schedule. it will be removed from database and storage.
+  ENABLE_SCHEDULE_COMMAND = 63, // Change the Schedule Settings
 
   NOT_SET_COMMAND = 255,
 }
