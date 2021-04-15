@@ -58,5 +58,10 @@ enum COMMAND:uint8 {
   DELETE_SCHEDULE_COMMAND = 62, // Delete schedule. it will be removed from database and storage.
   ENABLE_SCHEDULE_COMMAND = 63, // Change the Schedule Settings
 
+  GET_INTERFACE_COMMAND = 70,
+  GET_ALL_INTERFACES_COMMAND = 71,
+  UPDATE_INTERFACE_COMMAND = 72,
+  DELETE_INTERFACE_COMMAND = 73,
+
   NOT_SET_COMMAND = 255,
 }

@@ -58,12 +58,16 @@ enum COMMAND {
   COMMAND_UPDATE_SCHEDULE_COMMAND = 61,
   COMMAND_DELETE_SCHEDULE_COMMAND = 62,
   COMMAND_ENABLE_SCHEDULE_COMMAND = 63,
+  COMMAND_GET_INTERFACE_COMMAND = 70,
+  COMMAND_GET_ALL_INTERFACES_COMMAND = 71,
+  COMMAND_UPDATE_INTERFACE_COMMAND = 72,
+  COMMAND_DELETE_INTERFACE_COMMAND = 73,
   COMMAND_NOT_SET_COMMAND = 255,
   COMMAND_MIN = COMMAND_PLAY_COMMAND,
   COMMAND_MAX = COMMAND_NOT_SET_COMMAND
 };
 
-inline const COMMAND (&EnumValuesCOMMAND())[50] {
+inline const COMMAND (&EnumValuesCOMMAND())[54] {
   static const COMMAND values[] = {
     COMMAND_PLAY_COMMAND,
     COMMAND_PAUSE_COMMAND,
@@ -114,65 +118,282 @@ inline const COMMAND (&EnumValuesCOMMAND())[50] {
     COMMAND_UPDATE_SCHEDULE_COMMAND,
     COMMAND_DELETE_SCHEDULE_COMMAND,
     COMMAND_ENABLE_SCHEDULE_COMMAND,
+    COMMAND_GET_INTERFACE_COMMAND,
+    COMMAND_GET_ALL_INTERFACES_COMMAND,
+    COMMAND_UPDATE_INTERFACE_COMMAND,
+    COMMAND_DELETE_INTERFACE_COMMAND,
     COMMAND_NOT_SET_COMMAND
   };
   return values;
 }
 
+inline const char * const *EnumNamesCOMMAND() {
+  static const char * const names[257] = {
+    "PLAY_COMMAND",
+    "PAUSE_COMMAND",
+    "STOP_COMMAND",
+    "GET_PLAYLIST_COMMAND",
+    "UPDATE_PLAYLISTS_ORDER_COMMAND",
+    "PLAY_ALL_PLAYLISTS_COMMAND",
+    "PAUSE_ALL_PLAYLISTS_COMMAND",
+    "STOP_ALL_PLAYLISTS_COMMAND",
+    "GET_ALL_PLAYLISTS_COMMAND",
+    "SET_PLAYLIST_INTENSITY_COMMAND",
+    "GET_PLAYLIST_INTENSITY_COMMAND",
+    "SET_TRACK_INTENSITY_COMMAND",
+    "GET_TRACK_INTENSITY_COMMAND",
+    "CAPTURE_DMX_FRAME_COMMAND",
+    "RECORD_DMX_FRAME_COMMAND",
+    "STOP_RECORD_COMMAND",
+    "SAVE_CUE_COMMAND",
+    "DELETE_CUE_COMMAND",
+    "UPDATE_PLAYLIST_COMMAND",
+    "DELETE_PLAYLIST_COMMAND",
+    "UPDATE_SETTING_COMMAND",
+    "GET_SETTING_COMMAND",
+    "SET_PLAYLIST_TIME_POSITION_COMMAND",
+    "SET_WEBSOCKET_INPUT_COMMAND",
+    "SET_MASTER_INTENSITY",
+    "PLAY_CUE_COMMAND",
+    "PAUSE_CUE_COMMAND",
+    "STOP_CUE_COMMAND",
+    "GET_CUE_COMMAND",
+    "GET_ALL_CUES_COMMAND",
+    "EXIT_CUE_EDIT_COMMAND",
+    "",
+    "",
+    "",
+    "UPDATE_STORAGE_PATH",
+    "",
+    "GET_EVENT_COMMAND",
+    "GET_ALL_EVENTS_COMMAND",
+    "UPDATE_EVENT_COMMAND",
+    "DELETE_EVENT_COMMAND",
+    "GET_TRIGGER_COMMAND",
+    "GET_ALL_TRIGGERS_COMMAND",
+    "UPDATE_TRIGGER_COMMAND",
+    "DELETE_TRIGGER_COMMAND",
+    "SEND_EVENT_COMMAND",
+    "WAIT_TRIGGER_COMMAND",
+    "CHECK_TRIGGER_COMMAND",
+    "",
+    "",
+    "",
+    "UDP_MESSAGE",
+    "OSC_MESSAGE",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "GET_SCHEDULES_COMMAND",
+    "UPDATE_SCHEDULE_COMMAND",
+    "DELETE_SCHEDULE_COMMAND",
+    "ENABLE_SCHEDULE_COMMAND",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "GET_INTERFACE_COMMAND",
+    "GET_ALL_INTERFACES_COMMAND",
+    "UPDATE_INTERFACE_COMMAND",
+    "DELETE_INTERFACE_COMMAND",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "NOT_SET_COMMAND",
+    nullptr
+  };
+  return names;
+}
+
 inline const char *EnumNameCOMMAND(COMMAND e) {
-  switch (e) {
-    case COMMAND_PLAY_COMMAND: return "PLAY_COMMAND";
-    case COMMAND_PAUSE_COMMAND: return "PAUSE_COMMAND";
-    case COMMAND_STOP_COMMAND: return "STOP_COMMAND";
-    case COMMAND_GET_PLAYLIST_COMMAND: return "GET_PLAYLIST_COMMAND";
-    case COMMAND_UPDATE_PLAYLISTS_ORDER_COMMAND: return "UPDATE_PLAYLISTS_ORDER_COMMAND";
-    case COMMAND_PLAY_ALL_PLAYLISTS_COMMAND: return "PLAY_ALL_PLAYLISTS_COMMAND";
-    case COMMAND_PAUSE_ALL_PLAYLISTS_COMMAND: return "PAUSE_ALL_PLAYLISTS_COMMAND";
-    case COMMAND_STOP_ALL_PLAYLISTS_COMMAND: return "STOP_ALL_PLAYLISTS_COMMAND";
-    case COMMAND_GET_ALL_PLAYLISTS_COMMAND: return "GET_ALL_PLAYLISTS_COMMAND";
-    case COMMAND_SET_PLAYLIST_INTENSITY_COMMAND: return "SET_PLAYLIST_INTENSITY_COMMAND";
-    case COMMAND_GET_PLAYLIST_INTENSITY_COMMAND: return "GET_PLAYLIST_INTENSITY_COMMAND";
-    case COMMAND_SET_TRACK_INTENSITY_COMMAND: return "SET_TRACK_INTENSITY_COMMAND";
-    case COMMAND_GET_TRACK_INTENSITY_COMMAND: return "GET_TRACK_INTENSITY_COMMAND";
-    case COMMAND_CAPTURE_DMX_FRAME_COMMAND: return "CAPTURE_DMX_FRAME_COMMAND";
-    case COMMAND_RECORD_DMX_FRAME_COMMAND: return "RECORD_DMX_FRAME_COMMAND";
-    case COMMAND_STOP_RECORD_COMMAND: return "STOP_RECORD_COMMAND";
-    case COMMAND_SAVE_CUE_COMMAND: return "SAVE_CUE_COMMAND";
-    case COMMAND_DELETE_CUE_COMMAND: return "DELETE_CUE_COMMAND";
-    case COMMAND_UPDATE_PLAYLIST_COMMAND: return "UPDATE_PLAYLIST_COMMAND";
-    case COMMAND_DELETE_PLAYLIST_COMMAND: return "DELETE_PLAYLIST_COMMAND";
-    case COMMAND_UPDATE_SETTING_COMMAND: return "UPDATE_SETTING_COMMAND";
-    case COMMAND_GET_SETTING_COMMAND: return "GET_SETTING_COMMAND";
-    case COMMAND_SET_PLAYLIST_TIME_POSITION_COMMAND: return "SET_PLAYLIST_TIME_POSITION_COMMAND";
-    case COMMAND_SET_WEBSOCKET_INPUT_COMMAND: return "SET_WEBSOCKET_INPUT_COMMAND";
-    case COMMAND_SET_MASTER_INTENSITY: return "SET_MASTER_INTENSITY";
-    case COMMAND_PLAY_CUE_COMMAND: return "PLAY_CUE_COMMAND";
-    case COMMAND_PAUSE_CUE_COMMAND: return "PAUSE_CUE_COMMAND";
-    case COMMAND_STOP_CUE_COMMAND: return "STOP_CUE_COMMAND";
-    case COMMAND_GET_CUE_COMMAND: return "GET_CUE_COMMAND";
-    case COMMAND_GET_ALL_CUES_COMMAND: return "GET_ALL_CUES_COMMAND";
-    case COMMAND_EXIT_CUE_EDIT_COMMAND: return "EXIT_CUE_EDIT_COMMAND";
-    case COMMAND_UPDATE_STORAGE_PATH: return "UPDATE_STORAGE_PATH";
-    case COMMAND_GET_EVENT_COMMAND: return "GET_EVENT_COMMAND";
-    case COMMAND_GET_ALL_EVENTS_COMMAND: return "GET_ALL_EVENTS_COMMAND";
-    case COMMAND_UPDATE_EVENT_COMMAND: return "UPDATE_EVENT_COMMAND";
-    case COMMAND_DELETE_EVENT_COMMAND: return "DELETE_EVENT_COMMAND";
-    case COMMAND_GET_TRIGGER_COMMAND: return "GET_TRIGGER_COMMAND";
-    case COMMAND_GET_ALL_TRIGGERS_COMMAND: return "GET_ALL_TRIGGERS_COMMAND";
-    case COMMAND_UPDATE_TRIGGER_COMMAND: return "UPDATE_TRIGGER_COMMAND";
-    case COMMAND_DELETE_TRIGGER_COMMAND: return "DELETE_TRIGGER_COMMAND";
-    case COMMAND_SEND_EVENT_COMMAND: return "SEND_EVENT_COMMAND";
-    case COMMAND_WAIT_TRIGGER_COMMAND: return "WAIT_TRIGGER_COMMAND";
-    case COMMAND_CHECK_TRIGGER_COMMAND: return "CHECK_TRIGGER_COMMAND";
-    case COMMAND_UDP_MESSAGE: return "UDP_MESSAGE";
-    case COMMAND_OSC_MESSAGE: return "OSC_MESSAGE";
-    case COMMAND_GET_SCHEDULES_COMMAND: return "GET_SCHEDULES_COMMAND";
-    case COMMAND_UPDATE_SCHEDULE_COMMAND: return "UPDATE_SCHEDULE_COMMAND";
-    case COMMAND_DELETE_SCHEDULE_COMMAND: return "DELETE_SCHEDULE_COMMAND";
-    case COMMAND_ENABLE_SCHEDULE_COMMAND: return "ENABLE_SCHEDULE_COMMAND";
-    case COMMAND_NOT_SET_COMMAND: return "NOT_SET_COMMAND";
-    default: return "";
-  }
+  if (flatbuffers::IsOutRange(e, COMMAND_PLAY_COMMAND, COMMAND_NOT_SET_COMMAND)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesCOMMAND()[index];
 }
 
 }  // namespace SplayApi
