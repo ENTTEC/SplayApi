@@ -36,7 +36,7 @@ enum SETTING_CATEGORIES:uint8 {
     NTP = 15,
     BASE_PATH = 16,
     CUE_PATH = 17,
-    PLAYLIST_PATH = 18,
+    HOME_INTERFACE = 18,
     UDP = 19,
     TCP = 20,
     RS232C = 21,
