@@ -27,7 +27,6 @@ enum COMMAND:uint8 {
   GET_SETTING_COMMAND = 21,
   SET_PLAYLIST_TIME_POSITION_COMMAND = 22, // Set playback position of a playlist
   SET_WEBSOCKET_INPUT_COMMAND = 23, // Sets universe to monitor in Cue recording
-  SET_MASTER_INTENSITY = 24, // Set overall S-Play output intensity (Master Fader), persists until power cycle
 
   PLAY_CUE_COMMAND = 25, // Play cue with given id
   PAUSE_CUE_COMMAND = 26, // Pause cue with given id
@@ -52,6 +51,9 @@ enum COMMAND:uint8 {
 
   UDP_MESSAGE = 50, // Accepts messages to interpret as UDP input
   OSC_MESSAGE = 51, // Accepts messages to interpret as OSC input
+
+  GET_MASTER_INTENSITY = 55, // Get / Set overall S-Play output intensity (Master Fader), persists until power cycle
+  SET_MASTER_INTENSITY = 56,
 
   GET_SCHEDULES_COMMAND = 60,
   UPDATE_SCHEDULE_COMMAND = 61, // Update schedule to file already exist.
