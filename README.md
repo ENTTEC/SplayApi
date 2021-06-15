@@ -28,52 +28,110 @@ git config --local core.hooksPath .githooks/
 ### Definitions
 
 #### SplayEngine Commands
-All playback control commands supported by the device
+All control commands supported by the device are listed in `fbs/Command.fbs`.
+These ids can be used to fully control S-Play device
 ```c++
 enum CONTROL_COMMANDS {
-    PLAY_COMMAND = 0, // Play playlist on the device
-    PAUSE_COMMAND = 1, // Pause the playing playlist
-    STOP_COMMAND = 2, // Stop the playlist is in PAUSE or PLAY status.
-    GET_PLAYLIST_COMMAND = 3, // Get full information about playlist with Tracks, Triggers & Events
-    UPDATE_PLAYLISTS_ORDER_COMMAND = 4, // Update playlists by ids with given orders
-    PLAY_ALL_PLAYLISTS_COMMAND = 5, // Play all playlists on the device
-    PAUSE_ALL_PLAYLISTS_COMMAND = 6, // Pause all playing playlists
-    STOP_ALL_PLAYLISTS_COMMAND = 7, // Stop all playlists is in PAUSE or PLAY status.
-    GET_ALL_PLAYLISTS_COMMAND = 8, // Get status of all currently playing playlists
-    SET_PLAYLIST_INTENSITY_COMMAND = 9, // Output intensity (Master Fader) of the given playlist, persists until power cycle
-    GET_PLAYLIST_INTENSITY_COMMAND = 10, // Return the intensity of given playlist (not implemented)
-    SET_TRACK_INTENSITY_COMMAND = 11, // Output intensity of particular track in the given playlist (not implemented)
-    GET_TRACK_INTENSITY_COMMAND = 12, // Return the current Intensity (not implemented)
-    CAPTURE_DMX_FRAME_COMMAND = 13, // Static frame recording (not implemented)
-    RECORD_DMX_FRAME_COMMAND = 14, // Dynamic frame recording (not implemented)
-    STOP_RECORD_COMMAND = 15, // Stop any recording
-    PLAY_CUE_COMMAND = 16, // Stop current recording | Deprecate on Flatbuffer update for PLAY_CUE_COMMAND_FUTURE
-    STOP_CUE_COMMAND = 17, // Play given cue (not implemented) | Deprecate on Flatbuffer update for STOP_CUE_COMMAND_FUTURE
-    UPDATE_PLAYLIST_COMMAND = 18, // Update Playlist with json struct as gets from GET_PLAYLIST_COMMAND
-    DELETE_PLAYLIST_COMMAND = 19, // Delete Playlist
-    UPDATE_SETTING_COMMAND = 20, // (not implemented)
-    OSC_MESSAGE = 21, // Accepts messages to implement as OSC input
-    SET_PLAYLIST_TIME_POSITION_COMMAND = 22, // Set playback position of a playlist
-    SET_WEBSOCKET_INPUT_COMMAND = 23, // Sets universe to monitor in Cue recording
-    SET_MASTER_INTENSITY = 24, // Set overall S-Play output intensity (Master Fader), persists until power cycle
-    
-    PLAY_CUE_COMMAND_FUTURE = 25, // Send OSC message to Playback to trigger existing OSC triggers
-    PAUSE_CUE_COMMAND = 26,
-    STOP_CUE_COMMAND_FUTURE = 27,
-    GET_CUE_COMMAND = 28,
-    GET_ALL_CUES_COMMAND = 29,
+  PLAY_COMMAND = 0, // Play playlist by id
+  PAUSE_COMMAND = 1, // Pause the playing playlist by id
+  STOP_COMMAND = 2, // Stop the playlist if in PAUSE or PLAY status
+  GET_PLAYLIST_COMMAND = 3, // Get full information about playlist with Tracks, Triggers & Events
+  UPDATE_PLAYLISTS_ORDER_COMMAND = 4, // Update playlists by ids with given orders
+  PLAY_ALL_PLAYLISTS_COMMAND = 5, // Play all playlists on the device
+  PAUSE_ALL_PLAYLISTS_COMMAND = 6, // Pause all playing playlists
+  STOP_ALL_PLAYLISTS_COMMAND = 7, // Stop all playlists is in PAUSE or PLAY status.
+  GET_ALL_PLAYLISTS_COMMAND = 8, // Get status of all currently playing playlists
+  SET_PLAYLIST_INTENSITY_COMMAND = 9, // Output intensity (Master Fader) of the given playlist, persists until power cycle
+  
+  SET_TRACK_INTENSITY_COMMAND = 11, // Output intensity of particular track in the given playlist (not implemented)
+  GET_TRACK_INTENSITY_COMMAND = 12, // Return the current Intensity (not implemented)
+
+  CAPTURE_DMX_FRAME_COMMAND = 13, // Static frame recording
+  RECORD_DMX_FRAME_COMMAND = 14, // Dynamic frame recording
+  STOP_RECORD_COMMAND = 15, // Stop any recording
+  SAVE_CUE_COMMAND = 16, // Save cue state
+  DELETE_CUE_COMMAND = 17, // Delete Cue by id
+
+  UPDATE_PLAYLIST_COMMAND = 18, // Update/Create Playlist with json struct as gets from GET_PLAYLIST_COMMAND
+  DELETE_PLAYLIST_COMMAND = 19, // Delete Playlist by id
+  
+  UPDATE_SETTING_COMMAND = 20, // Update Setting by id
+  GET_SETTING_COMMAND = 21, // Get Setting by id
+  
+  SET_PLAYLIST_TIME_POSITION_COMMAND = 22, // Set playback position of a playlist
+  SET_WEBSOCKET_INPUT_COMMAND = 23, // Sets universe to monitor in Cue recording
+
+  PLAY_CUE_COMMAND = 25, // Play cue with given id
+  PAUSE_CUE_COMMAND = 26, // Pause cue with given id
+  STOP_CUE_COMMAND = 27, // Stop playback of playing cue by given id
+  GET_CUE_COMMAND = 28, // Get full info on cue by given id
+  GET_ALL_CUES_COMMAND = 29, // Get list of all cues
+  EXIT_CUE_EDIT_COMMAND = 30, // Frontend notifies on Cue editing finished
+
+  UPDATE_STORAGE_PATH = 34, // Update storage path using internal DB check for BASE_PATH setting
+
+  GET_EVENT_COMMAND = 36, // Get Event by id
+  GET_ALL_EVENTS_COMMAND = 37, // Get all existing Events
+  UPDATE_EVENT_COMMAND = 38, // Update/Create Event
+  DELETE_EVENT_COMMAND = 39, // Delete Event by id
+  GET_TRIGGER_COMMAND = 40, // Get Trigger by id
+  GET_ALL_TRIGGERS_COMMAND = 41, // Get all existing Triggers
+  UPDATE_TRIGGER_COMMAND = 42, // Update/Create Trigger
+  DELETE_TRIGGER_COMMAND = 43, // Delete Trigger by id
+  SEND_EVENT_COMMAND = 44, // Send given event
+  WAIT_TRIGGER_COMMAND = 45, // Add trigger to check
+  CHECK_TRIGGER_COMMAND = 46, // Check if added trigger happen
+
+  UDP_MESSAGE = 50, // Accepts messages to interpret as UDP input
+  OSC_MESSAGE = 51, // Accepts messages to interpret as OSC input
+
+  GET_MASTER_INTENSITY = 55, // Get / Set overall S-Play output intensity (Master Fader), persists until power cycle
+  SET_MASTER_INTENSITY = 56,
+
+  GET_SCHEDULES_COMMAND = 60, // Get all existing Schedules
+  UPDATE_SCHEDULE_COMMAND = 61, // Update Schedule to file already exist.
+  DELETE_SCHEDULE_COMMAND = 62, // Delete Schedule. it will be removed from database and storage.
+  ENABLE_SCHEDULE_COMMAND = 63, // Change the Schedule state enable ACTIVE = 1 / PAUSED = 2
+
+  GET_INTERFACE_COMMAND = 70, // Get Iterface page by id or URL
+  GET_ALL_INTERFACES_COMMAND = 71, // Get all created Interfaces
+  UPDATE_INTERFACE_COMMAND = 72, // Update/Create Interface page
+  DELETE_INTERFACE_COMMAND = 73, // Delete Interface by id
 }
 ```
 
-#### Playlist Statuses
+#### Playlists Control 
+
+PLAY_COMMAND: Play playlist by id
+
+PAUSE_COMMAND:  Pause the playing playlist by id
+
+STOP_COMMAND: Stop the playlist if in PAUSE or PLAY status
+
+GET_PLAYLIST_COMMAND: Get full information about playlist with Tracks, Triggers & Events
+
+UPDATE_PLAYLISTS_ORDER_COMMAND: Update playlists by ids with given orders
+
+PLAY_ALL_PLAYLISTS_COMMAND: Play all playlists on the device
+
+PAUSE_ALL_PLAYLISTS_COMMAND: Pause all playing playlists
+
+STOP_ALL_PLAYLISTS_COMMAND: Stop all playlists is in PAUSE or PLAY status.
+
+GET_ALL_PLAYLISTS_COMMAND: Get status of all currently playing playlists
+
+SET_PLAYLIST_INTENSITY_COMMAND: Output intensity (Master Fader) of the given playlist, persists until power cycle
+
+
+### Supported Playlists Statuses
 ```c++
 enum PLAYLIST_STATUS_TYPES {
-    PLAYLIST_STATUS_IDLE,
-    PLAYLIST_STATUS_PLAYING,
-    PLAYLIST_STATUS_PAUSED,
-    PLAYLIST_STATUS_STOPPED,
-    PLAYLIST_STATUS_STOPPING,
-    PLAYLIST_STATUS_ERROR
+  PLAYLIST_STATUS_IDLE = 0,
+  PLAYLIST_STATUS_PLAYING = 1,
+  PLAYLIST_STATUS_PAUSED = 2,
+  PLAYLIST_STATUS_STOPPED = 3,
+  PLAYLIST_STATUS_STOPPING = 4,
+  PLAYLIST_STATUS_ERROR = 5
 };
 
 ```

@@ -11,7 +11,7 @@ enum COMMAND:uint8 {
   STOP_ALL_PLAYLISTS_COMMAND = 7, // Stop all playlists is in PAUSE or PLAY status.
   GET_ALL_PLAYLISTS_COMMAND = 8, // Get status of all currently playing playlists
   SET_PLAYLIST_INTENSITY_COMMAND = 9, // Output intensity (Master Fader) of the given playlist, persists until power cycle
-  GET_PLAYLIST_INTENSITY_COMMAND = 10, // Return the intensity of given playlist (not implemented)
+  
   SET_TRACK_INTENSITY_COMMAND = 11, // Output intensity of particular track in the given playlist (not implemented)
   GET_TRACK_INTENSITY_COMMAND = 12, // Return the current Intensity (not implemented)
 
@@ -19,35 +19,37 @@ enum COMMAND:uint8 {
   RECORD_DMX_FRAME_COMMAND = 14, // Dynamic frame recording
   STOP_RECORD_COMMAND = 15, // Stop any recording
   SAVE_CUE_COMMAND = 16, // Save cue state
-  DELETE_CUE_COMMAND = 17,
+  DELETE_CUE_COMMAND = 17, // Delete Cue by id
 
-  UPDATE_PLAYLIST_COMMAND = 18, // Update Playlist with json struct as gets from GET_PLAYLIST_COMMAND
-  DELETE_PLAYLIST_COMMAND = 19, // Delete Playlist
-  UPDATE_SETTING_COMMAND = 20,
-  GET_SETTING_COMMAND = 21,
+  UPDATE_PLAYLIST_COMMAND = 18, // Update/Create Playlist with json struct as gets from GET_PLAYLIST_COMMAND
+  DELETE_PLAYLIST_COMMAND = 19, // Delete Playlist by id
+  
+  UPDATE_SETTING_COMMAND = 20, // Update Setting by id
+  GET_SETTING_COMMAND = 21, // Get Setting by id
+  
   SET_PLAYLIST_TIME_POSITION_COMMAND = 22, // Set playback position of a playlist
   SET_WEBSOCKET_INPUT_COMMAND = 23, // Sets universe to monitor in Cue recording
 
   PLAY_CUE_COMMAND = 25, // Play cue with given id
   PAUSE_CUE_COMMAND = 26, // Pause cue with given id
   STOP_CUE_COMMAND = 27, // Stop playback of playing cue by given id
-  GET_CUE_COMMAND = 28,
-  GET_ALL_CUES_COMMAND = 29,
+  GET_CUE_COMMAND = 28, // Get full info on cue by given id
+  GET_ALL_CUES_COMMAND = 29, // Get list of all cues
   EXIT_CUE_EDIT_COMMAND = 30, // Frontend notifies on Cue editing finished
 
   UPDATE_STORAGE_PATH = 34, // Update storage path using internal DB check for BASE_PATH setting
 
-  GET_EVENT_COMMAND = 36,
-  GET_ALL_EVENTS_COMMAND = 37,
-  UPDATE_EVENT_COMMAND = 38,
-  DELETE_EVENT_COMMAND = 39,
-  GET_TRIGGER_COMMAND = 40,
-  GET_ALL_TRIGGERS_COMMAND = 41,
-  UPDATE_TRIGGER_COMMAND = 42,
-  DELETE_TRIGGER_COMMAND = 43,
-  SEND_EVENT_COMMAND = 44,
-  WAIT_TRIGGER_COMMAND = 45,
-  CHECK_TRIGGER_COMMAND = 46,
+  GET_EVENT_COMMAND = 36, // Get Event by id
+  GET_ALL_EVENTS_COMMAND = 37, // Get all existing Events
+  UPDATE_EVENT_COMMAND = 38, // Update/Create Event
+  DELETE_EVENT_COMMAND = 39, // Delete Event by id
+  GET_TRIGGER_COMMAND = 40, // Get Trigger by id
+  GET_ALL_TRIGGERS_COMMAND = 41, // Get all existing Triggers
+  UPDATE_TRIGGER_COMMAND = 42, // Update/Create Trigger
+  DELETE_TRIGGER_COMMAND = 43, // Delete Trigger by id
+  SEND_EVENT_COMMAND = 44, // Send given event
+  WAIT_TRIGGER_COMMAND = 45, // Add trigger to check
+  CHECK_TRIGGER_COMMAND = 46, // Check if added trigger happen
 
   UDP_MESSAGE = 50, // Accepts messages to interpret as UDP input
   OSC_MESSAGE = 51, // Accepts messages to interpret as OSC input
@@ -55,15 +57,15 @@ enum COMMAND:uint8 {
   GET_MASTER_INTENSITY = 55, // Get / Set overall S-Play output intensity (Master Fader), persists until power cycle
   SET_MASTER_INTENSITY = 56,
 
-  GET_SCHEDULES_COMMAND = 60,
-  UPDATE_SCHEDULE_COMMAND = 61, // Update schedule to file already exist.
-  DELETE_SCHEDULE_COMMAND = 62, // Delete schedule. it will be removed from database and storage.
-  ENABLE_SCHEDULE_COMMAND = 63, // Change the Schedule Settings
+  GET_SCHEDULES_COMMAND = 60, // Get all existing Schedules
+  UPDATE_SCHEDULE_COMMAND = 61, // Update Schedule to file already exist.
+  DELETE_SCHEDULE_COMMAND = 62, // Delete Schedule. it will be removed from database and storage.
+  ENABLE_SCHEDULE_COMMAND = 63, // Change the Schedule state enable ACTIVE = 1 / PAUSED = 2
 
-  GET_INTERFACE_COMMAND = 70,
-  GET_ALL_INTERFACES_COMMAND = 71,
-  UPDATE_INTERFACE_COMMAND = 72,
-  DELETE_INTERFACE_COMMAND = 73,
+  GET_INTERFACE_COMMAND = 70, // Get Iterface page by id or URL
+  GET_ALL_INTERFACES_COMMAND = 71, // Get all created Interfaces
+  UPDATE_INTERFACE_COMMAND = 72, // Update/Create Interface page
+  DELETE_INTERFACE_COMMAND = 73, // Delete Interface by id
 
   NOT_SET_COMMAND = 255,
 }
