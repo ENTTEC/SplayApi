@@ -7,7 +7,7 @@ ENTTEC recommend that the S-Plays IP is set to be static before communicating us
 
 To ensure this API functions as intended, ensure you are running a software version of at least **v1.2.5**.
 
-### HTTP POST Commands for S-Play's playback.
+## HTTP POST Commands for S-Play's playback.
 Enum CONTROL_COMMANDS below presents the list of available playback commands.
 They can be sent using HTTP POST requests to the device IP on the`55555` port and path`/api`.
 
@@ -19,15 +19,15 @@ Request can be tested using **curl**:
 curl --header "Content-Type: application/json" -d "{\"command\":8}" http://192.168.1.13:55555/api --output -
 ``
 
-### Development
+## Development
 After clone run the command inside repo's dir to automatically execute `flatc` compilation (v1.12.0) to cpp & js for all *.fbs files:
 ``
 git config --local core.hooksPath .githooks/
 ``
 
-### Definitions
+## Description
 
-#### SplayEngine Commands
+### SplayEngine Commands
 All control commands supported by the device are listed in `fbs/Command.fbs`.
 These ids can be used to fully control S-Play device
 ```c++
@@ -100,30 +100,250 @@ enum CONTROL_COMMANDS {
 }
 ```
 
-#### Playlists Control 
+> `Good to know`: Be careful with JSON values' types, some fields support only integers or floats.
 
-PLAY_COMMAND: Play playlist by id
+### Playlists Control 
 
-PAUSE_COMMAND:  Pause the playing playlist by id
+#### PLAY_COMMAND: Play playlist by id
+Request:
+```json
+{
+ "command": 0,
+ "playlist_id" : 1
+}
+```
+Response:
+```json
+{"result": true}
+```
 
-STOP_COMMAND: Stop the playlist if in PAUSE or PLAY status
-
-GET_PLAYLIST_COMMAND: Get full information about playlist with Tracks, Triggers & Events
-
-UPDATE_PLAYLISTS_ORDER_COMMAND: Update playlists by ids with given orders
-
-PLAY_ALL_PLAYLISTS_COMMAND: Play all playlists on the device
-
-PAUSE_ALL_PLAYLISTS_COMMAND: Pause all playing playlists
-
-STOP_ALL_PLAYLISTS_COMMAND: Stop all playlists is in PAUSE or PLAY status.
-
-GET_ALL_PLAYLISTS_COMMAND: Get status of all currently playing playlists
-
-SET_PLAYLIST_INTENSITY_COMMAND: Output intensity (Master Fader) of the given playlist, persists until power cycle
+#### PAUSE_COMMAND: Pause the playing playlist by id
+Request:
+```json
+{
+ "command": 1,
+ "playlist_id" : 1
+}
+```
+Response:
+```json
+{"result": true}
+```
 
 
-### Supported Playlists Statuses
+#### STOP_COMMAND: Stop the playlist if in PAUSE or PLAY status
+This will perform STOP action, if Playlist's has Fade Out time not 0 the status become PLAYLIST_STATUS_STOPPING and with the repeaded STOP command Playlist will stop immediately, else it will stop.
+Request:
+```json
+{
+ "command": 2,
+ "playlist_id" : 1
+}
+```
+Response:
+```json
+{"result": true}
+```
+
+#### GET_PLAYLIST_COMMAND: Get full information about playlist with Tracks, Triggers & Events
+Request:
+```json
+{
+ "command": 3,
+ "playlist_id" : 1
+}
+```
+Response:
+```json
+{
+  "playlist": {
+    "current_time": 0,
+    "duration": 5000,
+    "fade_in": 0,
+    "fade_out": 2038,
+    "group": 1,
+    "hide_from_home": false,
+    "intensity": 100,
+    "loop": 1,
+    "name": "One",
+    "order": 1,
+    "playlist_id": 1,
+    "priority": 100,
+    "start_trigger": {
+      "active": true,
+      "name": "",
+      "start": 0,
+      "trigger_id": -1,
+      "type": 0,
+      "value": null
+    },
+    "status": 3,
+    "stop_trigger": {
+      "active": true,
+      "name": "",
+      "start": 0,
+      "trigger_id": -1,
+      "type": 0,
+      "value": null
+    },
+    "timeline": {
+      "event": {
+        "events": [
+          {
+            "active": true,
+            "event_id": 1,
+            "name": "Fist Udp",
+            "start": 500,
+            "type": 7,
+            "value": {
+              "ip": "127.0.0.1",
+              "port": 33333,
+              "value": "yoyo"
+            }
+          }
+        ]
+      },
+      "track1": {
+        "cues": [
+          {
+            "ch_start": 0,
+            "ch_stop": 511,
+            "cue_id": 1,
+            "duration": 5000,
+            "fade": {
+              "in": 0,
+              "out": 0
+            },
+            "name": "Fst",
+            "start": 0,
+            "type": 0
+          }
+        ],
+        "intensity": 100
+      },
+      "track2": {
+        "cues": [],
+        "intensity": 100
+      },
+      "track3": {
+        "cues": [],
+        "intensity": 100
+      },
+      "track4": {
+        "cues": [],
+        "intensity": 100
+      },
+      "trigger": {
+        "triggers": [
+          {
+            "active": true,
+            "name": "YOOsc",
+            "start": 11500,
+            "trigger_id": 2,
+            "type": 1,
+            "value": {
+              "address": "/yo",
+              "data_type": "string",
+              "ip": "127.0.0.255",
+              "net_type": "broadcast"
+            }
+          }
+        ]
+      }
+    },
+    "waiting_triggers": false
+  }
+}
+```
+
+#### UPDATE_PLAYLISTS_ORDER_COMMAND: Update playlists by ids with given orders
+Request:
+```json
+{
+  "command":4,
+  "orders":[
+    {"playlist_id":2,"order":1},
+    {"playlist_id":1,"order":2}
+  ]
+}
+```
+Response:
+```json
+{"result": true}
+```
+
+#### PLAY_ALL_PLAYLISTS_COMMAND: Play all playlists on the device
+Request:
+```json
+{"command": 5}
+```
+Response:
+```json
+{"result": true}
+```
+
+#### PAUSE_ALL_PLAYLISTS_COMMAND: Pause all playing playlists
+Request:
+```json
+{"command": 6}
+```
+Response:
+```json
+{"result": true}
+```
+
+#### STOP_ALL_PLAYLISTS_COMMAND: Stop all playlists is in PAUSE or PLAY status.
+Request:
+```json
+{"command": 7}
+```
+Response:
+```json
+{"result": true}
+```
+
+#### GET_ALL_PLAYLISTS_COMMAND: Get status of all currently playing playlists
+This will return all the playlist IDs and its status and playing time.
+If playlist is waiting any trigger, it has trigger information.
+
+Request:
+```json
+{"command": 8}
+```
+Response:
+```json
+{
+  "playlists": [
+    {
+      "current_time": 0,
+      "duration": 5000,
+      "hide_from_home": false,
+      "intensity": 100,
+      "name": "One",
+      "order": 2,
+      "playlist_id": 1,
+      "status": 3,
+      "waiting_triggers": false
+    },
+    {
+      "current_time": 0,
+      "duration": 12000,
+      "hide_from_home": false,
+      "intensity": 100,
+      "name": "Two ",
+      "order": 1,
+      "playlist_id": 2,
+      "status": 3,
+      "waiting_triggers": false
+    }
+  ]
+}
+```
+
+#### SET_PLAYLIST_INTENSITY_COMMAND: Output intensity (Master Fader) of the given playlist, persists until power cycle
+
+
+#### Supported Playlists Statuses returned in "status" fields
 ```c++
 enum PLAYLIST_STATUS_TYPES {
   PLAYLIST_STATUS_IDLE = 0,
@@ -185,174 +405,13 @@ enum TRIGGER_TYPE {
 
 ### JSON Requests and Responses Examples
 
-> `Good to know`: Be careful with JSON values' types, some fields support only integers or floats.
-
-#### ET Status of All Playlists
-This will return all the playlist IDs and its status and playing time.
-If playlist is waiting any trigger, it has trigger information.
-##### Request
-```json
-    {
-        "command": 8
-    }
-```
-##### Response
-The playlist 6 is stopped and playlist 4 is playing. We use the response object array to send playlist, as shown below.
-```json
-{
-    "playlists":[
-        {
-            "current_time": 0,
-            "duration": 3000,
-            "intensity": 100.0,
-            "name": "Art",
-            "notification_message": "",
-            "playlist_id": 6,
-            "status": PLAYLIST_STATUS_STOPPED,
-            "waiting_triggers": false,
-            "start_trigger":
-            {
-                "active": true,
-                "conditions": {
-                    "channel_number": 0,"threshold": 200,"universe": 100
-                },
-                "name": "Art-100-1-200",
-                "playlist_id": 1,
-                "position": 0,
-                "type": TRIGGER_TYPE_ARTNET
-            },
-            "stop_trigger":
-            {
-                "active": true,"conditions": null,"name": "","playlist_id": 0,"position": 0,"type": TRIGGER_TYPE_NONE
-            },
-            "triggers":
-            [
-                {
-                    "active": true,
-                    "conditions": "/test_int",
-                    "name": "Osc-/test",
-                    "playlist_id": 4,
-                    "position": 2000,
-                    "type": TRIGGER_TYPE_OSC
-                },
-                {
-                    "active": true,
-                    "conditions": {
-                        "channel_number": 0,
-                        "threshold": 200,
-                        "universe": 100
-                    },
-                    "name": "Art-100-1-200",
-                    "playlist_id": 1,
-                    "position": 4000,
-                    "type": TRIGGER_TYPE_ARTNET
-                }
-            ],
-
-        },
-        {
-            "current_time": 1500,
-            "duration": 5000,
-            "intensity":100.0,
-            "name":"Art",
-            "notification_message":"",
-            "playlist_id":4,
-            "start_trigger":
-            {
-                "active":true,
-                "conditions":
-                {
-                    "channel_number":0,
-                    "threshold":200,
-                    "universe":100
-                },
-                "name":"Art-100-1-200",
-                "playlist_id":1,
-                "position":0,
-                "type": TRIGGER_TYPE_ARTNET
-            },
-            "status":PLAYLIST_STATUS_PLAYING,
-            "stop_trigger":
-            {
-                "active":true,
-                "conditions":null,
-                "name":"",
-                "playlist_id":0,
-                "position":0,
-                "type": TRIGGER_TYPE_NONE
-            },
-            "triggers":[],
-            "waiting_triggers": false
-        }
-    ]
-}
-```
 
 #### STOP RECORD
 This command will stop to record DMX frame from device. This will return the latest record time.
 ##### Request
 ```json
     {
-        "command": 15,
-    }
-```
-##### Response
-```json
-    {
-        "result": true,
-    }
-```
-
-#### SET PlaylistID 25 to Play
-This will perform PLAY action, and return current state, timing and current cue of the playlist in question.
-If loop_count is 0, Playlist will keep PLAYING, till another Action is performed on this Playlist
-If playlist is currently PAUSED - it will be RESUMED, with PLAY
-Playlist must be in STOP state, to be started from the beginning.
-Playlist will Loop for 4 times more, after initial Play has ended. So, in total it plays for 5 times.
-Playlist will STOP, once it reaches the end of final loop.
-##### Request
-```json
-    {
-        "command": 0,
-        "playlist_id": 25,
-        "loop_count": 4
-    }
-```
-##### Response
-It should return playlist status.
-```json
-    {
-        "result": true,
-    }
-```
-
-#### SET PlaylistID 25 to PAUSE
-This will perform PAUSE action, and return current state, timing and current cue of the playlist in question.
-If playlist is PLAYING - it will be PAUSED.
-If playlist is PAUSED - it will be RESUMED
-##### Request
-```json
-    {
-        "command": 1,
-        "playlist_id": 25
-    }
-```
-##### Response
-```json
-    {
-        "result": true
-    }
-```
-
-#### SET PlaylistID 25 to STOP
-This will perform STOP action, and return current state, timing and current cue of the playlist in question.
-Playlist will STOP immediately.
-If Playlist is already Stopped, ignore STOP action.
-##### Request
-```json
-    {
-        "command": 2,
-        "playlist_id": 25
+        "command": 15
     }
 ```
 ##### Response
@@ -381,7 +440,7 @@ This will return
     }
 ```
 
-#### SET INTENSITY OF CUE TRACK on PlaylistID 25 (not implemented)
+#### SET INTENITY OF CUE TRACK on PlaylistID 25 (not implemented)
 This will update output intensity of particular track in the given playlist
 Once the Fader Level is set, it must be maintained for this Playlist, even if the Playlist is stopped.
 So a future PLAY, will use the last known Fader Level.
@@ -399,7 +458,7 @@ It will return intensity value of track on playlist set by this command.
 It will return playlist's status.
 ```json
     {
-        "result": true,
+        "result": true
     }
 ```
 
