@@ -52,7 +52,7 @@ enum CONTROL_COMMANDS {
   SAVE_CUE_COMMAND = 16, // Save cue state
   DELETE_CUE_COMMAND = 17, // Delete Cue by id
 
-  UPDATE_PLAYLIST_COMMAND = 18, // Update/Create Playlist with json struct as gets from GET_PLAYLIST_COMMAND
+  UPDATE_PLAYLIST_COMMAND = 18, // Update/Create Playlist with json struct as received from GET_PLAYLIST_COMMAND
   DELETE_PLAYLIST_COMMAND = 19, // Delete Playlist by id
   
   UPDATE_SETTING_COMMAND = 20, // Update Setting by id
@@ -101,8 +101,31 @@ enum CONTROL_COMMANDS {
 ```
 
 > `Good to know`: Be careful with JSON values' types, some fields support only integers or floats.
+> 
+> In case of error the Response will return `"result": false` with "error" field describing the error.
 
-### Playlists Control 
+For example if unsupported command is sent it Response:
+```json
+{
+  "result": false,
+  "error": "Unsupported command id: 100"
+}
+```
+
+### Playlists Control Description and JSON Requests/Responses Examples
+
+#### Supported Playlists Statuses returned in "status" field
+```c++
+enum PLAYLIST_STATUS_TYPES {
+  PLAYLIST_STATUS_IDLE = 0,
+  PLAYLIST_STATUS_PLAYING = 1,
+  PLAYLIST_STATUS_PAUSED = 2,
+  PLAYLIST_STATUS_STOPPED = 3,
+  PLAYLIST_STATUS_STOPPING = 4,
+  PLAYLIST_STATUS_ERROR = 5
+};
+
+```
 
 #### PLAY_COMMAND: Play playlist by id
 Request:
@@ -304,7 +327,9 @@ Response:
 
 #### GET_ALL_PLAYLISTS_COMMAND: Get status of all currently playing playlists
 This will return all the playlist IDs and its status and playing time.
-If playlist is waiting any trigger, it has trigger information.
+Playlist with id 1 is stopped and is hidden from home page.
+Playlist with id 2 is playing on 6th second with overall duration of 12 seconds/
+Both have intencity 100%.
 
 Request:
 ```json
@@ -317,7 +342,7 @@ Response:
     {
       "current_time": 0,
       "duration": 5000,
-      "hide_from_home": false,
+      "hide_from_home": true,
       "intensity": 100,
       "name": "One",
       "order": 2,
@@ -326,14 +351,14 @@ Response:
       "waiting_triggers": false
     },
     {
-      "current_time": 0,
+      "current_time": 6000,
       "duration": 12000,
       "hide_from_home": false,
       "intensity": 100,
       "name": "Two ",
       "order": 1,
       "playlist_id": 2,
-      "status": 3,
+      "status": 1,
       "waiting_triggers": false
     }
   ]
@@ -341,36 +366,265 @@ Response:
 ```
 
 #### SET_PLAYLIST_INTENSITY_COMMAND: Output intensity (Master Fader) of the given playlist, persists until power cycle
-
-
-#### Supported Playlists Statuses returned in "status" fields
-```c++
-enum PLAYLIST_STATUS_TYPES {
-  PLAYLIST_STATUS_IDLE = 0,
-  PLAYLIST_STATUS_PLAYING = 1,
-  PLAYLIST_STATUS_PAUSED = 2,
-  PLAYLIST_STATUS_STOPPED = 3,
-  PLAYLIST_STATUS_STOPPING = 4,
-  PLAYLIST_STATUS_ERROR = 5
-};
-
+Set playlist intensity to 50%
+Request:
+```json
+{
+  "command": 9, 
+  "playlist_id": 2, 
+  "intensity": 50}
+```
+Response:
+```json
+{"result": true}
 ```
 
-#### Setting Command Sub-Command
-Indicate what configuration is changed.
-```c++
-enum UPDATE_SETTINGS_TYPES {
-    UPDATE_SETTINGS_NTP                    = 0,     // Ntp configuration is changed
-    UPDATE_SETTINGS_ARTNET_DEVICE          = 1,     // ArtNet device configuration is changed
-    UPDATE_SETTINGS_SACN_DEVICE            = 2,     // sACN device configuration is changed
-    UPDATE_SETTINGS_DMX_DEVICE             = 3,     // DMX device configuration is changed
-    UPDATE_SETTINGS_OUTPUT                 = 4,     // Output configuration is changed
-    UPDATE_SETTINGS_SERIAL_DEVICE          = 5,     // Serial device configuration is changed
-    UPDATE_SETTINGS_OSC_DEVICE             = 6      // OSC configuration is changed
-    UPDATE_SETTINGS_NETWORK                = 7,     // Update network config
-};
 
+#### UPDATE_PLAYLIST_COMMAND: Update/Create Playlist with json struct as received from GET_PLAYLIST_COMMAND
+Update the properties of a playlist. To create new playlist `"playlist_id": 0` must be passsed  
+Request
+```json
+    {
+        "command": 18,
+        "playlist_filename": "playlist2.json"
+    }
 ```
+Response
+It should return true.
+```json
+{"result": true}
+```
+
+#### DELETE_PLAYLIST_COMMAND
+Remove the playlist from active list (e.g. from PlayAll).
+Request
+```json
+{
+    "command": 19,
+    "playlist_id": 3
+}
+```
+Response
+It should return true.
+```json
+{"result": true}
+```
+
+#### SET_PLAYLIST_TIME_POSITION on PlaylistID 25
+Send request with needed timeline position for playlist playing currently, the position is set with current_time as float which represents seconds (ms after dot) and playlist_id
+Request
+```json
+  {
+      "command": 22,
+      "playlist_id": 25,
+      "position": 10.550
+  }
+```
+Response
+```json
+{"result": true}
+```
+
+#### PLAY_CUE_COMMAND (not implemented)
+Preview static or dynamic cue for the given cue id
+Request
+```json
+    {
+        "command": 16,
+        "cue_id": 1
+    }
+```
+Response
+It should return cue previewing status.
+```json
+    {
+        "result": true,
+        "status": CUE_PLAY
+    }
+```
+
+#### STOP_CUE_COMMAND (not implemented)
+Stop previewing cue. and then the output should be stopped.
+Request
+```json
+    {
+        "command": 17,
+    }
+```
+Response
+It should return cue preview status.
+```json
+    {
+        "result": true,
+        "status": CUE_STOP
+    }
+```
+
+#### STOP RECORD
+This command will stop to record DMX frame from device. This will return the latest record time.
+Request
+```json
+    {
+        "command": 15
+    }
+```
+Response
+```json
+{"result": true}
+```
+
+
+-------------------------------------------------
+
+#### SET_MASTER_INTENSITY
+Set overall S-Play output intensity (Master Fader) with 50% brightness, doesn't persist after power cycle
+Request
+```json
+{
+  "command": 56,
+  "intensity": 0.5,
+}
+```
+Response
+```json
+{"result": true}
+```
+
+#### GET_MASTER_INTENSITY
+Get overall S-Play output intensity (Master Fader) returns 50% brightness, doesn't persist after power cycle
+Request
+```json
+{"command": 55}
+```
+Response
+```json
+{
+  "result": true,
+  "intensity": 0.5
+}
+```
+
+#### UDP_MESSAGE: Accepts messages to interpret as UDP input
+Send message to Playback to trigger existing UDP trigger with command "hello"
+```json
+{
+  "command": 50,
+  "message": "hello"
+}
+```
+Response
+```json
+{"result": true}
+```
+
+#### OSC_MESSAGE: Accepts messages to interpret as OSC input
+Send message to Playback to trigger existing OSC trigger with address "/test"
+Request
+```json
+{
+  "command": 51,
+  "address": "/test"
+}
+```
+Response
+```json
+{"result": true}
+```
+
+-------------------------------------------------
+
+### Settings Control Description and JSON Requests/Responses Examples
+
+> Be very careful while editing settings improper config can break S-Play logic and only factory reset will fix it.
+> First get the setting parameter then keeping the syntax and fields names the same modify values
+
+List of setting ids:
+```c++
+enum SETTING_CATEGORIES {
+    IS_SPARE = 0,
+    SYSTEM_NAME = 1,
+    PLAYBACK_CONFIG = 2,
+    PASSWORD = 3,
+    HELP_HINTS = 4,
+    SERIALNO = 5,
+    ENABLE_PASSWORD = 6,
+    SMTP = 7,
+    EMAIL = 8,
+    INPUT = 9,
+    OUTPUT = 10,
+    DMX = 11,
+    ARTNET = 12,
+    SACN = 13,
+    LOCATION = 14,
+    NTP = 15,
+    BASE_PATH = 16,
+    CUE_PATH = 17,
+    HOME_INTERFACE = 18,
+    UDP = 19,
+    TCP = 20,
+    RS232C = 21,
+    OSC = 22,
+    IEEE1588_CONFIG = 23,
+    IEEE1588_ACTIVE = 24,
+    LOCK_STATUS = 25,
+    DB_VERSION = 26,
+    SIZE_OF_SETTING_CATEGORIES
+};
+```
+
+#### GET_SETTING_COMMAND: Get Setting by id
+Get output settings
+Request
+```json
+{
+  "command": 21,
+  "setting_id": 10
+}
+```
+Response
+```json
+{
+  "result": true,
+  "setting": {
+    "outputs":[
+      "dmx1","dmx2",
+      "artnet1","artnet2","artnet3","artnet4","artnet5","artnet6","artnet7","artnet8",
+      "sacn1","sacn2","sacn3","sacn4","sacn5","sacn6","sacn7","sacn8",
+      "none","none","none","none","none","none","none","none","none","none","none","none","none","none"
+    ]}
+}
+```
+Here first two outputs are assigned to DMX 1 and 2 ports
+Next 8 outputs goes to ArtNet 1 to 8
+Next 8 outputs goes to sACN 1 to 8
+Other 14 are not assigned to any output
+
+#### UPDATE_SETTING_COMMAND: Update Setting by id
+Update playback configuration, set:
+"Send black frame on playlist stop" to false
+"Restrict to one active playlist per Group" to true
+
+Request
+```json
+{
+  "command": 20,
+  "setting": {
+    "setting_id": 2,
+    "value": {
+      "send_blackout":false,
+      "one_playlist_group_play":true
+    }
+  }
+}
+```
+Response
+```json
+{"result": true}
+```
+
+-------------------------------------------------
+
+### Event Management Description and JSON Requests/Responses Examples
 
 #### Event Type Names
 Indicate what type of event is sent.
@@ -403,281 +657,3 @@ enum TRIGGER_TYPE {
 };
 ```
 
-### JSON Requests and Responses Examples
-
-
-#### STOP RECORD
-This command will stop to record DMX frame from device. This will return the latest record time.
-##### Request
-```json
-    {
-        "command": 15
-    }
-```
-##### Response
-```json
-    {
-        "result": true
-    }
-```
-
-#### GET INTENSITY OF CUE TRACK on PlaylistID 25
-##### Request
-Get the intensity of special playlist.
-```json
-    {
-        "command": 12,
-        "playlist_id": 25,
-        "cue_track_id": 3
-    }
-```
-##### Response - Playlist ID 25 is PLAYING Cue ID 5, current time is 450.5 sec (playlist begins at 0)
-This will return
-```json
-    {
-        "result": true,
-        "fader_level": 75
-    }
-```
-
-#### SET INTENITY OF CUE TRACK on PlaylistID 25 (not implemented)
-This will update output intensity of particular track in the given playlist
-Once the Fader Level is set, it must be maintained for this Playlist, even if the Playlist is stopped.
-So a future PLAY, will use the last known Fader Level.
-##### Request
-It will return intensity value of track on playlist set by this command.
-```json
-    {
-        "command": 11,
-        "playlist_id": 25,
-        "cue_track_id": 2,
-        "intensity": 75
-    }
-```
-##### Response - Playlist ID 25 is PLAYING Cue ID 5, current time is 450.5 sec (playlist begins at 0)
-It will return playlist's status.
-```json
-    {
-        "result": true
-    }
-```
-
-#### GET PLAYLIST INTENSITY on PlaylistID 25 (not implemented)
-Get the intensity of special playlist.
-##### Request
-```json
-    {
-        "command": 10,
-        "playlist_id": 25
-    }
-```
-##### Response
-It will return intensity of special playlist.
-```json
-    {
-        "result": true,
-        "fader_level": 75
-    }
-```
-
-#### SET PLAYLIST INTENSITY on PlaylistID 25
-This will update MASTER INTENSITY of the given playlist.
-Once the Fader Level is set, it must be maintained for this Playlist, even if the Playlist is stopped, until power cycle.
-So a future PLAY, will use the last known Fader Level.
-##### Request
-```json
-    {
-        "command": 9,
-        "playlist_id": 25,
-        "intensity": 75
-    }
-```
-
-##### Response
-```json
-    {
-        "result": true,
-    }
-```
-
-#### UPDATE PLAYLIST
-Update the properties of playlist with given filename and its time elements.
-##### Request
-```json
-    {
-        "command": 12,
-        "playlist_filename": "playlist2.json",
-    }
-```
-##### Response
-It should return true.
-```json
-    {
-        "result": true
-    }
-```
-
-#### DELETE PLAYLIST
-Remove the playlist from active list (e.g. from PlayAll).
-##### Request
-```json
-    {
-        "command": 19,
-        "playlist_id": 3,
-    }
-```
-##### Response
-It should return true.
-```json
-    {
-        "result": true
-    }
-```
-
-#### UPDATE SETTINGS
-Update configuration and system parameters from database. For example NTP.
-##### Request
-```json
-    {
-        "command": 20,
-        "command_type": 0
-    }
-```
-##### Response
-It should return true.
-```json
-    {
-        "result": true
-    }
-```
-###  PLAY ALL PLAYLISTS
-Play all playlist in playlist storage.
-##### Request
-```json
-    {
-        "command": 5
-    }
-```
-
-##### Response
-It should return true on success.
-```json
-    {
-        "result": true,
-    }
-```
-
-#### PAUSE ALL PLAYLISTS
-Pause all running playlists.
-##### Request
-```json
-    {
-        "command": 6
-    }
-```
-##### Response
-It should return true on success.
-```json
-    {
-        "result": true,
-    }
-```
-
-#### STOP ALL PLAYLISTS
-Stop all playing or paused playlist.
-##### Request
-```json
-    {
-        "command": 7
-    }
-```
-##### Response
-It should return true on success.
-```json
-    {
-        "result": true,
-    }
-```
-
-#### PLAY_CUE_COMMAND (not implemented)
-Preview static or dynamic cue for the given cue id
-##### Request
-```json
-    {
-        "command": 16,
-        "cue_id": 1
-    }
-```
-##### Response
-It should return cue previewing status.
-```json
-    {
-        "result": true,
-        "status": CUE_PLAY
-    }
-```
-
-#### STOP_CUE_COMMAND (not implemented)
-Stop previewing cue. and then the output should be stopped.
-##### Request
-```json
-    {
-        "command": 17,
-    }
-```
-##### Response
-It should return cue preview status.
-```json
-    {
-        "result": true,
-        "status": CUE_STOP
-    }
-```
-
-#### SET_PLAYLIST_TIME_POSITION on PlaylistID 25
-Send request with needed timeline position for playlist playing currently, the position is set with current_time as float which represents seconds (ms after dot) and playlist_id
-##### Request
-```json
-    {
-        "command": 22,
-        "playlist_id": 25,
-        "position": 10.55
-    }
-```
-##### Response
-```json
-    {
-        "result": true
-    }
-```
-
-#### SET_MASTER_INTENSITY
-Set overall S-Play output intensity (Master Fader) with 50% brightness, doesn't persist after power cycle
-##### Request
-```json
-    {
-        "command": 24,
-        "intensity": 0.5,
-    }
-```
-##### Response
-```json
-    {
-        "result": true
-    }
-```
-#### OSC_MESSAGE
-Send OSC message to Playback to trigger existing OSC triggers
-##### Request
-```json
-    {
-        "command": 25,
-        "address": "/test"
-    }
-```
-##### Response
-```json
-    {
-        "result": true
-    }
-```
