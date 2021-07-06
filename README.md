@@ -203,7 +203,7 @@ Response:
       "event": {
         "events": [
           {
-            "active": true,      "event_id": 1,      "name": "Fist Udp",      "start": 500,      "type": 7,      "value": {
+            "active": true, "event_id": 1, "name": "Fist Udp", "start": 500, "type": 7, "value": {
               "ip": "127.0.0.1",        "port": 33333,        "value": "yoyo"
             }
           }
@@ -211,9 +211,17 @@ Response:
       },"track1": {
         "cues": [
           {
-            "ch_start": 0,      "ch_stop": 511,      "cue_id": 1,      "duration": 5000,      "fade": {
-              "in": 0,        "out": 0
-            },      "name": "Fst",      "start": 0,      "type": 0
+            "ch_start": 0,
+            "ch_stop": 511,
+            "cue_id": 1,
+            "duration": 5000,
+            "name": "Fst",
+            "start": 0,
+            "type": 0,
+            "fade": {
+              "in": 0,
+              "out": 0
+            }
           }
         ],  "intensity": 100
       },"track2": {
@@ -225,8 +233,13 @@ Response:
       },"trigger": {
         "triggers": [
           {
-            "active": true,      "name": "YOOsc",      "start": 11500,      "trigger_id": 2,      "type": 1,      "value": {
-              "address": "/yo",        "data_type": "string",        "ip": "127.0.0.255",        "net_type": "broadcast"
+            "active": true,
+            "name": "YOOsc",
+            "start": 11500,
+            "trigger_id": 2,
+            "type": 1,
+            "value": {
+              "address": "/yo", "data_type": "string", "ip": "127.0.0.255", "net_type": "broadcast"
             }
           }
         ]
