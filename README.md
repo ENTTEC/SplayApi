@@ -15,6 +15,7 @@ e.g. URL: ` http://192.168.1.13:55555/api`
 
 Request can be tested using:
 - **curl**
+
 ``
 curl --header "Content-Type: application/json" -d "{\"command\":8}" http://192.168.1.13:55555/api --output -
 ``
@@ -339,9 +340,7 @@ Response:
 ```
 
 #### SET_PLAYLIST_INTENSITY_COMMAND: Output intensity (Master Fader) of the given playlist, persists until power cycle
-Set playlist intensity to 50%
-
-Request:
+Request - Set playlist intensity to 50%
 ```json
 {
   "command": 9, 
@@ -355,7 +354,6 @@ Response:
 
 #### UPDATE_PLAYLIST_COMMAND: Update/Create Playlist with json struct as received from GET_PLAYLIST_COMMAND
 Update the properties of a playlist. To create new playlist `"playlist_id": 0` or no `"playlist_id"` key must be passsed  
-
 
 Create new Playlist with 
 - duration 312000ms
@@ -460,7 +458,7 @@ Request:
   }
 }
 ```
-Response
+Response:
 It should return true.
 ```json
 { "result": true }
@@ -468,7 +466,7 @@ It should return true.
 
 #### DELETE_PLAYLIST_COMMAND
 Remove the playlist from active list (e.g. from PlayAll).
-Request
+Request:
 ```json
 {
     "command": 19,
@@ -482,13 +480,13 @@ Response:
 
 #### SET_PLAYLIST_TIME_POSITION_COMMAND: Set playback position of given playlist and continue to play, if playlist was STOPPED it becomes PAUSED
 Send request with needed timeline position for playlist playing currently, the position is set with current_time as float which represents seconds (ms after dot) and playlist_id
-Request
+Request:
 ```json
   {
       "command": 22,"playlist_id": 25,"position": 10.550
   }
 ```
-Response
+Response:
 ```json
 { "result": true }
 ```
@@ -517,11 +515,11 @@ enum CUE_TYPE:uint8 {
 
 #### GET_ALL_CUES_COMMAND: Get list of all available cues
 
-Request
+Request:
 ```json
 { "command": 29 }
 ```
-Response
+Response:
 ```json
 { 
   "result": true,
@@ -566,14 +564,14 @@ Returns extended info about Cue with "frames": universes state in Static Cue and
 
 Below Dynamic Cue ("type" == CUE_TYPE_DYNAMIC) with only first 8 frames states of universes are shown, other 24 are zeroed arrays as the last here
 
-Request
+Request:
 ```json
 {
   "command": 28,
   "cue_id": 32
 }
 ```
-Response
+Response:
 ```json
 { 
   "result": true,
@@ -615,7 +613,7 @@ Response
 ```
 
 #### PLAY_CUE_COMMAND: Play cue with given id
-Request
+Request:
 ```json
 {
   "command": 25,
@@ -624,7 +622,7 @@ Request
   }
 }
 ```
-Response
+Response:
 ```json
 { "result": true }
 ```
@@ -657,34 +655,34 @@ Here Static cue with universe 1 & 2 enabled and corresponding frames is passed
   }
 }
 ```
-Response
+Response:
 ```json
 { "result": true }
 ```
 
 
 #### PAUSE_CUE_COMMAND: Pause cue with given id (not implemented)
-Request
+Request:
 ```json
 {
   "command": 26,
   "cue_id": 2
 }
 ```
-Response
+Response:
 ```json
 { "result": true }
 ```
 
 #### STOP_CUE_COMMAND: Stop playback of playing cue by given id
-Request
+Request:
 ```json
 {
   "command": 27,
   "cue_id": 21
 }
 ```
-Response
+Response:
 ```json
 { "result": true }
 ```
@@ -696,7 +694,7 @@ Capture Static cue with id 2 from ArtNet
 
 All recorded ArtNet data will be streamed via Websockets.
 
-Request
+Request:
 ```json
 {
   "command":  13,
@@ -707,7 +705,7 @@ Request
   ]
 }
 ```
-Response
+Response:
 ```json
 { "result": true }
 ```
@@ -722,7 +720,7 @@ Start recording of Dynamic cue with id 21, with params:
 
 All recorded sACN data will be streamed via Websockets.
 
-Request
+Request:
 ```json
 {
   "command":  14,
@@ -742,18 +740,18 @@ Request
 }
 
 ```
-Response
+Response:
 ```json
 { "result": true }
 ```
 
 #### STOP_RECORD_COMMAND: Stop any recording
 This command will stop the DMX/ArtNet/sACN frame recording if any
-Request
+Request:
 ```json
 {"command": 15}
 ```
-Response
+Response:
 ```json
 { "result": true }
 ```
@@ -765,7 +763,7 @@ If "cue_id" = 0 , engine will create new Cue from given data
 Static cue id=2 is updated, with 20 active universes but only one universe with data 
 (the first array at "frames" has value, the second and others are zero frames), 
 so universes from 1 till 19 will be getting zero frames, nothing will be sent to outputs from 21 till 32.
-Request
+Request:
 ```json
 { 
   "command": 16,
@@ -798,14 +796,14 @@ Request
   }
 }
 ```
-Response
+Response:
 ```json
 { "result": true }
 ```
 
 
 Create Dynamic cue with outputs to all 32 universes using the last recorded file, with active channels from 30 till 455 in all universes.
-Request
+Request:
 ```json
 {
   "config": {
@@ -828,13 +826,13 @@ Request
   "type": 1
 }
 ```
-Response
+Response:
 ```json
 { "result": true }
 ```
 
 #### DELETE_CUE_COMMAND: Delete Cue by id
-Request
+Request:
 ```json
 { 
   "command": 17,
@@ -848,11 +846,11 @@ Response - returns `true` if Cue with id 2 existed and was removed else `false`
   
 #### EXIT_CUE_EDIT_COMMAND: Frontend notifies on Cue editing finished, remove not persisted recorded files
 
-Request
+Request:
 ```json
 {"command": 30}
 ```
-Response
+Response:
 ```json
 { "result": true }
 ```
@@ -862,25 +860,25 @@ Response
 
 #### SET_MASTER_INTENSITY
 Set overall S-Play output intensity (Master Fader) with 50% brightness, doesn't persist after power cycle
-Request
+Request:
 ```json
 {
   "command": 56,
   "intensity": 50
 }
 ```
-Response
+Response:
 ```json
 { "result": true }
 ```
 
 #### GET_MASTER_INTENSITY
 Get overall S-Play output intensity (Master Fader) returns 50% brightness, doesn't persist after power cycle
-Request
+Request:
 ```json
 {"command": 55}
 ```
-Response
+Response:
 ```json
 {
   "result": true,
@@ -896,21 +894,21 @@ Send message to Playback to trigger existing UDP trigger with command "hello"
   "message": "hello"
 }
 ```
-Response
+Response:
 ```json
 { "result": true }
 ```
 
 #### OSC_MESSAGE: Accepts messages to interpret as OSC input
 Send message to Playback to trigger existing OSC trigger with address "/test"
-Request
+Request:
 ```json
 {
   "command": 51,
   "address": "/test"
 }
 ```
-Response
+Response:
 ```json
 { "result": true }
 ```
@@ -958,14 +956,14 @@ enum SETTING_CATEGORIES {
 
 #### GET_SETTING_COMMAND: Get Setting by id
 Get output settings
-Request
+Request:
 ```json
 {
   "command": 21,
   "setting_id": 10
 }
 ```
-Response
+Response:
 ```json
 {
   "result": true,
@@ -985,7 +983,7 @@ Update playback configuration, set:
 "Send black frame on playlist stop" to false
 "Restrict to one active playlist per Group" to true
 
-Request
+Request:
 ```json
 {
   "command": 20,
@@ -997,7 +995,7 @@ Request
   }
 }
 ```
-Response
+Response:
 ```json
 { "result": true }
 ```
@@ -1051,11 +1049,11 @@ Response - broadcast Art Net event for universe 11 with value 127 on channel 1
 ```
 
 #### GET_ALL_EVENTS_COMMAND: Get all existing Events
-Request
+Request:
 ```json
 { "command": 37 }
 ```
-Response
+Response:
 ```json
 {
   "events": [
@@ -1182,7 +1180,7 @@ Request - Create new event (`"event_id": 0`) with Relay Type (EVENT_TYPE_IO) for
   }
 }
 ```
-Response
+Response:
 ```json
 { "result": true }
 ```
@@ -1221,7 +1219,7 @@ Request - send OSC event to 192.168.0.100 port 8000 with address "/hello" and st
   }
 }
 ```
-Response
+Response:
 ```json
 { "result": true }
 ```
@@ -1282,11 +1280,11 @@ Response - trigger for Digital input 1 Activate on Make
 
 #### GET_ALL_TRIGGERS_COMMAND: Get all existing Triggers
 
-Request
+Request:
 ```json
 { "command": 41 }
 ```
-Response
+Response:
 ```json
 {
   "triggers": [
@@ -1388,7 +1386,6 @@ Response
 ```
 
 #### UPDATE_TRIGGER_COMMAND: Update/Create Trigger
-
 Request - Create new sACN trigger for universe: 200 channel: 100 value: 150
 ```json
 {
@@ -1427,8 +1424,7 @@ Response - returns result: true and generated trigger_id: 211
 ```
 
 #### DELETE_TRIGGER_COMMAND: Delete Trigger by id
-
-Request
+Request:
 ```json
 {
   "command": 43,
@@ -1441,7 +1437,6 @@ Response - returns `true` if Trigger with id 211 existed and was removed else `f
 ```
 
 #### WAIT_TRIGGER_COMMAND: Add temporary trigger to check with CHECK_TRIGGER_COMMAND
-
 Request - add OSC Trigger with address "/start" and string value "broadcast" 
 ```json
 {
@@ -1464,8 +1459,7 @@ Response - successfully added
 ```
 
 #### CHECK_TRIGGER_COMMAND: Check if added trigger happen
-
-Request
+Request:
 ```json
 { "command": 46 }
 ```
