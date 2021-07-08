@@ -93,7 +93,7 @@ enum CONTROL_COMMANDS {
   DELETE_SCHEDULE_COMMAND = 62, // Delete Schedule. it will be removed from database and storage.
   ENABLE_SCHEDULE_COMMAND = 63, // Change the Schedule state enable ACTIVE = 1 / PAUSED = 2
 
-  GET_INTERFACE_COMMAND = 70, // Get Iterface page by id or URL
+  GET_INTERFACE_COMMAND = 70, // Get Interface page by id or URL
   GET_ALL_INTERFACES_COMMAND = 71, // Get all created Interfaces
   UPDATE_INTERFACE_COMMAND = 72, // Update/Create Interface page
   DELETE_INTERFACE_COMMAND = 73, // Delete Interface by id
@@ -155,7 +155,8 @@ Response:
 
 
 #### STOP_COMMAND: Stop the playlist if in PAUSE or PLAY status
-This will perform STOP action, if Playlist's has Fade Out time not 0 the status become PLAYLIST_STATUS_STOPPING and with the repeaded STOP command Playlist will stop immediately, else it will stop.
+This will perform STOP action, if Playlist's has Fade Out time not 0 the status become PLAYLIST_STATUS_STOPPING and 
+with the repeated STOP command Playlist will stop immediately, else it will stop.
 Request:
 ```json
 {
@@ -300,7 +301,7 @@ Response:
 This will return all the playlist IDs and its status and playing time.
 Playlist with id 1 is stopped and is hidden from home page.
 Playlist with id 2 is playing on 6th second with overall duration of 12 seconds/
-Both have intencity 100%.
+Both have intensity 100%.
 
 Request:
 ```json
@@ -478,7 +479,7 @@ Response:
 { "result": true }
 ```
 
-#### SET_PLAYLIST_TIME_POSITION on PlaylistID 25
+#### SET_PLAYLIST_TIME_POSITION_COMMAND: Set playback position of given playlist and continue to play, if playlist was STOPPED it becomes PAUSED
 Send request with needed timeline position for playlist playing currently, the position is set with current_time as float which represents seconds (ms after dot) and playlist_id
 Request
 ```json
@@ -618,7 +619,7 @@ Request
 {
   "command": 25,
   "cue": {
-    "cue_id": 21,
+    "cue_id": 21
   }
 }
 ```
@@ -643,7 +644,6 @@ Here Static cue with universe 1 & 2 enabled and corresponding frames is passed
         1,2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
       ]
     },
-    "cue_id": 32,
     "duration": 5908,
     "frames": [
       [
@@ -761,7 +761,9 @@ Response
 Saves Cue config and for Static saves "frames" state / for Dynamic persists temporary recorded file.
 If "cue_id" = 0 , engine will create new Cue from given data 
 
-Static cue id=2 is updated, with 20 active universes but only one universe with data (the first array at "frames" has value, the second and others are zero frames), so universes from 1 till 19 will be getting zero frames, nothing will be sent to outputs from 21 till 32.
+Static cue id=2 is updated, with 20 active universes but only one universe with data 
+(the first array at "frames" has value, the second and others are zero frames), 
+so universes from 1 till 19 will be getting zero frames, nothing will be sent to outputs from 21 till 32.
 Request
 ```json
 { 
@@ -838,7 +840,7 @@ Request
   "cue_id": 2
 }
 ```
-Response
+Response - returns `true` if Cue with id 2 existed and was removed else `false`
 ```json
 { "result": true }
 ```
@@ -1001,36 +1003,472 @@ Response
 
 -------------------------------------------------
 
-### Event Management Description and JSON Requests/Responses Examples
+### Event and Trigger Management Description and JSON Requests/Responses Examples
 
-#### Event Type Names
-Indicate what type of event is sent.
+#### Event Types Names and Ids
+Indicate what type of event is sent based on "type" field
 ```c++
 enum EVENT_TYPE {
     EVENT_TYPE_NONE = 0,
-    EVENT_TYPE_RS232,
-    EVENT_TYPE_IO,
-    EVENT_TYPE_ARTNET,
-    EVENT_TYPE_DMX,
-    EVENT_TYPE_SACN,
-    EVENT_TYPE_OSC,
-    END_EVENT_TYPE
+    EVENT_TYPE_RS232 = 1,
+    EVENT_TYPE_IO = 2,
+    EVENT_TYPE_ARTNET = 3,
+    EVENT_TYPE_DMX = 4,
+    EVENT_TYPE_SACN = 5,
+    EVENT_TYPE_OSC = 6,
+    EVENT_TYPE_UDP = 7
 };
 ```
+
+#### GET_EVENT_COMMAND: Get Event by id
+
+Request - Get Event with id = 1
+```json
+{
+  "command": 36,
+  "event_id": 1
+}
+```
+Response - broadcast Art Net event for universe 11 with value 127 on channel 1
+```json 
+{
+  "event": {
+    "active": true,
+    "event_id": 1,
+    "name": "Boot Up Go",
+    "start": 0,
+    "type": 3,
+    "value": {
+      "channel": 0,
+      "ip": "192.168.0.255",
+      "net_type": "broadcast",
+      "universe": 11,
+      "value": 127
+    }
+  }
+}
+```
+
+#### GET_ALL_EVENTS_COMMAND: Get all existing Events
+Request
+```json
+{ "command": 37 }
+```
+Response
+```json
+{
+  "events": [
+    {
+      "active": true,
+      "event_id": 129,
+      "name": "ArtNet Up Go",
+      "start": 0,
+      "type": 3,
+      "value": {
+        "channel": 0,
+        "ip": "192.168.0.255",
+        "net_type": "broadcast",
+        "universe": 12,
+        "value": 127
+      }
+    },
+    {
+      "active": true,
+      "event_id": 130,
+      "name": "ArtNet Down Go",
+      "start": 0,
+      "type": 3,
+      "value": {
+        "channel": 1,
+        "ip": "192.168.0.2",
+        "net_type": "unicast",
+        "universe": 11,
+        "value": 127
+      }
+    },
+    {
+      "active": true,
+      "event_id": 200,
+      "name": "Just White Stop",
+      "start": 0,
+      "type": 7,
+      "value": {
+        "ip": "192.168.0.2",
+        "port": 5000,
+        "value": "25"
+      }
+    },
+    {
+      "active": true,
+      "event_id": 205,
+      "name": "AAAA sACN",
+      "start": 0,
+      "type": 5,
+      "value": {
+        "channel": 2,
+        "ip": "239.255.0.10",
+        "net_type": "multicast",
+        "universe": 10,
+        "value": 4
+      }
+    },
+    {
+      "active": true,
+      "event_id": 206,
+      "name": "Hellosc",
+      "start": 0,
+      "type": 6,
+      "value": {
+        "address": "/hello",
+        "data": "yo",
+        "data_type": "string",
+        "ip": "127.0.0.255",
+        "net_type": "broadcast",
+        "port": 8000
+      }
+    },
+    {
+      "active": true,
+      "event_id": 207,
+      "name": "RS",
+      "start": 0,
+      "type": 1,
+      "value": {
+        "data": "world"
+      }
+    },
+    {
+      "active": true,
+      "event_id": 208,
+      "name": "Dmx-2-1-200",
+      "start": 0,
+      "type": 4,
+      "value": {
+        "channel": 0,
+        "universe": 1,
+        "value": 200
+      }
+    },
+    {
+      "active": true,
+      "event_id": 209,
+      "name": "Relay 1 NC",
+      "start": 0,
+      "type": 2,
+      "value": {
+        "output": 1,
+        "value": 1
+      }
+    }
+  ]
+}
+```
+
+#### UPDATE_EVENT_COMMAND: Update/Create Event
+Request - Create new event (`"event_id": 0`) with Relay Type (EVENT_TYPE_IO) for Second Relay NC state
+```json
+{
+  "command": 38,
+  "event":
+  {
+    "event_id": 0,
+    "type": 2,
+    "value": {
+      "output": 2,
+      "value": 1
+    },
+    "name": "Relay 2 - NC"
+  }
+}
+```
+Response
+```json
+{ "result": true }
+```
+
+#### DELETE_EVENT_COMMAND: Delete Event by id
+
+Request - Delete Event with id = 1
+```json
+{
+  "command": 39,
+  "event_id": 1
+}
+```
+Response - returns `true` if Event with id 1 existed and was removed else `false`
+```json
+{ "result": true }
+```
+
+#### SEND_EVENT_COMMAND: Send given event
+Request - send OSC event to 192.168.0.100 port 8000 with address "/hello" and string value "yo"
+```json
+{
+  "command": 44,
+  "event": {
+    "event_id": 0,
+    "name": "Hellosc",
+    "type": 6,
+    "value": {
+      "address": "/hello",
+      "data": "yo",
+      "data_type": "string",
+      "ip": "192.168.0.100",
+      "net_type": "broadcast",
+      "port": 8000
+    }
+  }
+}
+```
+Response
+```json
+{ "result": true }
+```
+
 
 #### Trigger Types
 Indicate what device do you wait to trigger from.
 ```c++
 enum TRIGGER_TYPE {
     TRIGGER_TYPE_NONE = 0, // currently in playlist jsons it is -1
-    TRIGGER_TYPE_OSC,
-    TRIGGER_TYPE_RS232,
-    TRIGGER_TYPE_IO,
-    TRIGGER_TYPE_ARTNET,
-    TRIGGER_TYPE_DMX,
-    TRIGGER_TYPE_SACN,
-    TRIGGER_TYPE_POWERUP,
-    END_TRIGGER_TYPE
+    TRIGGER_TYPE_OSC = 1,
+    TRIGGER_TYPE_RS232 = 2,
+    TRIGGER_TYPE_IO = 3,
+    TRIGGER_TYPE_ARTNET = 4,
+    TRIGGER_TYPE_DMX = 5,
+    TRIGGER_TYPE_SACN = 6,
+    TRIGGER_TYPE_UDP = 8,
 };
 ```
 
+N.B.: "type" can be string with values:
+```c++
+triggerTypeIdToName = { {
+{ TRIGGER_TYPE_ARTNET, "artnet" },
+{ TRIGGER_TYPE_SACN, "sacn" },
+{ TRIGGER_TYPE_IO, "din" },
+{ TRIGGER_TYPE_RS232, "rs232" },
+{ TRIGGER_TYPE_DMX, "dmx" },
+{ TRIGGER_TYPE_OSC, "osc" },
+{ TRIGGER_TYPE_UDP, "udp" }
+}};
+```
+
+#### GET_TRIGGER_COMMAND: Get Trigger by id
+Request - get Trigger with id = 1
+```json
+{
+  "command": 40,
+  "trigger_id": 1
+}
+```
+Response - trigger for Digital input 1 Activate on Make
+```json
+{ 
+  "trigger": {
+    "active": true,
+    "name": "Down",
+    "start": 0,
+    "trigger_id": 1,
+    "type": 3,
+    "value": {
+      "data": 1,
+      "port": 0
+    }
+  }
+}
+```
+
+#### GET_ALL_TRIGGERS_COMMAND: Get all existing Triggers
+
+Request
+```json
+{ "command": 41 }
+```
+Response
+```json
+{
+  "triggers": [
+    {
+      "active": true,
+      "name": "Down",
+      "start": 0,
+      "trigger_id": 1,
+      "type": 3,
+      "value": {
+        "data": 1,
+        "port": 0
+      }
+    },
+    {
+      "active": true,
+      "name": "Up",
+      "start": 0,
+      "trigger_id": 2,
+      "type": 3,
+      "value": {
+        "data": 0,
+        "port": 1
+      }
+    },
+    {
+      "active": true,
+      "name": "Just White Start",
+      "start": 0,
+      "trigger_id": 20,
+      "type": 8,
+      "value": {
+        "ip": "192.168.0.",
+        "value": "UDP command"
+      }
+    },
+    {
+      "active": true,
+      "name": "No Trigger",
+      "start": 0,
+      "trigger_id": 24,
+      "type": 2,
+      "value": {
+        "data": "Please Don't Trigger Me"
+      }
+    },
+    {
+      "active": true,
+      "name": "Fast Blue Dmx 1-1-100",
+      "start": 0,
+      "trigger_id": 135,
+      "type": 5,
+      "value": {
+        "channel": 0,
+        "universe": 0,
+        "value": 100
+      }
+    },
+    {
+      "active": true,
+      "name": "Fast Yellow Meteors Up Start",
+      "start": 0,
+      "trigger_id": 136,
+      "type": 4,
+      "value": {
+        "channel": 29,
+        "net_type": "broadcast",
+        "universe": 10,
+        "value": 127
+      }
+    },
+    {
+      "active": true,
+      "name": "Osc Up Start",
+      "start": 0,
+      "trigger_id": 138,
+      "type": 1,
+      "value": {
+        "address": "/start",
+        "data_type": "string",
+        "net_type": "broadcast"
+      }
+    },
+    {
+      "active": true,
+      "name": "SACN trigger",
+      "start": 0,
+      "trigger_id": 211,
+      "type": 6,
+      "value": {
+        "channel": 99,
+        "net_type": "multicast",
+        "universe": 200,
+        "value": 150
+      }
+    }
+  ]
+}
+```
+
+#### UPDATE_TRIGGER_COMMAND: Update/Create Trigger
+
+Request - Create new sACN trigger for universe: 200 channel: 100 value: 150
+```json
+{
+  "command": 42,
+  "trigger": {
+    "trigger_id": 0,
+    "name": "SACN trigger",
+    "type": 6,
+    "value": {
+      "channel": 99,
+      "value": 150,
+      "universe": 200,
+      "net_type": "multicast"
+    }
+  }
+}
+```
+Response - returns result: true and generated trigger_id: 211
+```json
+{ 
+  "result": true,
+  "trigger": {
+    "active":true,
+    "name":"SACN trigger",
+    "start":0,
+    "trigger_id":211,
+    "type":6,
+    "value":{
+      "channel":99,
+      "net_type":"multicast",
+      "universe":200,
+      "value":150
+    }
+  }
+}
+```
+
+#### DELETE_TRIGGER_COMMAND: Delete Trigger by id
+
+Request
+```json
+{
+  "command": 43,
+  "trigger_id":211
+}
+```
+Response - returns `true` if Trigger with id 211 existed and was removed else `false`
+```json
+{ "result": true }
+```
+
+#### WAIT_TRIGGER_COMMAND: Add temporary trigger to check with CHECK_TRIGGER_COMMAND
+
+Request - add OSC Trigger with address "/start" and string value "broadcast" 
+```json
+{
+  "command": 45,
+  "trigger": {
+    "name": "",
+    "trigger_id": 0,
+    "type": "osc",
+    "value": {
+      "address": "/start",
+      "data_type": "string",
+      "net_type": "broadcast"
+    }
+  }
+}
+```
+Response - successfully added
+```json
+{ "result": true }
+```
+
+#### CHECK_TRIGGER_COMMAND: Check if added trigger happen
+
+Request
+```json
+{ "command": 46 }
+```
+Response - result `true` if trigger wasn't triggered and S-Play still listening for it, `false` if trigger happened or no trigger is awaited
+```json
+{ "result": true }
+```
