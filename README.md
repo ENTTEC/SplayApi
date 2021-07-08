@@ -5,7 +5,7 @@ This HTTP API allows for control over the ENTTEC S-Play (SKU: 70092), playback e
 
 ENTTEC recommend that the S-Plays IP is set to be static before communicating using this API.
 
-To ensure this API functions as intended, ensure you are running a software version of at least **v1.2.5**.
+To ensure this API functions as intended, ensure you are running a software version of at least **v1.6**.
 
 ## HTTP POST Commands for S-Play's playback.
 Enum CONTROL_COMMANDS below presents the list of available playback commands.
@@ -13,11 +13,12 @@ They can be sent using HTTP POST requests to the device IP on the`55555` port an
 
 e.g. URL: ` http://192.168.1.13:55555/api`
 
-Request can be tested using **curl**:
-
+Request can be tested using:
+- **curl**
 ``
 curl --header "Content-Type: application/json" -d "{\"command\":8}" http://192.168.1.13:55555/api --output -
 ``
+- [Insomnia](https://insomnia.rest/) with provided config (Insomnia_SplayAPI_1.6.json) with several examples of requests
 
 ## Development
 After clone run the command inside repo's dir to automatically execute `flatc` compilation (v1.12.0) to cpp & js for all *.fbs files:
