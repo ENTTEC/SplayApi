@@ -107,7 +107,7 @@ SplayApi.PIXEL_ORDERName = {
 /**
  * @enum {number}
  */
-SplayApi.SETTING_CATEGORIES = {
+SplayApi.SETTING = {
   IS_SPARE: 0,
   SYSTEM_NAME: 1,
   PLAYBACK_CONFIG: 2,
@@ -134,14 +134,13 @@ SplayApi.SETTING_CATEGORIES = {
   IEEE1588_CONFIG: 23,
   IEEE1588_ACTIVE: 24,
   LOCK_STATUS: 25,
-  DB_VERSION: 26,
-  SIZE_OF: 27
+  DB_VERSION: 26
 };
 
 /**
  * @enum {string}
  */
-SplayApi.SETTING_CATEGORIESName = {
+SplayApi.SETTINGName = {
   '0': 'IS_SPARE',
   '1': 'SYSTEM_NAME',
   '2': 'PLAYBACK_CONFIG',
@@ -168,8 +167,7 @@ SplayApi.SETTING_CATEGORIESName = {
   '23': 'IEEE1588_CONFIG',
   '24': 'IEEE1588_ACTIVE',
   '25': 'LOCK_STATUS',
-  '26': 'DB_VERSION',
-  '27': 'SIZE_OF'
+  '26': 'DB_VERSION'
 };
 
 // Exports for ECMAScript6 Modules
