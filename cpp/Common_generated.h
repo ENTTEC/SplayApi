@@ -9,37 +9,37 @@
 namespace SplayApi {
 
 enum UNIVERSE_TYPE {
-  UNIVERSE_TYPE_DMX_TYPE = 0,
-  UNIVERSE_TYPE_ARTNET_TYPE = 1,
-  UNIVERSE_TYPE_SACN_TYPE = 2,
-  UNIVERSE_TYPE_NONE_TYPE = 3,
-  UNIVERSE_TYPE_MIN = UNIVERSE_TYPE_DMX_TYPE,
-  UNIVERSE_TYPE_MAX = UNIVERSE_TYPE_NONE_TYPE
+  UNIVERSE_TYPE_DMX = 0,
+  UNIVERSE_TYPE_ARTNET = 1,
+  UNIVERSE_TYPE_SACN = 2,
+  UNIVERSE_TYPE_NONE = 3,
+  UNIVERSE_TYPE_MIN = UNIVERSE_TYPE_DMX,
+  UNIVERSE_TYPE_MAX = UNIVERSE_TYPE_NONE
 };
 
 inline const UNIVERSE_TYPE (&EnumValuesUNIVERSE_TYPE())[4] {
   static const UNIVERSE_TYPE values[] = {
-    UNIVERSE_TYPE_DMX_TYPE,
-    UNIVERSE_TYPE_ARTNET_TYPE,
-    UNIVERSE_TYPE_SACN_TYPE,
-    UNIVERSE_TYPE_NONE_TYPE
+    UNIVERSE_TYPE_DMX,
+    UNIVERSE_TYPE_ARTNET,
+    UNIVERSE_TYPE_SACN,
+    UNIVERSE_TYPE_NONE
   };
   return values;
 }
 
 inline const char * const *EnumNamesUNIVERSE_TYPE() {
   static const char * const names[5] = {
-    "DMX_TYPE",
-    "ARTNET_TYPE",
-    "SACN_TYPE",
-    "NONE_TYPE",
+    "DMX",
+    "ARTNET",
+    "SACN",
+    "NONE",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameUNIVERSE_TYPE(UNIVERSE_TYPE e) {
-  if (flatbuffers::IsOutRange(e, UNIVERSE_TYPE_DMX_TYPE, UNIVERSE_TYPE_NONE_TYPE)) return "";
+  if (flatbuffers::IsOutRange(e, UNIVERSE_TYPE_DMX, UNIVERSE_TYPE_NONE)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesUNIVERSE_TYPE()[index];
 }
@@ -76,11 +76,12 @@ enum PIXEL_ORDER {
   PIXEL_ORDER_GBWR = 27,
   PIXEL_ORDER_BRWG = 28,
   PIXEL_ORDER_BGWR = 29,
+  PIXEL_ORDER_W = 30,
   PIXEL_ORDER_MIN = PIXEL_ORDER_RGB,
-  PIXEL_ORDER_MAX = PIXEL_ORDER_BGWR
+  PIXEL_ORDER_MAX = PIXEL_ORDER_W
 };
 
-inline const PIXEL_ORDER (&EnumValuesPIXEL_ORDER())[30] {
+inline const PIXEL_ORDER (&EnumValuesPIXEL_ORDER())[31] {
   static const PIXEL_ORDER values[] = {
     PIXEL_ORDER_RGB,
     PIXEL_ORDER_RBG,
@@ -111,13 +112,14 @@ inline const PIXEL_ORDER (&EnumValuesPIXEL_ORDER())[30] {
     PIXEL_ORDER_GRWB,
     PIXEL_ORDER_GBWR,
     PIXEL_ORDER_BRWG,
-    PIXEL_ORDER_BGWR
+    PIXEL_ORDER_BGWR,
+    PIXEL_ORDER_W
   };
   return values;
 }
 
 inline const char * const *EnumNamesPIXEL_ORDER() {
-  static const char * const names[31] = {
+  static const char * const names[32] = {
     "RGB",
     "RBG",
     "GRB",
@@ -148,13 +150,14 @@ inline const char * const *EnumNamesPIXEL_ORDER() {
     "GBWR",
     "BRWG",
     "BGWR",
+    "W",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamePIXEL_ORDER(PIXEL_ORDER e) {
-  if (flatbuffers::IsOutRange(e, PIXEL_ORDER_RGB, PIXEL_ORDER_BGWR)) return "";
+  if (flatbuffers::IsOutRange(e, PIXEL_ORDER_RGB, PIXEL_ORDER_W)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesPIXEL_ORDER()[index];
 }
@@ -187,9 +190,9 @@ enum SETTING_CATEGORIES {
   SETTING_CATEGORIES_IEEE1588_ACTIVE = 24,
   SETTING_CATEGORIES_LOCK_STATUS = 25,
   SETTING_CATEGORIES_DB_VERSION = 26,
-  SETTING_CATEGORIES_SIZE_OF_SETTING_CATEGORIES = 27,
+  SETTING_CATEGORIES_SIZE_OF = 27,
   SETTING_CATEGORIES_MIN = SETTING_CATEGORIES_IS_SPARE,
-  SETTING_CATEGORIES_MAX = SETTING_CATEGORIES_SIZE_OF_SETTING_CATEGORIES
+  SETTING_CATEGORIES_MAX = SETTING_CATEGORIES_SIZE_OF
 };
 
 inline const SETTING_CATEGORIES (&EnumValuesSETTING_CATEGORIES())[28] {
@@ -221,7 +224,7 @@ inline const SETTING_CATEGORIES (&EnumValuesSETTING_CATEGORIES())[28] {
     SETTING_CATEGORIES_IEEE1588_ACTIVE,
     SETTING_CATEGORIES_LOCK_STATUS,
     SETTING_CATEGORIES_DB_VERSION,
-    SETTING_CATEGORIES_SIZE_OF_SETTING_CATEGORIES
+    SETTING_CATEGORIES_SIZE_OF
   };
   return values;
 }
@@ -255,14 +258,14 @@ inline const char * const *EnumNamesSETTING_CATEGORIES() {
     "IEEE1588_ACTIVE",
     "LOCK_STATUS",
     "DB_VERSION",
-    "SIZE_OF_SETTING_CATEGORIES",
+    "SIZE_OF",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameSETTING_CATEGORIES(SETTING_CATEGORIES e) {
-  if (flatbuffers::IsOutRange(e, SETTING_CATEGORIES_IS_SPARE, SETTING_CATEGORIES_SIZE_OF_SETTING_CATEGORIES)) return "";
+  if (flatbuffers::IsOutRange(e, SETTING_CATEGORIES_IS_SPARE, SETTING_CATEGORIES_SIZE_OF)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesSETTING_CATEGORIES()[index];
 }

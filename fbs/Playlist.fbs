@@ -13,18 +13,18 @@ include "Cue.fbs";
 
 namespace SplayApi;
 
-enum PLAYLIST_STATUS_TYPE:uint8 {
-  PLAYLIST_STATUS_IDLE,
-  PLAYLIST_STATUS_PLAYING,
-  PLAYLIST_STATUS_PAUSED,
-  PLAYLIST_STATUS_STOPPED,
-  PLAYLIST_STATUS_STOPPING,
-  PLAYLIST_STATUS_ERROR
+enum PLAYLIST_STATUS:uint8 {
+  IDLE,
+  PLAYING,
+  PAUSED,
+  STOPPED,
+  STOPPING,
+  ERROR
 }
 
 table Playlist {
   playlist_id:int;
-  status:PLAYLIST_STATUS_TYPE;
+  status:PLAYLIST_STATUS;
   current_time:uint32;
   duration:uint32;
   intensity:float;
@@ -42,22 +42,22 @@ table Playlist {
 }
 
 table PlayPlaylistReq {
-  command:COMMAND = PLAY_COMMAND;
+  command:COMMAND = PLAY;
   playlist_id:int;
 }
 
 table PausePlaylistReq {
-  command:COMMAND = PAUSE_COMMAND;
+  command:COMMAND = PAUSE;
   playlist_id:int;
 }
 
 table StopPlaylistReq {
-  command:COMMAND = STOP_COMMAND;
+  command:COMMAND = STOP;
   playlist_id:int;
 }
 
 table GetPlaylistReq {
-  command:COMMAND = GET_PLAYLIST_COMMAND;
+  command:COMMAND = GET_PLAYLIST;
   playlist_id:int;
 }
 
@@ -66,12 +66,12 @@ table GetPlaylistRes {
 }
 
 table UpdatePlaylistReq {
-  command:COMMAND = UPDATE_PLAYLIST_COMMAND;
+  command:COMMAND = UPDATE_PLAYLIST;
   playlist:Playlist;
 }
 
 table GetAllPlaylistsReq {
-  command:COMMAND = GET_ALL_PLAYLISTS_COMMAND;
+  command:COMMAND = GET_ALL_PLAYLISTS;
 }
 
 table GetAllPlaylistsRes {

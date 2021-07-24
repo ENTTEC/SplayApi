@@ -14,101 +14,131 @@ struct TriggerBuilder;
 struct Event;
 struct EventBuilder;
 
+enum CONTROL_TYPE {
+  CONTROL_TYPE_TRIGGER = 0,
+  CONTROL_TYPE_EVENT = 1,
+  CONTROL_TYPE_MIN = CONTROL_TYPE_TRIGGER,
+  CONTROL_TYPE_MAX = CONTROL_TYPE_EVENT
+};
+
+inline const CONTROL_TYPE (&EnumValuesCONTROL_TYPE())[2] {
+  static const CONTROL_TYPE values[] = {
+    CONTROL_TYPE_TRIGGER,
+    CONTROL_TYPE_EVENT
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesCONTROL_TYPE() {
+  static const char * const names[3] = {
+    "TRIGGER",
+    "EVENT",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameCONTROL_TYPE(CONTROL_TYPE e) {
+  if (flatbuffers::IsOutRange(e, CONTROL_TYPE_TRIGGER, CONTROL_TYPE_EVENT)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesCONTROL_TYPE()[index];
+}
+
 enum TRIGGER_TYPE {
-  TRIGGER_TYPE_TRIGGER_TYPE_NONE = 0,
-  TRIGGER_TYPE_TRIGGER_TYPE_OSC = 1,
-  TRIGGER_TYPE_TRIGGER_TYPE_RS232 = 2,
-  TRIGGER_TYPE_TRIGGER_TYPE_IO = 3,
-  TRIGGER_TYPE_TRIGGER_TYPE_ARTNET = 4,
-  TRIGGER_TYPE_TRIGGER_TYPE_DMX = 5,
-  TRIGGER_TYPE_TRIGGER_TYPE_SACN = 6,
-  TRIGGER_TYPE_TRIGGER_TYPE_POWERUP = 7,
-  TRIGGER_TYPE_TRIGGER_TYPE_UDP = 8,
-  TRIGGER_TYPE_MIN = TRIGGER_TYPE_TRIGGER_TYPE_NONE,
-  TRIGGER_TYPE_MAX = TRIGGER_TYPE_TRIGGER_TYPE_UDP
+  TRIGGER_TYPE_NONE = 0,
+  TRIGGER_TYPE_OSC = 1,
+  TRIGGER_TYPE_RS232 = 2,
+  TRIGGER_TYPE_IO = 3,
+  TRIGGER_TYPE_ARTNET = 4,
+  TRIGGER_TYPE_DMX = 5,
+  TRIGGER_TYPE_SACN = 6,
+  TRIGGER_TYPE_POWERUP = 7,
+  TRIGGER_TYPE_UDP = 8,
+  TRIGGER_TYPE_MIN = TRIGGER_TYPE_NONE,
+  TRIGGER_TYPE_MAX = TRIGGER_TYPE_UDP
 };
 
 inline const TRIGGER_TYPE (&EnumValuesTRIGGER_TYPE())[9] {
   static const TRIGGER_TYPE values[] = {
-    TRIGGER_TYPE_TRIGGER_TYPE_NONE,
-    TRIGGER_TYPE_TRIGGER_TYPE_OSC,
-    TRIGGER_TYPE_TRIGGER_TYPE_RS232,
-    TRIGGER_TYPE_TRIGGER_TYPE_IO,
-    TRIGGER_TYPE_TRIGGER_TYPE_ARTNET,
-    TRIGGER_TYPE_TRIGGER_TYPE_DMX,
-    TRIGGER_TYPE_TRIGGER_TYPE_SACN,
-    TRIGGER_TYPE_TRIGGER_TYPE_POWERUP,
-    TRIGGER_TYPE_TRIGGER_TYPE_UDP
+    TRIGGER_TYPE_NONE,
+    TRIGGER_TYPE_OSC,
+    TRIGGER_TYPE_RS232,
+    TRIGGER_TYPE_IO,
+    TRIGGER_TYPE_ARTNET,
+    TRIGGER_TYPE_DMX,
+    TRIGGER_TYPE_SACN,
+    TRIGGER_TYPE_POWERUP,
+    TRIGGER_TYPE_UDP
   };
   return values;
 }
 
 inline const char * const *EnumNamesTRIGGER_TYPE() {
   static const char * const names[10] = {
-    "TRIGGER_TYPE_NONE",
-    "TRIGGER_TYPE_OSC",
-    "TRIGGER_TYPE_RS232",
-    "TRIGGER_TYPE_IO",
-    "TRIGGER_TYPE_ARTNET",
-    "TRIGGER_TYPE_DMX",
-    "TRIGGER_TYPE_SACN",
-    "TRIGGER_TYPE_POWERUP",
-    "TRIGGER_TYPE_UDP",
+    "NONE",
+    "OSC",
+    "RS232",
+    "IO",
+    "ARTNET",
+    "DMX",
+    "SACN",
+    "POWERUP",
+    "UDP",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameTRIGGER_TYPE(TRIGGER_TYPE e) {
-  if (flatbuffers::IsOutRange(e, TRIGGER_TYPE_TRIGGER_TYPE_NONE, TRIGGER_TYPE_TRIGGER_TYPE_UDP)) return "";
+  if (flatbuffers::IsOutRange(e, TRIGGER_TYPE_NONE, TRIGGER_TYPE_UDP)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesTRIGGER_TYPE()[index];
 }
 
 enum EVENT_TYPE {
-  EVENT_TYPE_EVENT_TYPE_NONE = 0,
-  EVENT_TYPE_EVENT_TYPE_RS232 = 1,
-  EVENT_TYPE_EVENT_TYPE_IO = 2,
-  EVENT_TYPE_EVENT_TYPE_ARTNET = 3,
-  EVENT_TYPE_EVENT_TYPE_DMX = 4,
-  EVENT_TYPE_EVENT_TYPE_SACN = 5,
-  EVENT_TYPE_EVENT_TYPE_OSC = 6,
-  EVENT_TYPE_EVENT_TYPE_UDP = 7,
-  EVENT_TYPE_MIN = EVENT_TYPE_EVENT_TYPE_NONE,
-  EVENT_TYPE_MAX = EVENT_TYPE_EVENT_TYPE_UDP
+  EVENT_TYPE_NONE = 0,
+  EVENT_TYPE_RS232 = 1,
+  EVENT_TYPE_IO = 2,
+  EVENT_TYPE_ARTNET = 3,
+  EVENT_TYPE_DMX = 4,
+  EVENT_TYPE_SACN = 5,
+  EVENT_TYPE_OSC = 6,
+  EVENT_TYPE_UDP = 7,
+  EVENT_TYPE_MIN = EVENT_TYPE_NONE,
+  EVENT_TYPE_MAX = EVENT_TYPE_UDP
 };
 
 inline const EVENT_TYPE (&EnumValuesEVENT_TYPE())[8] {
   static const EVENT_TYPE values[] = {
-    EVENT_TYPE_EVENT_TYPE_NONE,
-    EVENT_TYPE_EVENT_TYPE_RS232,
-    EVENT_TYPE_EVENT_TYPE_IO,
-    EVENT_TYPE_EVENT_TYPE_ARTNET,
-    EVENT_TYPE_EVENT_TYPE_DMX,
-    EVENT_TYPE_EVENT_TYPE_SACN,
-    EVENT_TYPE_EVENT_TYPE_OSC,
-    EVENT_TYPE_EVENT_TYPE_UDP
+    EVENT_TYPE_NONE,
+    EVENT_TYPE_RS232,
+    EVENT_TYPE_IO,
+    EVENT_TYPE_ARTNET,
+    EVENT_TYPE_DMX,
+    EVENT_TYPE_SACN,
+    EVENT_TYPE_OSC,
+    EVENT_TYPE_UDP
   };
   return values;
 }
 
 inline const char * const *EnumNamesEVENT_TYPE() {
   static const char * const names[9] = {
-    "EVENT_TYPE_NONE",
-    "EVENT_TYPE_RS232",
-    "EVENT_TYPE_IO",
-    "EVENT_TYPE_ARTNET",
-    "EVENT_TYPE_DMX",
-    "EVENT_TYPE_SACN",
-    "EVENT_TYPE_OSC",
-    "EVENT_TYPE_UDP",
+    "NONE",
+    "RS232",
+    "IO",
+    "ARTNET",
+    "DMX",
+    "SACN",
+    "OSC",
+    "UDP",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameEVENT_TYPE(EVENT_TYPE e) {
-  if (flatbuffers::IsOutRange(e, EVENT_TYPE_EVENT_TYPE_NONE, EVENT_TYPE_EVENT_TYPE_UDP)) return "";
+  if (flatbuffers::IsOutRange(e, EVENT_TYPE_NONE, EVENT_TYPE_UDP)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesEVENT_TYPE()[index];
 }
@@ -193,7 +223,7 @@ inline flatbuffers::Offset<Trigger> CreateTrigger(
     flatbuffers::FlatBufferBuilder &_fbb,
     int32_t id = 0,
     flatbuffers::Offset<flatbuffers::String> name = 0,
-    SplayApi::TRIGGER_TYPE type = SplayApi::TRIGGER_TYPE_TRIGGER_TYPE_NONE,
+    SplayApi::TRIGGER_TYPE type = SplayApi::TRIGGER_TYPE_NONE,
     bool active = false,
     flatbuffers::Offset<flatbuffers::String> value = 0,
     uint32_t start = 0) {
@@ -211,7 +241,7 @@ inline flatbuffers::Offset<Trigger> CreateTriggerDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     int32_t id = 0,
     const char *name = nullptr,
-    SplayApi::TRIGGER_TYPE type = SplayApi::TRIGGER_TYPE_TRIGGER_TYPE_NONE,
+    SplayApi::TRIGGER_TYPE type = SplayApi::TRIGGER_TYPE_NONE,
     bool active = false,
     const char *value = nullptr,
     uint32_t start = 0) {
@@ -307,7 +337,7 @@ inline flatbuffers::Offset<Event> CreateEvent(
     flatbuffers::FlatBufferBuilder &_fbb,
     int32_t id = 0,
     flatbuffers::Offset<flatbuffers::String> name = 0,
-    SplayApi::EVENT_TYPE type = SplayApi::EVENT_TYPE_EVENT_TYPE_NONE,
+    SplayApi::EVENT_TYPE type = SplayApi::EVENT_TYPE_NONE,
     bool active = false,
     flatbuffers::Offset<flatbuffers::String> value = 0,
     uint32_t start = 0) {
@@ -325,7 +355,7 @@ inline flatbuffers::Offset<Event> CreateEventDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     int32_t id = 0,
     const char *name = nullptr,
-    SplayApi::EVENT_TYPE type = SplayApi::EVENT_TYPE_EVENT_TYPE_NONE,
+    SplayApi::EVENT_TYPE type = SplayApi::EVENT_TYPE_NONE,
     bool active = false,
     const char *value = nullptr,
     uint32_t start = 0) {

@@ -10,18 +10,18 @@ var SplayApi = SplayApi || {};
  * @enum {number}
  */
 SplayApi.CUE_TYPE = {
-  CUE_TYPE_STATIC: 0,
-  CUE_TYPE_DYNAMIC: 1,
-  CUE_TYPE_EFFECT: 2
+  STATIC: 0,
+  DYNAMIC: 1,
+  EFFECT: 2
 };
 
 /**
  * @enum {string}
  */
 SplayApi.CUE_TYPEName = {
-  '0': 'CUE_TYPE_STATIC',
-  '1': 'CUE_TYPE_DYNAMIC',
-  '2': 'CUE_TYPE_EFFECT'
+  '0': 'STATIC',
+  '1': 'DYNAMIC',
+  '2': 'EFFECT'
 };
 
 /**
@@ -110,7 +110,7 @@ SplayApi.CueConfig.prototype.chStop = function() {
  */
 SplayApi.CueConfig.prototype.source = function() {
   var offset = this.bb.__offset(this.bb_pos, 8);
-  return offset ? /** @type {SplayApi.UNIVERSE_TYPE} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.UNIVERSE_TYPE.DMX_TYPE;
+  return offset ? /** @type {SplayApi.UNIVERSE_TYPE} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.UNIVERSE_TYPE.DMX;
 };
 
 /**
@@ -158,7 +158,7 @@ SplayApi.CueConfig.addChStop = function(builder, chStop) {
  * @param {SplayApi.UNIVERSE_TYPE} source
  */
 SplayApi.CueConfig.addSource = function(builder, source) {
-  builder.addFieldInt8(2, source, SplayApi.UNIVERSE_TYPE.DMX_TYPE);
+  builder.addFieldInt8(2, source, SplayApi.UNIVERSE_TYPE.DMX);
 };
 
 /**
@@ -776,7 +776,7 @@ SplayApi.Cue.prototype.id = function() {
  */
 SplayApi.Cue.prototype.type = function() {
   var offset = this.bb.__offset(this.bb_pos, 6);
-  return offset ? /** @type {SplayApi.CUE_TYPE} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.CUE_TYPE.CUE_TYPE_STATIC;
+  return offset ? /** @type {SplayApi.CUE_TYPE} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.CUE_TYPE.STATIC;
 };
 
 /**
@@ -842,7 +842,7 @@ SplayApi.Cue.addId = function(builder, id) {
  * @param {SplayApi.CUE_TYPE} type
  */
 SplayApi.Cue.addType = function(builder, type) {
-  builder.addFieldInt8(1, type, SplayApi.CUE_TYPE.CUE_TYPE_STATIC);
+  builder.addFieldInt8(1, type, SplayApi.CUE_TYPE.STATIC);
 };
 
 /**
@@ -967,7 +967,7 @@ SplayApi.GetCueReq.getSizePrefixedRootAsGetCueReq = function(bb, obj) {
  */
 SplayApi.GetCueReq.prototype.command = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.GET_CUE_COMMAND;
+  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.GET_CUE;
 };
 
 /**
@@ -990,7 +990,7 @@ SplayApi.GetCueReq.startGetCueReq = function(builder) {
  * @param {SplayApi.COMMAND} command
  */
 SplayApi.GetCueReq.addCommand = function(builder, command) {
-  builder.addFieldInt8(0, command, SplayApi.COMMAND.GET_CUE_COMMAND);
+  builder.addFieldInt8(0, command, SplayApi.COMMAND.GET_CUE);
 };
 
 /**
@@ -1162,7 +1162,7 @@ SplayApi.GetAllCuesReq.getSizePrefixedRootAsGetAllCuesReq = function(bb, obj) {
  */
 SplayApi.GetAllCuesReq.prototype.command = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.GET_ALL_CUES_COMMAND;
+  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.GET_ALL_CUES;
 };
 
 /**
@@ -1177,7 +1177,7 @@ SplayApi.GetAllCuesReq.startGetAllCuesReq = function(builder) {
  * @param {SplayApi.COMMAND} command
  */
 SplayApi.GetAllCuesReq.addCommand = function(builder, command) {
-  builder.addFieldInt8(0, command, SplayApi.COMMAND.GET_ALL_CUES_COMMAND);
+  builder.addFieldInt8(0, command, SplayApi.COMMAND.GET_ALL_CUES);
 };
 
 /**

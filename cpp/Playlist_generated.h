@@ -40,46 +40,46 @@ struct GetAllPlaylistsReqBuilder;
 struct GetAllPlaylistsRes;
 struct GetAllPlaylistsResBuilder;
 
-enum PLAYLIST_STATUS_TYPE {
-  PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_IDLE = 0,
-  PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_PLAYING = 1,
-  PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_PAUSED = 2,
-  PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_STOPPED = 3,
-  PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_STOPPING = 4,
-  PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_ERROR = 5,
-  PLAYLIST_STATUS_TYPE_MIN = PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_IDLE,
-  PLAYLIST_STATUS_TYPE_MAX = PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_ERROR
+enum PLAYLIST_STATUS {
+  PLAYLIST_STATUS_IDLE = 0,
+  PLAYLIST_STATUS_PLAYING = 1,
+  PLAYLIST_STATUS_PAUSED = 2,
+  PLAYLIST_STATUS_STOPPED = 3,
+  PLAYLIST_STATUS_STOPPING = 4,
+  PLAYLIST_STATUS_ERROR = 5,
+  PLAYLIST_STATUS_MIN = PLAYLIST_STATUS_IDLE,
+  PLAYLIST_STATUS_MAX = PLAYLIST_STATUS_ERROR
 };
 
-inline const PLAYLIST_STATUS_TYPE (&EnumValuesPLAYLIST_STATUS_TYPE())[6] {
-  static const PLAYLIST_STATUS_TYPE values[] = {
-    PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_IDLE,
-    PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_PLAYING,
-    PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_PAUSED,
-    PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_STOPPED,
-    PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_STOPPING,
-    PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_ERROR
+inline const PLAYLIST_STATUS (&EnumValuesPLAYLIST_STATUS())[6] {
+  static const PLAYLIST_STATUS values[] = {
+    PLAYLIST_STATUS_IDLE,
+    PLAYLIST_STATUS_PLAYING,
+    PLAYLIST_STATUS_PAUSED,
+    PLAYLIST_STATUS_STOPPED,
+    PLAYLIST_STATUS_STOPPING,
+    PLAYLIST_STATUS_ERROR
   };
   return values;
 }
 
-inline const char * const *EnumNamesPLAYLIST_STATUS_TYPE() {
+inline const char * const *EnumNamesPLAYLIST_STATUS() {
   static const char * const names[7] = {
-    "PLAYLIST_STATUS_IDLE",
-    "PLAYLIST_STATUS_PLAYING",
-    "PLAYLIST_STATUS_PAUSED",
-    "PLAYLIST_STATUS_STOPPED",
-    "PLAYLIST_STATUS_STOPPING",
-    "PLAYLIST_STATUS_ERROR",
+    "IDLE",
+    "PLAYING",
+    "PAUSED",
+    "STOPPED",
+    "STOPPING",
+    "ERROR",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNamePLAYLIST_STATUS_TYPE(PLAYLIST_STATUS_TYPE e) {
-  if (flatbuffers::IsOutRange(e, PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_IDLE, PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_ERROR)) return "";
+inline const char *EnumNamePLAYLIST_STATUS(PLAYLIST_STATUS e) {
+  if (flatbuffers::IsOutRange(e, PLAYLIST_STATUS_IDLE, PLAYLIST_STATUS_ERROR)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesPLAYLIST_STATUS_TYPE()[index];
+  return EnumNamesPLAYLIST_STATUS()[index];
 }
 
 struct Playlist FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -105,8 +105,8 @@ struct Playlist FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   int32_t playlist_id() const {
     return GetField<int32_t>(VT_PLAYLIST_ID, 0);
   }
-  SplayApi::PLAYLIST_STATUS_TYPE status() const {
-    return static_cast<SplayApi::PLAYLIST_STATUS_TYPE>(GetField<uint8_t>(VT_STATUS, 0));
+  SplayApi::PLAYLIST_STATUS status() const {
+    return static_cast<SplayApi::PLAYLIST_STATUS>(GetField<uint8_t>(VT_STATUS, 0));
   }
   uint32_t current_time() const {
     return GetField<uint32_t>(VT_CURRENT_TIME, 0);
@@ -195,7 +195,7 @@ struct PlaylistBuilder {
   void add_playlist_id(int32_t playlist_id) {
     fbb_.AddElement<int32_t>(Playlist::VT_PLAYLIST_ID, playlist_id, 0);
   }
-  void add_status(SplayApi::PLAYLIST_STATUS_TYPE status) {
+  void add_status(SplayApi::PLAYLIST_STATUS status) {
     fbb_.AddElement<uint8_t>(Playlist::VT_STATUS, static_cast<uint8_t>(status), 0);
   }
   void add_current_time(uint32_t current_time) {
@@ -255,7 +255,7 @@ struct PlaylistBuilder {
 inline flatbuffers::Offset<Playlist> CreatePlaylist(
     flatbuffers::FlatBufferBuilder &_fbb,
     int32_t playlist_id = 0,
-    SplayApi::PLAYLIST_STATUS_TYPE status = SplayApi::PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_IDLE,
+    SplayApi::PLAYLIST_STATUS status = SplayApi::PLAYLIST_STATUS_IDLE,
     uint32_t current_time = 0,
     uint32_t duration = 0,
     float intensity = 0.0f,
@@ -293,7 +293,7 @@ inline flatbuffers::Offset<Playlist> CreatePlaylist(
 inline flatbuffers::Offset<Playlist> CreatePlaylistDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     int32_t playlist_id = 0,
-    SplayApi::PLAYLIST_STATUS_TYPE status = SplayApi::PLAYLIST_STATUS_TYPE_PLAYLIST_STATUS_IDLE,
+    SplayApi::PLAYLIST_STATUS status = SplayApi::PLAYLIST_STATUS_IDLE,
     uint32_t current_time = 0,
     uint32_t duration = 0,
     float intensity = 0.0f,
@@ -380,7 +380,7 @@ struct PlayPlaylistReqBuilder {
 
 inline flatbuffers::Offset<PlayPlaylistReq> CreatePlayPlaylistReq(
     flatbuffers::FlatBufferBuilder &_fbb,
-    SplayApi::COMMAND command = SplayApi::COMMAND_PLAY_COMMAND,
+    SplayApi::COMMAND command = SplayApi::COMMAND_PLAY,
     int32_t playlist_id = 0) {
   PlayPlaylistReqBuilder builder_(_fbb);
   builder_.add_playlist_id(playlist_id);
@@ -432,7 +432,7 @@ struct PausePlaylistReqBuilder {
 
 inline flatbuffers::Offset<PausePlaylistReq> CreatePausePlaylistReq(
     flatbuffers::FlatBufferBuilder &_fbb,
-    SplayApi::COMMAND command = SplayApi::COMMAND_PAUSE_COMMAND,
+    SplayApi::COMMAND command = SplayApi::COMMAND_PAUSE,
     int32_t playlist_id = 0) {
   PausePlaylistReqBuilder builder_(_fbb);
   builder_.add_playlist_id(playlist_id);
@@ -484,7 +484,7 @@ struct StopPlaylistReqBuilder {
 
 inline flatbuffers::Offset<StopPlaylistReq> CreateStopPlaylistReq(
     flatbuffers::FlatBufferBuilder &_fbb,
-    SplayApi::COMMAND command = SplayApi::COMMAND_STOP_COMMAND,
+    SplayApi::COMMAND command = SplayApi::COMMAND_STOP,
     int32_t playlist_id = 0) {
   StopPlaylistReqBuilder builder_(_fbb);
   builder_.add_playlist_id(playlist_id);
@@ -536,7 +536,7 @@ struct GetPlaylistReqBuilder {
 
 inline flatbuffers::Offset<GetPlaylistReq> CreateGetPlaylistReq(
     flatbuffers::FlatBufferBuilder &_fbb,
-    SplayApi::COMMAND command = SplayApi::COMMAND_GET_PLAYLIST_COMMAND,
+    SplayApi::COMMAND command = SplayApi::COMMAND_GET_PLAYLIST,
     int32_t playlist_id = 0) {
   GetPlaylistReqBuilder builder_(_fbb);
   builder_.add_playlist_id(playlist_id);
@@ -632,7 +632,7 @@ struct UpdatePlaylistReqBuilder {
 
 inline flatbuffers::Offset<UpdatePlaylistReq> CreateUpdatePlaylistReq(
     flatbuffers::FlatBufferBuilder &_fbb,
-    SplayApi::COMMAND command = SplayApi::COMMAND_UPDATE_PLAYLIST_COMMAND,
+    SplayApi::COMMAND command = SplayApi::COMMAND_UPDATE_PLAYLIST,
     flatbuffers::Offset<SplayApi::Playlist> playlist = 0) {
   UpdatePlaylistReqBuilder builder_(_fbb);
   builder_.add_playlist(playlist);
@@ -676,7 +676,7 @@ struct GetAllPlaylistsReqBuilder {
 
 inline flatbuffers::Offset<GetAllPlaylistsReq> CreateGetAllPlaylistsReq(
     flatbuffers::FlatBufferBuilder &_fbb,
-    SplayApi::COMMAND command = SplayApi::COMMAND_GET_ALL_PLAYLISTS_COMMAND) {
+    SplayApi::COMMAND command = SplayApi::COMMAND_GET_ALL_PLAYLISTS) {
   GetAllPlaylistsReqBuilder builder_(_fbb);
   builder_.add_command(command);
   return builder_.Finish();

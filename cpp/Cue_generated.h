@@ -43,34 +43,34 @@ struct GetAllCuesRes;
 struct GetAllCuesResBuilder;
 
 enum CUE_TYPE {
-  CUE_TYPE_CUE_TYPE_STATIC = 0,
-  CUE_TYPE_CUE_TYPE_DYNAMIC = 1,
-  CUE_TYPE_CUE_TYPE_EFFECT = 2,
-  CUE_TYPE_MIN = CUE_TYPE_CUE_TYPE_STATIC,
-  CUE_TYPE_MAX = CUE_TYPE_CUE_TYPE_EFFECT
+  CUE_TYPE_STATIC = 0,
+  CUE_TYPE_DYNAMIC = 1,
+  CUE_TYPE_EFFECT = 2,
+  CUE_TYPE_MIN = CUE_TYPE_STATIC,
+  CUE_TYPE_MAX = CUE_TYPE_EFFECT
 };
 
 inline const CUE_TYPE (&EnumValuesCUE_TYPE())[3] {
   static const CUE_TYPE values[] = {
-    CUE_TYPE_CUE_TYPE_STATIC,
-    CUE_TYPE_CUE_TYPE_DYNAMIC,
-    CUE_TYPE_CUE_TYPE_EFFECT
+    CUE_TYPE_STATIC,
+    CUE_TYPE_DYNAMIC,
+    CUE_TYPE_EFFECT
   };
   return values;
 }
 
 inline const char * const *EnumNamesCUE_TYPE() {
   static const char * const names[4] = {
-    "CUE_TYPE_STATIC",
-    "CUE_TYPE_DYNAMIC",
-    "CUE_TYPE_EFFECT",
+    "STATIC",
+    "DYNAMIC",
+    "EFFECT",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameCUE_TYPE(CUE_TYPE e) {
-  if (flatbuffers::IsOutRange(e, CUE_TYPE_CUE_TYPE_STATIC, CUE_TYPE_CUE_TYPE_EFFECT)) return "";
+  if (flatbuffers::IsOutRange(e, CUE_TYPE_STATIC, CUE_TYPE_EFFECT)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesCUE_TYPE()[index];
 }
@@ -201,7 +201,7 @@ inline flatbuffers::Offset<CueConfig> CreateCueConfig(
     flatbuffers::FlatBufferBuilder &_fbb,
     uint16_t ch_start = 0,
     uint16_t ch_stop = 511,
-    SplayApi::UNIVERSE_TYPE source = SplayApi::UNIVERSE_TYPE_DMX_TYPE,
+    SplayApi::UNIVERSE_TYPE source = SplayApi::UNIVERSE_TYPE_DMX,
     bool rec_control = false,
     flatbuffers::Offset<SplayApi::Trigger> trigger = 0) {
   CueConfigBuilder builder_(_fbb);
@@ -558,7 +558,7 @@ struct CueBuilder {
 inline flatbuffers::Offset<Cue> CreateCue(
     flatbuffers::FlatBufferBuilder &_fbb,
     int32_t id = 0,
-    SplayApi::CUE_TYPE type = SplayApi::CUE_TYPE_CUE_TYPE_STATIC,
+    SplayApi::CUE_TYPE type = SplayApi::CUE_TYPE_STATIC,
     flatbuffers::Offset<flatbuffers::String> name = 0,
     uint32_t duration = 0,
     SplayApi::Frame frame_type = SplayApi::Frame_NONE,
@@ -578,7 +578,7 @@ inline flatbuffers::Offset<Cue> CreateCue(
 inline flatbuffers::Offset<Cue> CreateCueDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     int32_t id = 0,
-    SplayApi::CUE_TYPE type = SplayApi::CUE_TYPE_CUE_TYPE_STATIC,
+    SplayApi::CUE_TYPE type = SplayApi::CUE_TYPE_STATIC,
     const char *name = nullptr,
     uint32_t duration = 0,
     SplayApi::Frame frame_type = SplayApi::Frame_NONE,
@@ -640,7 +640,7 @@ struct GetCueReqBuilder {
 
 inline flatbuffers::Offset<GetCueReq> CreateGetCueReq(
     flatbuffers::FlatBufferBuilder &_fbb,
-    SplayApi::COMMAND command = SplayApi::COMMAND_GET_CUE_COMMAND,
+    SplayApi::COMMAND command = SplayApi::COMMAND_GET_CUE,
     int32_t cue_id = 0) {
   GetCueReqBuilder builder_(_fbb);
   builder_.add_cue_id(cue_id);
@@ -727,7 +727,7 @@ struct GetAllCuesReqBuilder {
 
 inline flatbuffers::Offset<GetAllCuesReq> CreateGetAllCuesReq(
     flatbuffers::FlatBufferBuilder &_fbb,
-    SplayApi::COMMAND command = SplayApi::COMMAND_GET_ALL_CUES_COMMAND) {
+    SplayApi::COMMAND command = SplayApi::COMMAND_GET_ALL_CUES) {
   GetAllCuesReqBuilder builder_(_fbb);
   builder_.add_command(command);
   return builder_.Finish();

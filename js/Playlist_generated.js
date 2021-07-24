@@ -9,25 +9,25 @@ var SplayApi = SplayApi || {};
 /**
  * @enum {number}
  */
-SplayApi.PLAYLIST_STATUS_TYPE = {
-  PLAYLIST_STATUS_IDLE: 0,
-  PLAYLIST_STATUS_PLAYING: 1,
-  PLAYLIST_STATUS_PAUSED: 2,
-  PLAYLIST_STATUS_STOPPED: 3,
-  PLAYLIST_STATUS_STOPPING: 4,
-  PLAYLIST_STATUS_ERROR: 5
+SplayApi.PLAYLIST_STATUS = {
+  IDLE: 0,
+  PLAYING: 1,
+  PAUSED: 2,
+  STOPPED: 3,
+  STOPPING: 4,
+  ERROR: 5
 };
 
 /**
  * @enum {string}
  */
-SplayApi.PLAYLIST_STATUS_TYPEName = {
-  '0': 'PLAYLIST_STATUS_IDLE',
-  '1': 'PLAYLIST_STATUS_PLAYING',
-  '2': 'PLAYLIST_STATUS_PAUSED',
-  '3': 'PLAYLIST_STATUS_STOPPED',
-  '4': 'PLAYLIST_STATUS_STOPPING',
-  '5': 'PLAYLIST_STATUS_ERROR'
+SplayApi.PLAYLIST_STATUSName = {
+  '0': 'IDLE',
+  '1': 'PLAYING',
+  '2': 'PAUSED',
+  '3': 'STOPPED',
+  '4': 'STOPPING',
+  '5': 'ERROR'
 };
 
 /**
@@ -84,11 +84,11 @@ SplayApi.Playlist.prototype.playlistId = function() {
 };
 
 /**
- * @returns {SplayApi.PLAYLIST_STATUS_TYPE}
+ * @returns {SplayApi.PLAYLIST_STATUS}
  */
 SplayApi.Playlist.prototype.status = function() {
   var offset = this.bb.__offset(this.bb_pos, 6);
-  return offset ? /** @type {SplayApi.PLAYLIST_STATUS_TYPE} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.PLAYLIST_STATUS_TYPE.PLAYLIST_STATUS_IDLE;
+  return offset ? /** @type {SplayApi.PLAYLIST_STATUS} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.PLAYLIST_STATUS.IDLE;
 };
 
 /**
@@ -284,10 +284,10 @@ SplayApi.Playlist.addPlaylistId = function(builder, playlistId) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {SplayApi.PLAYLIST_STATUS_TYPE} status
+ * @param {SplayApi.PLAYLIST_STATUS} status
  */
 SplayApi.Playlist.addStatus = function(builder, status) {
-  builder.addFieldInt8(1, status, SplayApi.PLAYLIST_STATUS_TYPE.PLAYLIST_STATUS_IDLE);
+  builder.addFieldInt8(1, status, SplayApi.PLAYLIST_STATUS.IDLE);
 };
 
 /**
@@ -540,7 +540,7 @@ SplayApi.Playlist.endPlaylist = function(builder) {
 /**
  * @param {flatbuffers.Builder} builder
  * @param {number} playlistId
- * @param {SplayApi.PLAYLIST_STATUS_TYPE} status
+ * @param {SplayApi.PLAYLIST_STATUS} status
  * @param {number} currentTime
  * @param {number} duration
  * @param {number} intensity
@@ -628,7 +628,7 @@ SplayApi.PlayPlaylistReq.getSizePrefixedRootAsPlayPlaylistReq = function(bb, obj
  */
 SplayApi.PlayPlaylistReq.prototype.command = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.PLAY_COMMAND;
+  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.PLAY;
 };
 
 /**
@@ -651,7 +651,7 @@ SplayApi.PlayPlaylistReq.startPlayPlaylistReq = function(builder) {
  * @param {SplayApi.COMMAND} command
  */
 SplayApi.PlayPlaylistReq.addCommand = function(builder, command) {
-  builder.addFieldInt8(0, command, SplayApi.COMMAND.PLAY_COMMAND);
+  builder.addFieldInt8(0, command, SplayApi.COMMAND.PLAY);
 };
 
 /**
@@ -734,7 +734,7 @@ SplayApi.PausePlaylistReq.getSizePrefixedRootAsPausePlaylistReq = function(bb, o
  */
 SplayApi.PausePlaylistReq.prototype.command = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.PAUSE_COMMAND;
+  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.PAUSE;
 };
 
 /**
@@ -757,7 +757,7 @@ SplayApi.PausePlaylistReq.startPausePlaylistReq = function(builder) {
  * @param {SplayApi.COMMAND} command
  */
 SplayApi.PausePlaylistReq.addCommand = function(builder, command) {
-  builder.addFieldInt8(0, command, SplayApi.COMMAND.PAUSE_COMMAND);
+  builder.addFieldInt8(0, command, SplayApi.COMMAND.PAUSE);
 };
 
 /**
@@ -840,7 +840,7 @@ SplayApi.StopPlaylistReq.getSizePrefixedRootAsStopPlaylistReq = function(bb, obj
  */
 SplayApi.StopPlaylistReq.prototype.command = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.STOP_COMMAND;
+  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.STOP;
 };
 
 /**
@@ -863,7 +863,7 @@ SplayApi.StopPlaylistReq.startStopPlaylistReq = function(builder) {
  * @param {SplayApi.COMMAND} command
  */
 SplayApi.StopPlaylistReq.addCommand = function(builder, command) {
-  builder.addFieldInt8(0, command, SplayApi.COMMAND.STOP_COMMAND);
+  builder.addFieldInt8(0, command, SplayApi.COMMAND.STOP);
 };
 
 /**
@@ -946,7 +946,7 @@ SplayApi.GetPlaylistReq.getSizePrefixedRootAsGetPlaylistReq = function(bb, obj) 
  */
 SplayApi.GetPlaylistReq.prototype.command = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.GET_PLAYLIST_COMMAND;
+  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.GET_PLAYLIST;
 };
 
 /**
@@ -969,7 +969,7 @@ SplayApi.GetPlaylistReq.startGetPlaylistReq = function(builder) {
  * @param {SplayApi.COMMAND} command
  */
 SplayApi.GetPlaylistReq.addCommand = function(builder, command) {
-  builder.addFieldInt8(0, command, SplayApi.COMMAND.GET_PLAYLIST_COMMAND);
+  builder.addFieldInt8(0, command, SplayApi.COMMAND.GET_PLAYLIST);
 };
 
 /**
@@ -1141,7 +1141,7 @@ SplayApi.UpdatePlaylistReq.getSizePrefixedRootAsUpdatePlaylistReq = function(bb,
  */
 SplayApi.UpdatePlaylistReq.prototype.command = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.UPDATE_PLAYLIST_COMMAND;
+  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.UPDATE_PLAYLIST;
 };
 
 /**
@@ -1165,7 +1165,7 @@ SplayApi.UpdatePlaylistReq.startUpdatePlaylistReq = function(builder) {
  * @param {SplayApi.COMMAND} command
  */
 SplayApi.UpdatePlaylistReq.addCommand = function(builder, command) {
-  builder.addFieldInt8(0, command, SplayApi.COMMAND.UPDATE_PLAYLIST_COMMAND);
+  builder.addFieldInt8(0, command, SplayApi.COMMAND.UPDATE_PLAYLIST);
 };
 
 /**
@@ -1248,7 +1248,7 @@ SplayApi.GetAllPlaylistsReq.getSizePrefixedRootAsGetAllPlaylistsReq = function(b
  */
 SplayApi.GetAllPlaylistsReq.prototype.command = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.GET_ALL_PLAYLISTS_COMMAND;
+  return offset ? /** @type {SplayApi.COMMAND} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.COMMAND.GET_ALL_PLAYLISTS;
 };
 
 /**
@@ -1263,7 +1263,7 @@ SplayApi.GetAllPlaylistsReq.startGetAllPlaylistsReq = function(builder) {
  * @param {SplayApi.COMMAND} command
  */
 SplayApi.GetAllPlaylistsReq.addCommand = function(builder, command) {
-  builder.addFieldInt8(0, command, SplayApi.COMMAND.GET_ALL_PLAYLISTS_COMMAND);
+  builder.addFieldInt8(0, command, SplayApi.COMMAND.GET_ALL_PLAYLISTS);
 };
 
 /**

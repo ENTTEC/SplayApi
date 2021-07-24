@@ -10,20 +10,20 @@ var SplayApi = SplayApi || {};
  * @enum {number}
  */
 SplayApi.UNIVERSE_TYPE = {
-  DMX_TYPE: 0,
-  ARTNET_TYPE: 1,
-  SACN_TYPE: 2,
-  NONE_TYPE: 3
+  DMX: 0,
+  ARTNET: 1,
+  SACN: 2,
+  NONE: 3
 };
 
 /**
  * @enum {string}
  */
 SplayApi.UNIVERSE_TYPEName = {
-  '0': 'DMX_TYPE',
-  '1': 'ARTNET_TYPE',
-  '2': 'SACN_TYPE',
-  '3': 'NONE_TYPE'
+  '0': 'DMX',
+  '1': 'ARTNET',
+  '2': 'SACN',
+  '3': 'NONE'
 };
 
 /**
@@ -61,7 +61,8 @@ SplayApi.PIXEL_ORDER = {
   GRWB: 26,
   GBWR: 27,
   BRWG: 28,
-  BGWR: 29
+  BGWR: 29,
+  W: 30
 };
 
 /**
@@ -99,7 +100,8 @@ SplayApi.PIXEL_ORDERName = {
   '26': 'GRWB',
   '27': 'GBWR',
   '28': 'BRWG',
-  '29': 'BGWR'
+  '29': 'BGWR',
+  '30': 'W'
 };
 
 /**
@@ -133,7 +135,7 @@ SplayApi.SETTING_CATEGORIES = {
   IEEE1588_ACTIVE: 24,
   LOCK_STATUS: 25,
   DB_VERSION: 26,
-  SIZE_OF_SETTING_CATEGORIES: 27
+  SIZE_OF: 27
 };
 
 /**
@@ -167,7 +169,7 @@ SplayApi.SETTING_CATEGORIESName = {
   '24': 'IEEE1588_ACTIVE',
   '25': 'LOCK_STATUS',
   '26': 'DB_VERSION',
-  '27': 'SIZE_OF_SETTING_CATEGORIES'
+  '27': 'SIZE_OF'
 };
 
 // Exports for ECMAScript6 Modules

@@ -9,59 +9,75 @@ var SplayApi = SplayApi || {};
 /**
  * @enum {number}
  */
+SplayApi.CONTROL_TYPE = {
+  TRIGGER: 0,
+  EVENT: 1
+};
+
+/**
+ * @enum {string}
+ */
+SplayApi.CONTROL_TYPEName = {
+  '0': 'TRIGGER',
+  '1': 'EVENT'
+};
+
+/**
+ * @enum {number}
+ */
 SplayApi.TRIGGER_TYPE = {
-  TRIGGER_TYPE_NONE: 0,
-  TRIGGER_TYPE_OSC: 1,
-  TRIGGER_TYPE_RS232: 2,
-  TRIGGER_TYPE_IO: 3,
-  TRIGGER_TYPE_ARTNET: 4,
-  TRIGGER_TYPE_DMX: 5,
-  TRIGGER_TYPE_SACN: 6,
-  TRIGGER_TYPE_POWERUP: 7,
-  TRIGGER_TYPE_UDP: 8
+  NONE: 0,
+  OSC: 1,
+  RS232: 2,
+  IO: 3,
+  ARTNET: 4,
+  DMX: 5,
+  SACN: 6,
+  POWERUP: 7,
+  UDP: 8
 };
 
 /**
  * @enum {string}
  */
 SplayApi.TRIGGER_TYPEName = {
-  '0': 'TRIGGER_TYPE_NONE',
-  '1': 'TRIGGER_TYPE_OSC',
-  '2': 'TRIGGER_TYPE_RS232',
-  '3': 'TRIGGER_TYPE_IO',
-  '4': 'TRIGGER_TYPE_ARTNET',
-  '5': 'TRIGGER_TYPE_DMX',
-  '6': 'TRIGGER_TYPE_SACN',
-  '7': 'TRIGGER_TYPE_POWERUP',
-  '8': 'TRIGGER_TYPE_UDP'
+  '0': 'NONE',
+  '1': 'OSC',
+  '2': 'RS232',
+  '3': 'IO',
+  '4': 'ARTNET',
+  '5': 'DMX',
+  '6': 'SACN',
+  '7': 'POWERUP',
+  '8': 'UDP'
 };
 
 /**
  * @enum {number}
  */
 SplayApi.EVENT_TYPE = {
-  EVENT_TYPE_NONE: 0,
-  EVENT_TYPE_RS232: 1,
-  EVENT_TYPE_IO: 2,
-  EVENT_TYPE_ARTNET: 3,
-  EVENT_TYPE_DMX: 4,
-  EVENT_TYPE_SACN: 5,
-  EVENT_TYPE_OSC: 6,
-  EVENT_TYPE_UDP: 7
+  NONE: 0,
+  RS232: 1,
+  IO: 2,
+  ARTNET: 3,
+  DMX: 4,
+  SACN: 5,
+  OSC: 6,
+  UDP: 7
 };
 
 /**
  * @enum {string}
  */
 SplayApi.EVENT_TYPEName = {
-  '0': 'EVENT_TYPE_NONE',
-  '1': 'EVENT_TYPE_RS232',
-  '2': 'EVENT_TYPE_IO',
-  '3': 'EVENT_TYPE_ARTNET',
-  '4': 'EVENT_TYPE_DMX',
-  '5': 'EVENT_TYPE_SACN',
-  '6': 'EVENT_TYPE_OSC',
-  '7': 'EVENT_TYPE_UDP'
+  '0': 'NONE',
+  '1': 'RS232',
+  '2': 'IO',
+  '3': 'ARTNET',
+  '4': 'DMX',
+  '5': 'SACN',
+  '6': 'OSC',
+  '7': 'UDP'
 };
 
 /**
@@ -131,7 +147,7 @@ SplayApi.Trigger.prototype.name = function(optionalEncoding) {
  */
 SplayApi.Trigger.prototype.type = function() {
   var offset = this.bb.__offset(this.bb_pos, 8);
-  return offset ? /** @type {SplayApi.TRIGGER_TYPE} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.TRIGGER_TYPE.TRIGGER_TYPE_NONE;
+  return offset ? /** @type {SplayApi.TRIGGER_TYPE} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.TRIGGER_TYPE.NONE;
 };
 
 /**
@@ -187,7 +203,7 @@ SplayApi.Trigger.addName = function(builder, nameOffset) {
  * @param {SplayApi.TRIGGER_TYPE} type
  */
 SplayApi.Trigger.addType = function(builder, type) {
-  builder.addFieldInt8(2, type, SplayApi.TRIGGER_TYPE.TRIGGER_TYPE_NONE);
+  builder.addFieldInt8(2, type, SplayApi.TRIGGER_TYPE.NONE);
 };
 
 /**
@@ -311,7 +327,7 @@ SplayApi.Event.prototype.name = function(optionalEncoding) {
  */
 SplayApi.Event.prototype.type = function() {
   var offset = this.bb.__offset(this.bb_pos, 8);
-  return offset ? /** @type {SplayApi.EVENT_TYPE} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.EVENT_TYPE.EVENT_TYPE_NONE;
+  return offset ? /** @type {SplayApi.EVENT_TYPE} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.EVENT_TYPE.NONE;
 };
 
 /**
@@ -367,7 +383,7 @@ SplayApi.Event.addName = function(builder, nameOffset) {
  * @param {SplayApi.EVENT_TYPE} type
  */
 SplayApi.Event.addType = function(builder, type) {
-  builder.addFieldInt8(2, type, SplayApi.EVENT_TYPE.EVENT_TYPE_NONE);
+  builder.addFieldInt8(2, type, SplayApi.EVENT_TYPE.NONE);
 };
 
 /**

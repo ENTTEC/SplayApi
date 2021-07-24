@@ -5,9 +5,9 @@ include "Control.fbs";
 namespace SplayApi;
 
 enum CUE_TYPE:uint8 {
-  CUE_TYPE_STATIC,
-  CUE_TYPE_DYNAMIC,
-  CUE_TYPE_EFFECT,
+  STATIC,
+  DYNAMIC,
+  EFFECT,
 }
 
 table CueConfig{
@@ -53,7 +53,7 @@ table Cue {
 }
 
 table GetCueReq {
-  command:COMMAND = GET_CUE_COMMAND;
+  command:COMMAND = GET_CUE;
   cue_id:int;
 }
 
@@ -62,7 +62,7 @@ table GetCueRes {
 }
 
 table GetAllCuesReq {
-  command:COMMAND = GET_ALL_CUES_COMMAND;
+  command:COMMAND = GET_ALL_CUES;
 }
 
 table GetAllCuesRes {
