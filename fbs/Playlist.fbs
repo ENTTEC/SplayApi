@@ -23,14 +23,15 @@ enum PLAYLIST_STATUS:uint8 {
 }
 
 table Playlist {
-  playlist_id:int;
+  playlist_id:uint16;
+  order:uint16;
   status:PLAYLIST_STATUS;
-  current_time:uint32;
-  duration:uint32;
+  current_time:uint64;
+  duration:uint64;
   intensity:float;
   name:string;
   waiting_triggers:bool;
-  notification_message:string;
+  hide_from_home:bool;
   start_trigger:Trigger;
   stop_trigger:Trigger;
   triggers:[Trigger];

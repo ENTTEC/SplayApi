@@ -86,33 +86,37 @@ struct Playlist FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef PlaylistBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_PLAYLIST_ID = 4,
-    VT_STATUS = 6,
-    VT_CURRENT_TIME = 8,
-    VT_DURATION = 10,
-    VT_INTENSITY = 12,
-    VT_NAME = 14,
-    VT_WAITING_TRIGGERS = 16,
-    VT_NOTIFICATION_MESSAGE = 18,
-    VT_START_TRIGGER = 20,
-    VT_STOP_TRIGGER = 22,
-    VT_TRIGGERS = 24,
-    VT_EVENTS = 26,
-    VT_TRACK1 = 28,
-    VT_TRACK2 = 30,
-    VT_TRACK3 = 32,
-    VT_TRACK4 = 34
+    VT_ORDER = 6,
+    VT_STATUS = 8,
+    VT_CURRENT_TIME = 10,
+    VT_DURATION = 12,
+    VT_INTENSITY = 14,
+    VT_NAME = 16,
+    VT_WAITING_TRIGGERS = 18,
+    VT_HIDE_FROM_HOME = 20,
+    VT_START_TRIGGER = 22,
+    VT_STOP_TRIGGER = 24,
+    VT_TRIGGERS = 26,
+    VT_EVENTS = 28,
+    VT_TRACK1 = 30,
+    VT_TRACK2 = 32,
+    VT_TRACK3 = 34,
+    VT_TRACK4 = 36
   };
-  int32_t playlist_id() const {
-    return GetField<int32_t>(VT_PLAYLIST_ID, 0);
+  uint16_t playlist_id() const {
+    return GetField<uint16_t>(VT_PLAYLIST_ID, 0);
+  }
+  uint16_t order() const {
+    return GetField<uint16_t>(VT_ORDER, 0);
   }
   SplayApi::PLAYLIST_STATUS status() const {
     return static_cast<SplayApi::PLAYLIST_STATUS>(GetField<uint8_t>(VT_STATUS, 0));
   }
-  uint32_t current_time() const {
-    return GetField<uint32_t>(VT_CURRENT_TIME, 0);
+  uint64_t current_time() const {
+    return GetField<uint64_t>(VT_CURRENT_TIME, 0);
   }
-  uint32_t duration() const {
-    return GetField<uint32_t>(VT_DURATION, 0);
+  uint64_t duration() const {
+    return GetField<uint64_t>(VT_DURATION, 0);
   }
   float intensity() const {
     return GetField<float>(VT_INTENSITY, 0.0f);
@@ -123,8 +127,8 @@ struct Playlist FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   bool waiting_triggers() const {
     return GetField<uint8_t>(VT_WAITING_TRIGGERS, 0) != 0;
   }
-  const flatbuffers::String *notification_message() const {
-    return GetPointer<const flatbuffers::String *>(VT_NOTIFICATION_MESSAGE);
+  bool hide_from_home() const {
+    return GetField<uint8_t>(VT_HIDE_FROM_HOME, 0) != 0;
   }
   const SplayApi::Trigger *start_trigger() const {
     return GetPointer<const SplayApi::Trigger *>(VT_START_TRIGGER);
@@ -152,16 +156,16 @@ struct Playlist FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<int32_t>(verifier, VT_PLAYLIST_ID) &&
+           VerifyField<uint16_t>(verifier, VT_PLAYLIST_ID) &&
+           VerifyField<uint16_t>(verifier, VT_ORDER) &&
            VerifyField<uint8_t>(verifier, VT_STATUS) &&
-           VerifyField<uint32_t>(verifier, VT_CURRENT_TIME) &&
-           VerifyField<uint32_t>(verifier, VT_DURATION) &&
+           VerifyField<uint64_t>(verifier, VT_CURRENT_TIME) &&
+           VerifyField<uint64_t>(verifier, VT_DURATION) &&
            VerifyField<float>(verifier, VT_INTENSITY) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(name()) &&
            VerifyField<uint8_t>(verifier, VT_WAITING_TRIGGERS) &&
-           VerifyOffset(verifier, VT_NOTIFICATION_MESSAGE) &&
-           verifier.VerifyString(notification_message()) &&
+           VerifyField<uint8_t>(verifier, VT_HIDE_FROM_HOME) &&
            VerifyOffset(verifier, VT_START_TRIGGER) &&
            verifier.VerifyTable(start_trigger()) &&
            VerifyOffset(verifier, VT_STOP_TRIGGER) &&
@@ -192,17 +196,20 @@ struct PlaylistBuilder {
   typedef Playlist Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_playlist_id(int32_t playlist_id) {
-    fbb_.AddElement<int32_t>(Playlist::VT_PLAYLIST_ID, playlist_id, 0);
+  void add_playlist_id(uint16_t playlist_id) {
+    fbb_.AddElement<uint16_t>(Playlist::VT_PLAYLIST_ID, playlist_id, 0);
+  }
+  void add_order(uint16_t order) {
+    fbb_.AddElement<uint16_t>(Playlist::VT_ORDER, order, 0);
   }
   void add_status(SplayApi::PLAYLIST_STATUS status) {
     fbb_.AddElement<uint8_t>(Playlist::VT_STATUS, static_cast<uint8_t>(status), 0);
   }
-  void add_current_time(uint32_t current_time) {
-    fbb_.AddElement<uint32_t>(Playlist::VT_CURRENT_TIME, current_time, 0);
+  void add_current_time(uint64_t current_time) {
+    fbb_.AddElement<uint64_t>(Playlist::VT_CURRENT_TIME, current_time, 0);
   }
-  void add_duration(uint32_t duration) {
-    fbb_.AddElement<uint32_t>(Playlist::VT_DURATION, duration, 0);
+  void add_duration(uint64_t duration) {
+    fbb_.AddElement<uint64_t>(Playlist::VT_DURATION, duration, 0);
   }
   void add_intensity(float intensity) {
     fbb_.AddElement<float>(Playlist::VT_INTENSITY, intensity, 0.0f);
@@ -213,8 +220,8 @@ struct PlaylistBuilder {
   void add_waiting_triggers(bool waiting_triggers) {
     fbb_.AddElement<uint8_t>(Playlist::VT_WAITING_TRIGGERS, static_cast<uint8_t>(waiting_triggers), 0);
   }
-  void add_notification_message(flatbuffers::Offset<flatbuffers::String> notification_message) {
-    fbb_.AddOffset(Playlist::VT_NOTIFICATION_MESSAGE, notification_message);
+  void add_hide_from_home(bool hide_from_home) {
+    fbb_.AddElement<uint8_t>(Playlist::VT_HIDE_FROM_HOME, static_cast<uint8_t>(hide_from_home), 0);
   }
   void add_start_trigger(flatbuffers::Offset<SplayApi::Trigger> start_trigger) {
     fbb_.AddOffset(Playlist::VT_START_TRIGGER, start_trigger);
@@ -254,14 +261,15 @@ struct PlaylistBuilder {
 
 inline flatbuffers::Offset<Playlist> CreatePlaylist(
     flatbuffers::FlatBufferBuilder &_fbb,
-    int32_t playlist_id = 0,
+    uint16_t playlist_id = 0,
+    uint16_t order = 0,
     SplayApi::PLAYLIST_STATUS status = SplayApi::PLAYLIST_STATUS_IDLE,
-    uint32_t current_time = 0,
-    uint32_t duration = 0,
+    uint64_t current_time = 0,
+    uint64_t duration = 0,
     float intensity = 0.0f,
     flatbuffers::Offset<flatbuffers::String> name = 0,
     bool waiting_triggers = false,
-    flatbuffers::Offset<flatbuffers::String> notification_message = 0,
+    bool hide_from_home = false,
     flatbuffers::Offset<SplayApi::Trigger> start_trigger = 0,
     flatbuffers::Offset<SplayApi::Trigger> stop_trigger = 0,
     flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Trigger>>> triggers = 0,
@@ -271,6 +279,8 @@ inline flatbuffers::Offset<Playlist> CreatePlaylist(
     flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>>> track3 = 0,
     flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>>> track4 = 0) {
   PlaylistBuilder builder_(_fbb);
+  builder_.add_duration(duration);
+  builder_.add_current_time(current_time);
   builder_.add_track4(track4);
   builder_.add_track3(track3);
   builder_.add_track2(track2);
@@ -279,12 +289,11 @@ inline flatbuffers::Offset<Playlist> CreatePlaylist(
   builder_.add_triggers(triggers);
   builder_.add_stop_trigger(stop_trigger);
   builder_.add_start_trigger(start_trigger);
-  builder_.add_notification_message(notification_message);
   builder_.add_name(name);
   builder_.add_intensity(intensity);
-  builder_.add_duration(duration);
-  builder_.add_current_time(current_time);
+  builder_.add_order(order);
   builder_.add_playlist_id(playlist_id);
+  builder_.add_hide_from_home(hide_from_home);
   builder_.add_waiting_triggers(waiting_triggers);
   builder_.add_status(status);
   return builder_.Finish();
@@ -292,14 +301,15 @@ inline flatbuffers::Offset<Playlist> CreatePlaylist(
 
 inline flatbuffers::Offset<Playlist> CreatePlaylistDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
-    int32_t playlist_id = 0,
+    uint16_t playlist_id = 0,
+    uint16_t order = 0,
     SplayApi::PLAYLIST_STATUS status = SplayApi::PLAYLIST_STATUS_IDLE,
-    uint32_t current_time = 0,
-    uint32_t duration = 0,
+    uint64_t current_time = 0,
+    uint64_t duration = 0,
     float intensity = 0.0f,
     const char *name = nullptr,
     bool waiting_triggers = false,
-    const char *notification_message = nullptr,
+    bool hide_from_home = false,
     flatbuffers::Offset<SplayApi::Trigger> start_trigger = 0,
     flatbuffers::Offset<SplayApi::Trigger> stop_trigger = 0,
     const std::vector<flatbuffers::Offset<SplayApi::Trigger>> *triggers = nullptr,
@@ -309,7 +319,6 @@ inline flatbuffers::Offset<Playlist> CreatePlaylistDirect(
     const std::vector<flatbuffers::Offset<SplayApi::Cue>> *track3 = nullptr,
     const std::vector<flatbuffers::Offset<SplayApi::Cue>> *track4 = nullptr) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
-  auto notification_message__ = notification_message ? _fbb.CreateString(notification_message) : 0;
   auto triggers__ = triggers ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::Trigger>>(*triggers) : 0;
   auto events__ = events ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::Event>>(*events) : 0;
   auto track1__ = track1 ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::Cue>>(*track1) : 0;
@@ -319,13 +328,14 @@ inline flatbuffers::Offset<Playlist> CreatePlaylistDirect(
   return SplayApi::CreatePlaylist(
       _fbb,
       playlist_id,
+      order,
       status,
       current_time,
       duration,
       intensity,
       name__,
       waiting_triggers,
-      notification_message__,
+      hide_from_home,
       start_trigger,
       stop_trigger,
       triggers__,

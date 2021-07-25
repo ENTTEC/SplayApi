@@ -80,38 +80,46 @@ SplayApi.Playlist.getSizePrefixedRootAsPlaylist = function(bb, obj) {
  */
 SplayApi.Playlist.prototype.playlistId = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? this.bb.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {number}
+ */
+SplayApi.Playlist.prototype.order = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
 
 /**
  * @returns {SplayApi.PLAYLIST_STATUS}
  */
 SplayApi.Playlist.prototype.status = function() {
-  var offset = this.bb.__offset(this.bb_pos, 6);
+  var offset = this.bb.__offset(this.bb_pos, 8);
   return offset ? /** @type {SplayApi.PLAYLIST_STATUS} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.PLAYLIST_STATUS.IDLE;
 };
 
 /**
- * @returns {number}
+ * @returns {flatbuffers.Long}
  */
 SplayApi.Playlist.prototype.currentTime = function() {
-  var offset = this.bb.__offset(this.bb_pos, 8);
-  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
+  var offset = this.bb.__offset(this.bb_pos, 10);
+  return offset ? this.bb.readUint64(this.bb_pos + offset) : this.bb.createLong(0, 0);
 };
 
 /**
- * @returns {number}
+ * @returns {flatbuffers.Long}
  */
 SplayApi.Playlist.prototype.duration = function() {
-  var offset = this.bb.__offset(this.bb_pos, 10);
-  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
+  var offset = this.bb.__offset(this.bb_pos, 12);
+  return offset ? this.bb.readUint64(this.bb_pos + offset) : this.bb.createLong(0, 0);
 };
 
 /**
  * @returns {number}
  */
 SplayApi.Playlist.prototype.intensity = function() {
-  var offset = this.bb.__offset(this.bb_pos, 12);
+  var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -120,7 +128,7 @@ SplayApi.Playlist.prototype.intensity = function() {
  * @returns {string|Uint8Array|null}
  */
 SplayApi.Playlist.prototype.name = function(optionalEncoding) {
-  var offset = this.bb.__offset(this.bb_pos, 14);
+  var offset = this.bb.__offset(this.bb_pos, 16);
   return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
@@ -128,17 +136,16 @@ SplayApi.Playlist.prototype.name = function(optionalEncoding) {
  * @returns {boolean}
  */
 SplayApi.Playlist.prototype.waitingTriggers = function() {
-  var offset = this.bb.__offset(this.bb_pos, 16);
+  var offset = this.bb.__offset(this.bb_pos, 18);
   return offset ? !!this.bb.readInt8(this.bb_pos + offset) : false;
 };
 
 /**
- * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array|null}
+ * @returns {boolean}
  */
-SplayApi.Playlist.prototype.notificationMessage = function(optionalEncoding) {
-  var offset = this.bb.__offset(this.bb_pos, 18);
-  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+SplayApi.Playlist.prototype.hideFromHome = function() {
+  var offset = this.bb.__offset(this.bb_pos, 20);
+  return offset ? !!this.bb.readInt8(this.bb_pos + offset) : false;
 };
 
 /**
@@ -146,7 +153,7 @@ SplayApi.Playlist.prototype.notificationMessage = function(optionalEncoding) {
  * @returns {SplayApi.Trigger|null}
  */
 SplayApi.Playlist.prototype.startTrigger = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 20);
+  var offset = this.bb.__offset(this.bb_pos, 22);
   return offset ? (obj || new SplayApi.Trigger).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
 };
 
@@ -155,7 +162,7 @@ SplayApi.Playlist.prototype.startTrigger = function(obj) {
  * @returns {SplayApi.Trigger|null}
  */
 SplayApi.Playlist.prototype.stopTrigger = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 22);
+  var offset = this.bb.__offset(this.bb_pos, 24);
   return offset ? (obj || new SplayApi.Trigger).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
 };
 
@@ -165,7 +172,7 @@ SplayApi.Playlist.prototype.stopTrigger = function(obj) {
  * @returns {SplayApi.Trigger}
  */
 SplayApi.Playlist.prototype.triggers = function(index, obj) {
-  var offset = this.bb.__offset(this.bb_pos, 24);
+  var offset = this.bb.__offset(this.bb_pos, 26);
   return offset ? (obj || new SplayApi.Trigger).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
@@ -173,7 +180,7 @@ SplayApi.Playlist.prototype.triggers = function(index, obj) {
  * @returns {number}
  */
 SplayApi.Playlist.prototype.triggersLength = function() {
-  var offset = this.bb.__offset(this.bb_pos, 24);
+  var offset = this.bb.__offset(this.bb_pos, 26);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -183,7 +190,7 @@ SplayApi.Playlist.prototype.triggersLength = function() {
  * @returns {SplayApi.Event}
  */
 SplayApi.Playlist.prototype.events = function(index, obj) {
-  var offset = this.bb.__offset(this.bb_pos, 26);
+  var offset = this.bb.__offset(this.bb_pos, 28);
   return offset ? (obj || new SplayApi.Event).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
@@ -191,7 +198,7 @@ SplayApi.Playlist.prototype.events = function(index, obj) {
  * @returns {number}
  */
 SplayApi.Playlist.prototype.eventsLength = function() {
-  var offset = this.bb.__offset(this.bb_pos, 26);
+  var offset = this.bb.__offset(this.bb_pos, 28);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -201,7 +208,7 @@ SplayApi.Playlist.prototype.eventsLength = function() {
  * @returns {SplayApi.Cue}
  */
 SplayApi.Playlist.prototype.track1 = function(index, obj) {
-  var offset = this.bb.__offset(this.bb_pos, 28);
+  var offset = this.bb.__offset(this.bb_pos, 30);
   return offset ? (obj || new SplayApi.Cue).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
@@ -209,7 +216,7 @@ SplayApi.Playlist.prototype.track1 = function(index, obj) {
  * @returns {number}
  */
 SplayApi.Playlist.prototype.track1Length = function() {
-  var offset = this.bb.__offset(this.bb_pos, 28);
+  var offset = this.bb.__offset(this.bb_pos, 30);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -219,7 +226,7 @@ SplayApi.Playlist.prototype.track1Length = function() {
  * @returns {SplayApi.Cue}
  */
 SplayApi.Playlist.prototype.track2 = function(index, obj) {
-  var offset = this.bb.__offset(this.bb_pos, 30);
+  var offset = this.bb.__offset(this.bb_pos, 32);
   return offset ? (obj || new SplayApi.Cue).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
@@ -227,7 +234,7 @@ SplayApi.Playlist.prototype.track2 = function(index, obj) {
  * @returns {number}
  */
 SplayApi.Playlist.prototype.track2Length = function() {
-  var offset = this.bb.__offset(this.bb_pos, 30);
+  var offset = this.bb.__offset(this.bb_pos, 32);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -237,7 +244,7 @@ SplayApi.Playlist.prototype.track2Length = function() {
  * @returns {SplayApi.Cue}
  */
 SplayApi.Playlist.prototype.track3 = function(index, obj) {
-  var offset = this.bb.__offset(this.bb_pos, 32);
+  var offset = this.bb.__offset(this.bb_pos, 34);
   return offset ? (obj || new SplayApi.Cue).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
@@ -245,7 +252,7 @@ SplayApi.Playlist.prototype.track3 = function(index, obj) {
  * @returns {number}
  */
 SplayApi.Playlist.prototype.track3Length = function() {
-  var offset = this.bb.__offset(this.bb_pos, 32);
+  var offset = this.bb.__offset(this.bb_pos, 34);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -255,7 +262,7 @@ SplayApi.Playlist.prototype.track3Length = function() {
  * @returns {SplayApi.Cue}
  */
 SplayApi.Playlist.prototype.track4 = function(index, obj) {
-  var offset = this.bb.__offset(this.bb_pos, 34);
+  var offset = this.bb.__offset(this.bb_pos, 36);
   return offset ? (obj || new SplayApi.Cue).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
@@ -263,7 +270,7 @@ SplayApi.Playlist.prototype.track4 = function(index, obj) {
  * @returns {number}
  */
 SplayApi.Playlist.prototype.track4Length = function() {
-  var offset = this.bb.__offset(this.bb_pos, 34);
+  var offset = this.bb.__offset(this.bb_pos, 36);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -271,7 +278,7 @@ SplayApi.Playlist.prototype.track4Length = function() {
  * @param {flatbuffers.Builder} builder
  */
 SplayApi.Playlist.startPlaylist = function(builder) {
-  builder.startObject(16);
+  builder.startObject(17);
 };
 
 /**
@@ -279,7 +286,15 @@ SplayApi.Playlist.startPlaylist = function(builder) {
  * @param {number} playlistId
  */
 SplayApi.Playlist.addPlaylistId = function(builder, playlistId) {
-  builder.addFieldInt32(0, playlistId, 0);
+  builder.addFieldInt16(0, playlistId, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} order
+ */
+SplayApi.Playlist.addOrder = function(builder, order) {
+  builder.addFieldInt16(1, order, 0);
 };
 
 /**
@@ -287,23 +302,23 @@ SplayApi.Playlist.addPlaylistId = function(builder, playlistId) {
  * @param {SplayApi.PLAYLIST_STATUS} status
  */
 SplayApi.Playlist.addStatus = function(builder, status) {
-  builder.addFieldInt8(1, status, SplayApi.PLAYLIST_STATUS.IDLE);
+  builder.addFieldInt8(2, status, SplayApi.PLAYLIST_STATUS.IDLE);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {number} currentTime
+ * @param {flatbuffers.Long} currentTime
  */
 SplayApi.Playlist.addCurrentTime = function(builder, currentTime) {
-  builder.addFieldInt32(2, currentTime, 0);
+  builder.addFieldInt64(3, currentTime, builder.createLong(0, 0));
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {number} duration
+ * @param {flatbuffers.Long} duration
  */
 SplayApi.Playlist.addDuration = function(builder, duration) {
-  builder.addFieldInt32(3, duration, 0);
+  builder.addFieldInt64(4, duration, builder.createLong(0, 0));
 };
 
 /**
@@ -311,7 +326,7 @@ SplayApi.Playlist.addDuration = function(builder, duration) {
  * @param {number} intensity
  */
 SplayApi.Playlist.addIntensity = function(builder, intensity) {
-  builder.addFieldFloat32(4, intensity, 0.0);
+  builder.addFieldFloat32(5, intensity, 0.0);
 };
 
 /**
@@ -319,7 +334,7 @@ SplayApi.Playlist.addIntensity = function(builder, intensity) {
  * @param {flatbuffers.Offset} nameOffset
  */
 SplayApi.Playlist.addName = function(builder, nameOffset) {
-  builder.addFieldOffset(5, nameOffset, 0);
+  builder.addFieldOffset(6, nameOffset, 0);
 };
 
 /**
@@ -327,15 +342,15 @@ SplayApi.Playlist.addName = function(builder, nameOffset) {
  * @param {boolean} waitingTriggers
  */
 SplayApi.Playlist.addWaitingTriggers = function(builder, waitingTriggers) {
-  builder.addFieldInt8(6, +waitingTriggers, +false);
+  builder.addFieldInt8(7, +waitingTriggers, +false);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} notificationMessageOffset
+ * @param {boolean} hideFromHome
  */
-SplayApi.Playlist.addNotificationMessage = function(builder, notificationMessageOffset) {
-  builder.addFieldOffset(7, notificationMessageOffset, 0);
+SplayApi.Playlist.addHideFromHome = function(builder, hideFromHome) {
+  builder.addFieldInt8(8, +hideFromHome, +false);
 };
 
 /**
@@ -343,7 +358,7 @@ SplayApi.Playlist.addNotificationMessage = function(builder, notificationMessage
  * @param {flatbuffers.Offset} startTriggerOffset
  */
 SplayApi.Playlist.addStartTrigger = function(builder, startTriggerOffset) {
-  builder.addFieldOffset(8, startTriggerOffset, 0);
+  builder.addFieldOffset(9, startTriggerOffset, 0);
 };
 
 /**
@@ -351,7 +366,7 @@ SplayApi.Playlist.addStartTrigger = function(builder, startTriggerOffset) {
  * @param {flatbuffers.Offset} stopTriggerOffset
  */
 SplayApi.Playlist.addStopTrigger = function(builder, stopTriggerOffset) {
-  builder.addFieldOffset(9, stopTriggerOffset, 0);
+  builder.addFieldOffset(10, stopTriggerOffset, 0);
 };
 
 /**
@@ -359,7 +374,7 @@ SplayApi.Playlist.addStopTrigger = function(builder, stopTriggerOffset) {
  * @param {flatbuffers.Offset} triggersOffset
  */
 SplayApi.Playlist.addTriggers = function(builder, triggersOffset) {
-  builder.addFieldOffset(10, triggersOffset, 0);
+  builder.addFieldOffset(11, triggersOffset, 0);
 };
 
 /**
@@ -388,7 +403,7 @@ SplayApi.Playlist.startTriggersVector = function(builder, numElems) {
  * @param {flatbuffers.Offset} eventsOffset
  */
 SplayApi.Playlist.addEvents = function(builder, eventsOffset) {
-  builder.addFieldOffset(11, eventsOffset, 0);
+  builder.addFieldOffset(12, eventsOffset, 0);
 };
 
 /**
@@ -417,7 +432,7 @@ SplayApi.Playlist.startEventsVector = function(builder, numElems) {
  * @param {flatbuffers.Offset} track1Offset
  */
 SplayApi.Playlist.addTrack1 = function(builder, track1Offset) {
-  builder.addFieldOffset(12, track1Offset, 0);
+  builder.addFieldOffset(13, track1Offset, 0);
 };
 
 /**
@@ -446,7 +461,7 @@ SplayApi.Playlist.startTrack1Vector = function(builder, numElems) {
  * @param {flatbuffers.Offset} track2Offset
  */
 SplayApi.Playlist.addTrack2 = function(builder, track2Offset) {
-  builder.addFieldOffset(13, track2Offset, 0);
+  builder.addFieldOffset(14, track2Offset, 0);
 };
 
 /**
@@ -475,7 +490,7 @@ SplayApi.Playlist.startTrack2Vector = function(builder, numElems) {
  * @param {flatbuffers.Offset} track3Offset
  */
 SplayApi.Playlist.addTrack3 = function(builder, track3Offset) {
-  builder.addFieldOffset(14, track3Offset, 0);
+  builder.addFieldOffset(15, track3Offset, 0);
 };
 
 /**
@@ -504,7 +519,7 @@ SplayApi.Playlist.startTrack3Vector = function(builder, numElems) {
  * @param {flatbuffers.Offset} track4Offset
  */
 SplayApi.Playlist.addTrack4 = function(builder, track4Offset) {
-  builder.addFieldOffset(15, track4Offset, 0);
+  builder.addFieldOffset(16, track4Offset, 0);
 };
 
 /**
@@ -540,13 +555,14 @@ SplayApi.Playlist.endPlaylist = function(builder) {
 /**
  * @param {flatbuffers.Builder} builder
  * @param {number} playlistId
+ * @param {number} order
  * @param {SplayApi.PLAYLIST_STATUS} status
- * @param {number} currentTime
- * @param {number} duration
+ * @param {flatbuffers.Long} currentTime
+ * @param {flatbuffers.Long} duration
  * @param {number} intensity
  * @param {flatbuffers.Offset} nameOffset
  * @param {boolean} waitingTriggers
- * @param {flatbuffers.Offset} notificationMessageOffset
+ * @param {boolean} hideFromHome
  * @param {flatbuffers.Offset} startTriggerOffset
  * @param {flatbuffers.Offset} stopTriggerOffset
  * @param {flatbuffers.Offset} triggersOffset
@@ -557,16 +573,17 @@ SplayApi.Playlist.endPlaylist = function(builder) {
  * @param {flatbuffers.Offset} track4Offset
  * @returns {flatbuffers.Offset}
  */
-SplayApi.Playlist.createPlaylist = function(builder, playlistId, status, currentTime, duration, intensity, nameOffset, waitingTriggers, notificationMessageOffset, startTriggerOffset, stopTriggerOffset, triggersOffset, eventsOffset, track1Offset, track2Offset, track3Offset, track4Offset) {
+SplayApi.Playlist.createPlaylist = function(builder, playlistId, order, status, currentTime, duration, intensity, nameOffset, waitingTriggers, hideFromHome, startTriggerOffset, stopTriggerOffset, triggersOffset, eventsOffset, track1Offset, track2Offset, track3Offset, track4Offset) {
   SplayApi.Playlist.startPlaylist(builder);
   SplayApi.Playlist.addPlaylistId(builder, playlistId);
+  SplayApi.Playlist.addOrder(builder, order);
   SplayApi.Playlist.addStatus(builder, status);
   SplayApi.Playlist.addCurrentTime(builder, currentTime);
   SplayApi.Playlist.addDuration(builder, duration);
   SplayApi.Playlist.addIntensity(builder, intensity);
   SplayApi.Playlist.addName(builder, nameOffset);
   SplayApi.Playlist.addWaitingTriggers(builder, waitingTriggers);
-  SplayApi.Playlist.addNotificationMessage(builder, notificationMessageOffset);
+  SplayApi.Playlist.addHideFromHome(builder, hideFromHome);
   SplayApi.Playlist.addStartTrigger(builder, startTriggerOffset);
   SplayApi.Playlist.addStopTrigger(builder, stopTriggerOffset);
   SplayApi.Playlist.addTriggers(builder, triggersOffset);
