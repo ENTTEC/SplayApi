@@ -112,14 +112,14 @@ struct Playlist FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   SplayApi::PLAYLIST_STATUS status() const {
     return static_cast<SplayApi::PLAYLIST_STATUS>(GetField<uint8_t>(VT_STATUS, 0));
   }
-  uint64_t current_time() const {
-    return GetField<uint64_t>(VT_CURRENT_TIME, 0);
+  uint32_t current_time() const {
+    return GetField<uint32_t>(VT_CURRENT_TIME, 0);
   }
-  uint64_t duration() const {
-    return GetField<uint64_t>(VT_DURATION, 0);
+  uint32_t duration() const {
+    return GetField<uint32_t>(VT_DURATION, 0);
   }
-  float intensity() const {
-    return GetField<float>(VT_INTENSITY, 0.0f);
+  uint8_t intensity() const {
+    return GetField<uint8_t>(VT_INTENSITY, 0);
   }
   const flatbuffers::String *name() const {
     return GetPointer<const flatbuffers::String *>(VT_NAME);
@@ -159,9 +159,9 @@ struct Playlist FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyField<uint16_t>(verifier, VT_PLAYLIST_ID) &&
            VerifyField<uint16_t>(verifier, VT_ORDER) &&
            VerifyField<uint8_t>(verifier, VT_STATUS) &&
-           VerifyField<uint64_t>(verifier, VT_CURRENT_TIME) &&
-           VerifyField<uint64_t>(verifier, VT_DURATION) &&
-           VerifyField<float>(verifier, VT_INTENSITY) &&
+           VerifyField<uint32_t>(verifier, VT_CURRENT_TIME) &&
+           VerifyField<uint32_t>(verifier, VT_DURATION) &&
+           VerifyField<uint8_t>(verifier, VT_INTENSITY) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(name()) &&
            VerifyField<uint8_t>(verifier, VT_WAITING_TRIGGERS) &&
@@ -205,14 +205,14 @@ struct PlaylistBuilder {
   void add_status(SplayApi::PLAYLIST_STATUS status) {
     fbb_.AddElement<uint8_t>(Playlist::VT_STATUS, static_cast<uint8_t>(status), 0);
   }
-  void add_current_time(uint64_t current_time) {
-    fbb_.AddElement<uint64_t>(Playlist::VT_CURRENT_TIME, current_time, 0);
+  void add_current_time(uint32_t current_time) {
+    fbb_.AddElement<uint32_t>(Playlist::VT_CURRENT_TIME, current_time, 0);
   }
-  void add_duration(uint64_t duration) {
-    fbb_.AddElement<uint64_t>(Playlist::VT_DURATION, duration, 0);
+  void add_duration(uint32_t duration) {
+    fbb_.AddElement<uint32_t>(Playlist::VT_DURATION, duration, 0);
   }
-  void add_intensity(float intensity) {
-    fbb_.AddElement<float>(Playlist::VT_INTENSITY, intensity, 0.0f);
+  void add_intensity(uint8_t intensity) {
+    fbb_.AddElement<uint8_t>(Playlist::VT_INTENSITY, intensity, 0);
   }
   void add_name(flatbuffers::Offset<flatbuffers::String> name) {
     fbb_.AddOffset(Playlist::VT_NAME, name);
@@ -264,9 +264,9 @@ inline flatbuffers::Offset<Playlist> CreatePlaylist(
     uint16_t playlist_id = 0,
     uint16_t order = 0,
     SplayApi::PLAYLIST_STATUS status = SplayApi::PLAYLIST_STATUS_IDLE,
-    uint64_t current_time = 0,
-    uint64_t duration = 0,
-    float intensity = 0.0f,
+    uint32_t current_time = 0,
+    uint32_t duration = 0,
+    uint8_t intensity = 0,
     flatbuffers::Offset<flatbuffers::String> name = 0,
     bool waiting_triggers = false,
     bool hide_from_home = false,
@@ -279,8 +279,6 @@ inline flatbuffers::Offset<Playlist> CreatePlaylist(
     flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>>> track3 = 0,
     flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>>> track4 = 0) {
   PlaylistBuilder builder_(_fbb);
-  builder_.add_duration(duration);
-  builder_.add_current_time(current_time);
   builder_.add_track4(track4);
   builder_.add_track3(track3);
   builder_.add_track2(track2);
@@ -290,11 +288,13 @@ inline flatbuffers::Offset<Playlist> CreatePlaylist(
   builder_.add_stop_trigger(stop_trigger);
   builder_.add_start_trigger(start_trigger);
   builder_.add_name(name);
-  builder_.add_intensity(intensity);
+  builder_.add_duration(duration);
+  builder_.add_current_time(current_time);
   builder_.add_order(order);
   builder_.add_playlist_id(playlist_id);
   builder_.add_hide_from_home(hide_from_home);
   builder_.add_waiting_triggers(waiting_triggers);
+  builder_.add_intensity(intensity);
   builder_.add_status(status);
   return builder_.Finish();
 }
@@ -304,9 +304,9 @@ inline flatbuffers::Offset<Playlist> CreatePlaylistDirect(
     uint16_t playlist_id = 0,
     uint16_t order = 0,
     SplayApi::PLAYLIST_STATUS status = SplayApi::PLAYLIST_STATUS_IDLE,
-    uint64_t current_time = 0,
-    uint64_t duration = 0,
-    float intensity = 0.0f,
+    uint32_t current_time = 0,
+    uint32_t duration = 0,
+    uint8_t intensity = 0,
     const char *name = nullptr,
     bool waiting_triggers = false,
     bool hide_from_home = false,

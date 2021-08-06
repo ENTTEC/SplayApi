@@ -26,9 +26,9 @@ table Playlist {
   playlist_id:uint16;
   order:uint16;
   status:PLAYLIST_STATUS;
-  current_time:uint64;
-  duration:uint64;
-  intensity:float;
+  current_time:uint32;
+  duration:uint32;
+  intensity:uint8;
   name:string;
   waiting_triggers:bool;
   hide_from_home:bool;

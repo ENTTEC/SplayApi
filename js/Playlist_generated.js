@@ -100,19 +100,19 @@ SplayApi.Playlist.prototype.status = function() {
 };
 
 /**
- * @returns {flatbuffers.Long}
+ * @returns {number}
  */
 SplayApi.Playlist.prototype.currentTime = function() {
   var offset = this.bb.__offset(this.bb_pos, 10);
-  return offset ? this.bb.readUint64(this.bb_pos + offset) : this.bb.createLong(0, 0);
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
 
 /**
- * @returns {flatbuffers.Long}
+ * @returns {number}
  */
 SplayApi.Playlist.prototype.duration = function() {
   var offset = this.bb.__offset(this.bb_pos, 12);
-  return offset ? this.bb.readUint64(this.bb_pos + offset) : this.bb.createLong(0, 0);
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
 
 /**
@@ -120,7 +120,7 @@ SplayApi.Playlist.prototype.duration = function() {
  */
 SplayApi.Playlist.prototype.intensity = function() {
   var offset = this.bb.__offset(this.bb_pos, 14);
-  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
 };
 
 /**
@@ -307,18 +307,18 @@ SplayApi.Playlist.addStatus = function(builder, status) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Long} currentTime
+ * @param {number} currentTime
  */
 SplayApi.Playlist.addCurrentTime = function(builder, currentTime) {
-  builder.addFieldInt64(3, currentTime, builder.createLong(0, 0));
+  builder.addFieldInt32(3, currentTime, 0);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Long} duration
+ * @param {number} duration
  */
 SplayApi.Playlist.addDuration = function(builder, duration) {
-  builder.addFieldInt64(4, duration, builder.createLong(0, 0));
+  builder.addFieldInt32(4, duration, 0);
 };
 
 /**
@@ -326,7 +326,7 @@ SplayApi.Playlist.addDuration = function(builder, duration) {
  * @param {number} intensity
  */
 SplayApi.Playlist.addIntensity = function(builder, intensity) {
-  builder.addFieldFloat32(5, intensity, 0.0);
+  builder.addFieldInt8(5, intensity, 0);
 };
 
 /**
@@ -557,8 +557,8 @@ SplayApi.Playlist.endPlaylist = function(builder) {
  * @param {number} playlistId
  * @param {number} order
  * @param {SplayApi.PLAYLIST_STATUS} status
- * @param {flatbuffers.Long} currentTime
- * @param {flatbuffers.Long} duration
+ * @param {number} currentTime
+ * @param {number} duration
  * @param {number} intensity
  * @param {flatbuffers.Offset} nameOffset
  * @param {boolean} waitingTriggers
