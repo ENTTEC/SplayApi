@@ -15,7 +15,7 @@ table CueConfig{
   ch_stop:uint16 = 511;
   source:UNIVERSE_TYPE;
   rec_control:bool; // use trigger to start and stop recording
-  trigger:Trigger;
+  trigger:TriggerTable;
 }
 
 table StaticFrameArray{
@@ -43,7 +43,7 @@ union Frame{
   EffectRainbowFrame
 }
 
-table Cue {
+table CueTable {
   id:int;
   type:CUE_TYPE;
   name:string;
@@ -58,7 +58,7 @@ table GetCueReq {
 }
 
 table GetCueRes {
-  cue:Cue;
+  cue:CueTable;
 }
 
 table GetAllCuesReq {
@@ -66,5 +66,5 @@ table GetAllCuesReq {
 }
 
 table GetAllCuesRes {
-  cues:[Cue];
+  cues:[CueTable];
 }

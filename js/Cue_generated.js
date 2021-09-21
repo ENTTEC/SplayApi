@@ -122,12 +122,12 @@ SplayApi.CueConfig.prototype.recControl = function() {
 };
 
 /**
- * @param {SplayApi.Trigger=} obj
- * @returns {SplayApi.Trigger|null}
+ * @param {SplayApi.TriggerTable=} obj
+ * @returns {SplayApi.TriggerTable|null}
  */
 SplayApi.CueConfig.prototype.trigger = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 12);
-  return offset ? (obj || new SplayApi.Trigger).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
+  return offset ? (obj || new SplayApi.TriggerTable).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
 };
 
 /**
@@ -721,7 +721,7 @@ SplayApi.EffectRainbowFrame.createEffectRainbowFrame = function(builder, pixelOr
 /**
  * @constructor
  */
-SplayApi.Cue = function() {
+SplayApi.CueTable = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
    */
@@ -736,9 +736,9 @@ SplayApi.Cue = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {SplayApi.Cue}
+ * @returns {SplayApi.CueTable}
  */
-SplayApi.Cue.prototype.__init = function(i, bb) {
+SplayApi.CueTable.prototype.__init = function(i, bb) {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -746,27 +746,27 @@ SplayApi.Cue.prototype.__init = function(i, bb) {
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {SplayApi.Cue=} obj
- * @returns {SplayApi.Cue}
+ * @param {SplayApi.CueTable=} obj
+ * @returns {SplayApi.CueTable}
  */
-SplayApi.Cue.getRootAsCue = function(bb, obj) {
-  return (obj || new SplayApi.Cue).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+SplayApi.CueTable.getRootAsCueTable = function(bb, obj) {
+  return (obj || new SplayApi.CueTable).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {SplayApi.Cue=} obj
- * @returns {SplayApi.Cue}
+ * @param {SplayApi.CueTable=} obj
+ * @returns {SplayApi.CueTable}
  */
-SplayApi.Cue.getSizePrefixedRootAsCue = function(bb, obj) {
+SplayApi.CueTable.getSizePrefixedRootAsCueTable = function(bb, obj) {
   bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
-  return (obj || new SplayApi.Cue).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+  return (obj || new SplayApi.CueTable).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @returns {number}
  */
-SplayApi.Cue.prototype.id = function() {
+SplayApi.CueTable.prototype.id = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.readInt32(this.bb_pos + offset) : 0;
 };
@@ -774,7 +774,7 @@ SplayApi.Cue.prototype.id = function() {
 /**
  * @returns {SplayApi.CUE_TYPE}
  */
-SplayApi.Cue.prototype.type = function() {
+SplayApi.CueTable.prototype.type = function() {
   var offset = this.bb.__offset(this.bb_pos, 6);
   return offset ? /** @type {SplayApi.CUE_TYPE} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.CUE_TYPE.STATIC;
 };
@@ -783,7 +783,7 @@ SplayApi.Cue.prototype.type = function() {
  * @param {flatbuffers.Encoding=} optionalEncoding
  * @returns {string|Uint8Array|null}
  */
-SplayApi.Cue.prototype.name = function(optionalEncoding) {
+SplayApi.CueTable.prototype.name = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 8);
   return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
@@ -791,7 +791,7 @@ SplayApi.Cue.prototype.name = function(optionalEncoding) {
 /**
  * @returns {number}
  */
-SplayApi.Cue.prototype.duration = function() {
+SplayApi.CueTable.prototype.duration = function() {
   var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
@@ -799,7 +799,7 @@ SplayApi.Cue.prototype.duration = function() {
 /**
  * @returns {SplayApi.Frame}
  */
-SplayApi.Cue.prototype.frameType = function() {
+SplayApi.CueTable.prototype.frameType = function() {
   var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? /** @type {SplayApi.Frame} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.Frame.NONE;
 };
@@ -808,7 +808,7 @@ SplayApi.Cue.prototype.frameType = function() {
  * @param {flatbuffers.Table} obj
  * @returns {?flatbuffers.Table}
  */
-SplayApi.Cue.prototype.frame = function(obj) {
+SplayApi.CueTable.prototype.frame = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? this.bb.__union(obj, this.bb_pos + offset) : null;
 };
@@ -817,7 +817,7 @@ SplayApi.Cue.prototype.frame = function(obj) {
  * @param {SplayApi.CueConfig=} obj
  * @returns {SplayApi.CueConfig|null}
  */
-SplayApi.Cue.prototype.config = function(obj) {
+SplayApi.CueTable.prototype.config = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 16);
   return offset ? (obj || new SplayApi.CueConfig).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
 };
@@ -825,7 +825,7 @@ SplayApi.Cue.prototype.config = function(obj) {
 /**
  * @param {flatbuffers.Builder} builder
  */
-SplayApi.Cue.startCue = function(builder) {
+SplayApi.CueTable.startCueTable = function(builder) {
   builder.startObject(7);
 };
 
@@ -833,7 +833,7 @@ SplayApi.Cue.startCue = function(builder) {
  * @param {flatbuffers.Builder} builder
  * @param {number} id
  */
-SplayApi.Cue.addId = function(builder, id) {
+SplayApi.CueTable.addId = function(builder, id) {
   builder.addFieldInt32(0, id, 0);
 };
 
@@ -841,7 +841,7 @@ SplayApi.Cue.addId = function(builder, id) {
  * @param {flatbuffers.Builder} builder
  * @param {SplayApi.CUE_TYPE} type
  */
-SplayApi.Cue.addType = function(builder, type) {
+SplayApi.CueTable.addType = function(builder, type) {
   builder.addFieldInt8(1, type, SplayApi.CUE_TYPE.STATIC);
 };
 
@@ -849,7 +849,7 @@ SplayApi.Cue.addType = function(builder, type) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} nameOffset
  */
-SplayApi.Cue.addName = function(builder, nameOffset) {
+SplayApi.CueTable.addName = function(builder, nameOffset) {
   builder.addFieldOffset(2, nameOffset, 0);
 };
 
@@ -857,7 +857,7 @@ SplayApi.Cue.addName = function(builder, nameOffset) {
  * @param {flatbuffers.Builder} builder
  * @param {number} duration
  */
-SplayApi.Cue.addDuration = function(builder, duration) {
+SplayApi.CueTable.addDuration = function(builder, duration) {
   builder.addFieldInt32(3, duration, 0);
 };
 
@@ -865,7 +865,7 @@ SplayApi.Cue.addDuration = function(builder, duration) {
  * @param {flatbuffers.Builder} builder
  * @param {SplayApi.Frame} frameType
  */
-SplayApi.Cue.addFrameType = function(builder, frameType) {
+SplayApi.CueTable.addFrameType = function(builder, frameType) {
   builder.addFieldInt8(4, frameType, SplayApi.Frame.NONE);
 };
 
@@ -873,7 +873,7 @@ SplayApi.Cue.addFrameType = function(builder, frameType) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} frameOffset
  */
-SplayApi.Cue.addFrame = function(builder, frameOffset) {
+SplayApi.CueTable.addFrame = function(builder, frameOffset) {
   builder.addFieldOffset(5, frameOffset, 0);
 };
 
@@ -881,7 +881,7 @@ SplayApi.Cue.addFrame = function(builder, frameOffset) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} configOffset
  */
-SplayApi.Cue.addConfig = function(builder, configOffset) {
+SplayApi.CueTable.addConfig = function(builder, configOffset) {
   builder.addFieldOffset(6, configOffset, 0);
 };
 
@@ -889,7 +889,7 @@ SplayApi.Cue.addConfig = function(builder, configOffset) {
  * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
-SplayApi.Cue.endCue = function(builder) {
+SplayApi.CueTable.endCueTable = function(builder) {
   var offset = builder.endObject();
   return offset;
 };
@@ -905,16 +905,16 @@ SplayApi.Cue.endCue = function(builder) {
  * @param {flatbuffers.Offset} configOffset
  * @returns {flatbuffers.Offset}
  */
-SplayApi.Cue.createCue = function(builder, id, type, nameOffset, duration, frameType, frameOffset, configOffset) {
-  SplayApi.Cue.startCue(builder);
-  SplayApi.Cue.addId(builder, id);
-  SplayApi.Cue.addType(builder, type);
-  SplayApi.Cue.addName(builder, nameOffset);
-  SplayApi.Cue.addDuration(builder, duration);
-  SplayApi.Cue.addFrameType(builder, frameType);
-  SplayApi.Cue.addFrame(builder, frameOffset);
-  SplayApi.Cue.addConfig(builder, configOffset);
-  return SplayApi.Cue.endCue(builder);
+SplayApi.CueTable.createCueTable = function(builder, id, type, nameOffset, duration, frameType, frameOffset, configOffset) {
+  SplayApi.CueTable.startCueTable(builder);
+  SplayApi.CueTable.addId(builder, id);
+  SplayApi.CueTable.addType(builder, type);
+  SplayApi.CueTable.addName(builder, nameOffset);
+  SplayApi.CueTable.addDuration(builder, duration);
+  SplayApi.CueTable.addFrameType(builder, frameType);
+  SplayApi.CueTable.addFrame(builder, frameOffset);
+  SplayApi.CueTable.addConfig(builder, configOffset);
+  return SplayApi.CueTable.endCueTable(builder);
 }
 
 /**
@@ -1069,12 +1069,12 @@ SplayApi.GetCueRes.getSizePrefixedRootAsGetCueRes = function(bb, obj) {
 };
 
 /**
- * @param {SplayApi.Cue=} obj
- * @returns {SplayApi.Cue|null}
+ * @param {SplayApi.CueTable=} obj
+ * @returns {SplayApi.CueTable|null}
  */
 SplayApi.GetCueRes.prototype.cue = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? (obj || new SplayApi.Cue).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
+  return offset ? (obj || new SplayApi.CueTable).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
 };
 
 /**
@@ -1247,12 +1247,12 @@ SplayApi.GetAllCuesRes.getSizePrefixedRootAsGetAllCuesRes = function(bb, obj) {
 
 /**
  * @param {number} index
- * @param {SplayApi.Cue=} obj
- * @returns {SplayApi.Cue}
+ * @param {SplayApi.CueTable=} obj
+ * @returns {SplayApi.CueTable}
  */
 SplayApi.GetAllCuesRes.prototype.cues = function(index, obj) {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? (obj || new SplayApi.Cue).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
+  return offset ? (obj || new SplayApi.CueTable).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
 /**

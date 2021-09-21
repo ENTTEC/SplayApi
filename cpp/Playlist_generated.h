@@ -130,29 +130,29 @@ struct Playlist FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   bool hide_from_home() const {
     return GetField<uint8_t>(VT_HIDE_FROM_HOME, 0) != 0;
   }
-  const SplayApi::Trigger *start_trigger() const {
-    return GetPointer<const SplayApi::Trigger *>(VT_START_TRIGGER);
+  const SplayApi::TriggerTable *start_trigger() const {
+    return GetPointer<const SplayApi::TriggerTable *>(VT_START_TRIGGER);
   }
-  const SplayApi::Trigger *stop_trigger() const {
-    return GetPointer<const SplayApi::Trigger *>(VT_STOP_TRIGGER);
+  const SplayApi::TriggerTable *stop_trigger() const {
+    return GetPointer<const SplayApi::TriggerTable *>(VT_STOP_TRIGGER);
   }
-  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::Trigger>> *triggers() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::Trigger>> *>(VT_TRIGGERS);
+  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::TriggerTable>> *triggers() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::TriggerTable>> *>(VT_TRIGGERS);
   }
-  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::Event>> *events() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::Event>> *>(VT_EVENTS);
+  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::EventTable>> *events() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::EventTable>> *>(VT_EVENTS);
   }
-  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>> *track1() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>> *>(VT_TRACK1);
+  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>> *track1() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>> *>(VT_TRACK1);
   }
-  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>> *track2() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>> *>(VT_TRACK2);
+  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>> *track2() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>> *>(VT_TRACK2);
   }
-  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>> *track3() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>> *>(VT_TRACK3);
+  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>> *track3() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>> *>(VT_TRACK3);
   }
-  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>> *track4() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>> *>(VT_TRACK4);
+  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>> *track4() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>> *>(VT_TRACK4);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -223,28 +223,28 @@ struct PlaylistBuilder {
   void add_hide_from_home(bool hide_from_home) {
     fbb_.AddElement<uint8_t>(Playlist::VT_HIDE_FROM_HOME, static_cast<uint8_t>(hide_from_home), 0);
   }
-  void add_start_trigger(flatbuffers::Offset<SplayApi::Trigger> start_trigger) {
+  void add_start_trigger(flatbuffers::Offset<SplayApi::TriggerTable> start_trigger) {
     fbb_.AddOffset(Playlist::VT_START_TRIGGER, start_trigger);
   }
-  void add_stop_trigger(flatbuffers::Offset<SplayApi::Trigger> stop_trigger) {
+  void add_stop_trigger(flatbuffers::Offset<SplayApi::TriggerTable> stop_trigger) {
     fbb_.AddOffset(Playlist::VT_STOP_TRIGGER, stop_trigger);
   }
-  void add_triggers(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Trigger>>> triggers) {
+  void add_triggers(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::TriggerTable>>> triggers) {
     fbb_.AddOffset(Playlist::VT_TRIGGERS, triggers);
   }
-  void add_events(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Event>>> events) {
+  void add_events(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::EventTable>>> events) {
     fbb_.AddOffset(Playlist::VT_EVENTS, events);
   }
-  void add_track1(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>>> track1) {
+  void add_track1(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>>> track1) {
     fbb_.AddOffset(Playlist::VT_TRACK1, track1);
   }
-  void add_track2(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>>> track2) {
+  void add_track2(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>>> track2) {
     fbb_.AddOffset(Playlist::VT_TRACK2, track2);
   }
-  void add_track3(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>>> track3) {
+  void add_track3(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>>> track3) {
     fbb_.AddOffset(Playlist::VT_TRACK3, track3);
   }
-  void add_track4(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>>> track4) {
+  void add_track4(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>>> track4) {
     fbb_.AddOffset(Playlist::VT_TRACK4, track4);
   }
   explicit PlaylistBuilder(flatbuffers::FlatBufferBuilder &_fbb)
@@ -270,14 +270,14 @@ inline flatbuffers::Offset<Playlist> CreatePlaylist(
     flatbuffers::Offset<flatbuffers::String> name = 0,
     bool waiting_triggers = false,
     bool hide_from_home = false,
-    flatbuffers::Offset<SplayApi::Trigger> start_trigger = 0,
-    flatbuffers::Offset<SplayApi::Trigger> stop_trigger = 0,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Trigger>>> triggers = 0,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Event>>> events = 0,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>>> track1 = 0,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>>> track2 = 0,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>>> track3 = 0,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>>> track4 = 0) {
+    flatbuffers::Offset<SplayApi::TriggerTable> start_trigger = 0,
+    flatbuffers::Offset<SplayApi::TriggerTable> stop_trigger = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::TriggerTable>>> triggers = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::EventTable>>> events = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>>> track1 = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>>> track2 = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>>> track3 = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>>> track4 = 0) {
   PlaylistBuilder builder_(_fbb);
   builder_.add_track4(track4);
   builder_.add_track3(track3);
@@ -310,21 +310,21 @@ inline flatbuffers::Offset<Playlist> CreatePlaylistDirect(
     const char *name = nullptr,
     bool waiting_triggers = false,
     bool hide_from_home = false,
-    flatbuffers::Offset<SplayApi::Trigger> start_trigger = 0,
-    flatbuffers::Offset<SplayApi::Trigger> stop_trigger = 0,
-    const std::vector<flatbuffers::Offset<SplayApi::Trigger>> *triggers = nullptr,
-    const std::vector<flatbuffers::Offset<SplayApi::Event>> *events = nullptr,
-    const std::vector<flatbuffers::Offset<SplayApi::Cue>> *track1 = nullptr,
-    const std::vector<flatbuffers::Offset<SplayApi::Cue>> *track2 = nullptr,
-    const std::vector<flatbuffers::Offset<SplayApi::Cue>> *track3 = nullptr,
-    const std::vector<flatbuffers::Offset<SplayApi::Cue>> *track4 = nullptr) {
+    flatbuffers::Offset<SplayApi::TriggerTable> start_trigger = 0,
+    flatbuffers::Offset<SplayApi::TriggerTable> stop_trigger = 0,
+    const std::vector<flatbuffers::Offset<SplayApi::TriggerTable>> *triggers = nullptr,
+    const std::vector<flatbuffers::Offset<SplayApi::EventTable>> *events = nullptr,
+    const std::vector<flatbuffers::Offset<SplayApi::CueTable>> *track1 = nullptr,
+    const std::vector<flatbuffers::Offset<SplayApi::CueTable>> *track2 = nullptr,
+    const std::vector<flatbuffers::Offset<SplayApi::CueTable>> *track3 = nullptr,
+    const std::vector<flatbuffers::Offset<SplayApi::CueTable>> *track4 = nullptr) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
-  auto triggers__ = triggers ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::Trigger>>(*triggers) : 0;
-  auto events__ = events ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::Event>>(*events) : 0;
-  auto track1__ = track1 ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::Cue>>(*track1) : 0;
-  auto track2__ = track2 ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::Cue>>(*track2) : 0;
-  auto track3__ = track3 ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::Cue>>(*track3) : 0;
-  auto track4__ = track4 ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::Cue>>(*track4) : 0;
+  auto triggers__ = triggers ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::TriggerTable>>(*triggers) : 0;
+  auto events__ = events ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::EventTable>>(*events) : 0;
+  auto track1__ = track1 ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::CueTable>>(*track1) : 0;
+  auto track2__ = track2 ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::CueTable>>(*track2) : 0;
+  auto track3__ = track3 ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::CueTable>>(*track3) : 0;
+  auto track4__ = track4 ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::CueTable>>(*track4) : 0;
   return SplayApi::CreatePlaylist(
       _fbb,
       playlist_id,

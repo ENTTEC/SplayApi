@@ -32,14 +32,14 @@ table Playlist {
   name:string;
   waiting_triggers:bool;
   hide_from_home:bool;
-  start_trigger:Trigger;
-  stop_trigger:Trigger;
-  triggers:[Trigger];
-  events:[Event];
-  track1:[Cue];
-  track2:[Cue];
-  track3:[Cue];
-  track4:[Cue];
+  start_trigger:TriggerTable;
+  stop_trigger:TriggerTable;
+  triggers:[TriggerTable];
+  events:[EventTable];
+  track1:[CueTable];
+  track2:[CueTable];
+  track3:[CueTable];
+  track4:[CueTable];
 }
 
 table PlayPlaylistReq {

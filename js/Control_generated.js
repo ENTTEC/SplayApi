@@ -83,7 +83,7 @@ SplayApi.EVENT_TYPEName = {
 /**
  * @constructor
  */
-SplayApi.Trigger = function() {
+SplayApi.TriggerTable = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
    */
@@ -98,9 +98,9 @@ SplayApi.Trigger = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {SplayApi.Trigger}
+ * @returns {SplayApi.TriggerTable}
  */
-SplayApi.Trigger.prototype.__init = function(i, bb) {
+SplayApi.TriggerTable.prototype.__init = function(i, bb) {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -108,27 +108,27 @@ SplayApi.Trigger.prototype.__init = function(i, bb) {
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {SplayApi.Trigger=} obj
- * @returns {SplayApi.Trigger}
+ * @param {SplayApi.TriggerTable=} obj
+ * @returns {SplayApi.TriggerTable}
  */
-SplayApi.Trigger.getRootAsTrigger = function(bb, obj) {
-  return (obj || new SplayApi.Trigger).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+SplayApi.TriggerTable.getRootAsTriggerTable = function(bb, obj) {
+  return (obj || new SplayApi.TriggerTable).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {SplayApi.Trigger=} obj
- * @returns {SplayApi.Trigger}
+ * @param {SplayApi.TriggerTable=} obj
+ * @returns {SplayApi.TriggerTable}
  */
-SplayApi.Trigger.getSizePrefixedRootAsTrigger = function(bb, obj) {
+SplayApi.TriggerTable.getSizePrefixedRootAsTriggerTable = function(bb, obj) {
   bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
-  return (obj || new SplayApi.Trigger).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+  return (obj || new SplayApi.TriggerTable).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @returns {number}
  */
-SplayApi.Trigger.prototype.id = function() {
+SplayApi.TriggerTable.prototype.id = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.readInt32(this.bb_pos + offset) : 0;
 };
@@ -137,7 +137,7 @@ SplayApi.Trigger.prototype.id = function() {
  * @param {flatbuffers.Encoding=} optionalEncoding
  * @returns {string|Uint8Array|null}
  */
-SplayApi.Trigger.prototype.name = function(optionalEncoding) {
+SplayApi.TriggerTable.prototype.name = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 6);
   return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
@@ -145,7 +145,7 @@ SplayApi.Trigger.prototype.name = function(optionalEncoding) {
 /**
  * @returns {SplayApi.TRIGGER_TYPE}
  */
-SplayApi.Trigger.prototype.type = function() {
+SplayApi.TriggerTable.prototype.type = function() {
   var offset = this.bb.__offset(this.bb_pos, 8);
   return offset ? /** @type {SplayApi.TRIGGER_TYPE} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.TRIGGER_TYPE.NONE;
 };
@@ -153,7 +153,7 @@ SplayApi.Trigger.prototype.type = function() {
 /**
  * @returns {boolean}
  */
-SplayApi.Trigger.prototype.active = function() {
+SplayApi.TriggerTable.prototype.active = function() {
   var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? !!this.bb.readInt8(this.bb_pos + offset) : false;
 };
@@ -162,7 +162,7 @@ SplayApi.Trigger.prototype.active = function() {
  * @param {flatbuffers.Encoding=} optionalEncoding
  * @returns {string|Uint8Array|null}
  */
-SplayApi.Trigger.prototype.value = function(optionalEncoding) {
+SplayApi.TriggerTable.prototype.value = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
@@ -170,7 +170,7 @@ SplayApi.Trigger.prototype.value = function(optionalEncoding) {
 /**
  * @returns {number}
  */
-SplayApi.Trigger.prototype.start = function() {
+SplayApi.TriggerTable.prototype.start = function() {
   var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
@@ -178,7 +178,7 @@ SplayApi.Trigger.prototype.start = function() {
 /**
  * @param {flatbuffers.Builder} builder
  */
-SplayApi.Trigger.startTrigger = function(builder) {
+SplayApi.TriggerTable.startTriggerTable = function(builder) {
   builder.startObject(6);
 };
 
@@ -186,7 +186,7 @@ SplayApi.Trigger.startTrigger = function(builder) {
  * @param {flatbuffers.Builder} builder
  * @param {number} id
  */
-SplayApi.Trigger.addId = function(builder, id) {
+SplayApi.TriggerTable.addId = function(builder, id) {
   builder.addFieldInt32(0, id, 0);
 };
 
@@ -194,7 +194,7 @@ SplayApi.Trigger.addId = function(builder, id) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} nameOffset
  */
-SplayApi.Trigger.addName = function(builder, nameOffset) {
+SplayApi.TriggerTable.addName = function(builder, nameOffset) {
   builder.addFieldOffset(1, nameOffset, 0);
 };
 
@@ -202,7 +202,7 @@ SplayApi.Trigger.addName = function(builder, nameOffset) {
  * @param {flatbuffers.Builder} builder
  * @param {SplayApi.TRIGGER_TYPE} type
  */
-SplayApi.Trigger.addType = function(builder, type) {
+SplayApi.TriggerTable.addType = function(builder, type) {
   builder.addFieldInt8(2, type, SplayApi.TRIGGER_TYPE.NONE);
 };
 
@@ -210,7 +210,7 @@ SplayApi.Trigger.addType = function(builder, type) {
  * @param {flatbuffers.Builder} builder
  * @param {boolean} active
  */
-SplayApi.Trigger.addActive = function(builder, active) {
+SplayApi.TriggerTable.addActive = function(builder, active) {
   builder.addFieldInt8(3, +active, +false);
 };
 
@@ -218,7 +218,7 @@ SplayApi.Trigger.addActive = function(builder, active) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} valueOffset
  */
-SplayApi.Trigger.addValue = function(builder, valueOffset) {
+SplayApi.TriggerTable.addValue = function(builder, valueOffset) {
   builder.addFieldOffset(4, valueOffset, 0);
 };
 
@@ -226,7 +226,7 @@ SplayApi.Trigger.addValue = function(builder, valueOffset) {
  * @param {flatbuffers.Builder} builder
  * @param {number} start
  */
-SplayApi.Trigger.addStart = function(builder, start) {
+SplayApi.TriggerTable.addStart = function(builder, start) {
   builder.addFieldInt32(5, start, 0);
 };
 
@@ -234,7 +234,7 @@ SplayApi.Trigger.addStart = function(builder, start) {
  * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
-SplayApi.Trigger.endTrigger = function(builder) {
+SplayApi.TriggerTable.endTriggerTable = function(builder) {
   var offset = builder.endObject();
   return offset;
 };
@@ -249,21 +249,21 @@ SplayApi.Trigger.endTrigger = function(builder) {
  * @param {number} start
  * @returns {flatbuffers.Offset}
  */
-SplayApi.Trigger.createTrigger = function(builder, id, nameOffset, type, active, valueOffset, start) {
-  SplayApi.Trigger.startTrigger(builder);
-  SplayApi.Trigger.addId(builder, id);
-  SplayApi.Trigger.addName(builder, nameOffset);
-  SplayApi.Trigger.addType(builder, type);
-  SplayApi.Trigger.addActive(builder, active);
-  SplayApi.Trigger.addValue(builder, valueOffset);
-  SplayApi.Trigger.addStart(builder, start);
-  return SplayApi.Trigger.endTrigger(builder);
+SplayApi.TriggerTable.createTriggerTable = function(builder, id, nameOffset, type, active, valueOffset, start) {
+  SplayApi.TriggerTable.startTriggerTable(builder);
+  SplayApi.TriggerTable.addId(builder, id);
+  SplayApi.TriggerTable.addName(builder, nameOffset);
+  SplayApi.TriggerTable.addType(builder, type);
+  SplayApi.TriggerTable.addActive(builder, active);
+  SplayApi.TriggerTable.addValue(builder, valueOffset);
+  SplayApi.TriggerTable.addStart(builder, start);
+  return SplayApi.TriggerTable.endTriggerTable(builder);
 }
 
 /**
  * @constructor
  */
-SplayApi.Event = function() {
+SplayApi.EventTable = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
    */
@@ -278,9 +278,9 @@ SplayApi.Event = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {SplayApi.Event}
+ * @returns {SplayApi.EventTable}
  */
-SplayApi.Event.prototype.__init = function(i, bb) {
+SplayApi.EventTable.prototype.__init = function(i, bb) {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -288,27 +288,27 @@ SplayApi.Event.prototype.__init = function(i, bb) {
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {SplayApi.Event=} obj
- * @returns {SplayApi.Event}
+ * @param {SplayApi.EventTable=} obj
+ * @returns {SplayApi.EventTable}
  */
-SplayApi.Event.getRootAsEvent = function(bb, obj) {
-  return (obj || new SplayApi.Event).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+SplayApi.EventTable.getRootAsEventTable = function(bb, obj) {
+  return (obj || new SplayApi.EventTable).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {SplayApi.Event=} obj
- * @returns {SplayApi.Event}
+ * @param {SplayApi.EventTable=} obj
+ * @returns {SplayApi.EventTable}
  */
-SplayApi.Event.getSizePrefixedRootAsEvent = function(bb, obj) {
+SplayApi.EventTable.getSizePrefixedRootAsEventTable = function(bb, obj) {
   bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
-  return (obj || new SplayApi.Event).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+  return (obj || new SplayApi.EventTable).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @returns {number}
  */
-SplayApi.Event.prototype.id = function() {
+SplayApi.EventTable.prototype.id = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.readInt32(this.bb_pos + offset) : 0;
 };
@@ -317,7 +317,7 @@ SplayApi.Event.prototype.id = function() {
  * @param {flatbuffers.Encoding=} optionalEncoding
  * @returns {string|Uint8Array|null}
  */
-SplayApi.Event.prototype.name = function(optionalEncoding) {
+SplayApi.EventTable.prototype.name = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 6);
   return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
@@ -325,7 +325,7 @@ SplayApi.Event.prototype.name = function(optionalEncoding) {
 /**
  * @returns {SplayApi.EVENT_TYPE}
  */
-SplayApi.Event.prototype.type = function() {
+SplayApi.EventTable.prototype.type = function() {
   var offset = this.bb.__offset(this.bb_pos, 8);
   return offset ? /** @type {SplayApi.EVENT_TYPE} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.EVENT_TYPE.NONE;
 };
@@ -333,7 +333,7 @@ SplayApi.Event.prototype.type = function() {
 /**
  * @returns {boolean}
  */
-SplayApi.Event.prototype.active = function() {
+SplayApi.EventTable.prototype.active = function() {
   var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? !!this.bb.readInt8(this.bb_pos + offset) : false;
 };
@@ -342,7 +342,7 @@ SplayApi.Event.prototype.active = function() {
  * @param {flatbuffers.Encoding=} optionalEncoding
  * @returns {string|Uint8Array|null}
  */
-SplayApi.Event.prototype.value = function(optionalEncoding) {
+SplayApi.EventTable.prototype.value = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
@@ -350,7 +350,7 @@ SplayApi.Event.prototype.value = function(optionalEncoding) {
 /**
  * @returns {number}
  */
-SplayApi.Event.prototype.start = function() {
+SplayApi.EventTable.prototype.start = function() {
   var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
@@ -358,7 +358,7 @@ SplayApi.Event.prototype.start = function() {
 /**
  * @param {flatbuffers.Builder} builder
  */
-SplayApi.Event.startEvent = function(builder) {
+SplayApi.EventTable.startEventTable = function(builder) {
   builder.startObject(6);
 };
 
@@ -366,7 +366,7 @@ SplayApi.Event.startEvent = function(builder) {
  * @param {flatbuffers.Builder} builder
  * @param {number} id
  */
-SplayApi.Event.addId = function(builder, id) {
+SplayApi.EventTable.addId = function(builder, id) {
   builder.addFieldInt32(0, id, 0);
 };
 
@@ -374,7 +374,7 @@ SplayApi.Event.addId = function(builder, id) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} nameOffset
  */
-SplayApi.Event.addName = function(builder, nameOffset) {
+SplayApi.EventTable.addName = function(builder, nameOffset) {
   builder.addFieldOffset(1, nameOffset, 0);
 };
 
@@ -382,7 +382,7 @@ SplayApi.Event.addName = function(builder, nameOffset) {
  * @param {flatbuffers.Builder} builder
  * @param {SplayApi.EVENT_TYPE} type
  */
-SplayApi.Event.addType = function(builder, type) {
+SplayApi.EventTable.addType = function(builder, type) {
   builder.addFieldInt8(2, type, SplayApi.EVENT_TYPE.NONE);
 };
 
@@ -390,7 +390,7 @@ SplayApi.Event.addType = function(builder, type) {
  * @param {flatbuffers.Builder} builder
  * @param {boolean} active
  */
-SplayApi.Event.addActive = function(builder, active) {
+SplayApi.EventTable.addActive = function(builder, active) {
   builder.addFieldInt8(3, +active, +false);
 };
 
@@ -398,7 +398,7 @@ SplayApi.Event.addActive = function(builder, active) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} valueOffset
  */
-SplayApi.Event.addValue = function(builder, valueOffset) {
+SplayApi.EventTable.addValue = function(builder, valueOffset) {
   builder.addFieldOffset(4, valueOffset, 0);
 };
 
@@ -406,7 +406,7 @@ SplayApi.Event.addValue = function(builder, valueOffset) {
  * @param {flatbuffers.Builder} builder
  * @param {number} start
  */
-SplayApi.Event.addStart = function(builder, start) {
+SplayApi.EventTable.addStart = function(builder, start) {
   builder.addFieldInt32(5, start, 0);
 };
 
@@ -414,7 +414,7 @@ SplayApi.Event.addStart = function(builder, start) {
  * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
-SplayApi.Event.endEvent = function(builder) {
+SplayApi.EventTable.endEventTable = function(builder) {
   var offset = builder.endObject();
   return offset;
 };
@@ -429,15 +429,15 @@ SplayApi.Event.endEvent = function(builder) {
  * @param {number} start
  * @returns {flatbuffers.Offset}
  */
-SplayApi.Event.createEvent = function(builder, id, nameOffset, type, active, valueOffset, start) {
-  SplayApi.Event.startEvent(builder);
-  SplayApi.Event.addId(builder, id);
-  SplayApi.Event.addName(builder, nameOffset);
-  SplayApi.Event.addType(builder, type);
-  SplayApi.Event.addActive(builder, active);
-  SplayApi.Event.addValue(builder, valueOffset);
-  SplayApi.Event.addStart(builder, start);
-  return SplayApi.Event.endEvent(builder);
+SplayApi.EventTable.createEventTable = function(builder, id, nameOffset, type, active, valueOffset, start) {
+  SplayApi.EventTable.startEventTable(builder);
+  SplayApi.EventTable.addId(builder, id);
+  SplayApi.EventTable.addName(builder, nameOffset);
+  SplayApi.EventTable.addType(builder, type);
+  SplayApi.EventTable.addActive(builder, active);
+  SplayApi.EventTable.addValue(builder, valueOffset);
+  SplayApi.EventTable.addStart(builder, start);
+  return SplayApi.EventTable.endEventTable(builder);
 }
 
 // Exports for ECMAScript6 Modules

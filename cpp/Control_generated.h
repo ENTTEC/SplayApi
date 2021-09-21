@@ -8,11 +8,11 @@
 
 namespace SplayApi {
 
-struct Trigger;
-struct TriggerBuilder;
+struct TriggerTable;
+struct TriggerTableBuilder;
 
-struct Event;
-struct EventBuilder;
+struct EventTable;
+struct EventTableBuilder;
 
 enum CONTROL_TYPE {
   CONTROL_TYPE_TRIGGER = 0,
@@ -143,8 +143,8 @@ inline const char *EnumNameEVENT_TYPE(EVENT_TYPE e) {
   return EnumNamesEVENT_TYPE()[index];
 }
 
-struct Trigger FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  typedef TriggerBuilder Builder;
+struct TriggerTable FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef TriggerTableBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_NAME = 6,
@@ -185,41 +185,41 @@ struct Trigger FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   }
 };
 
-struct TriggerBuilder {
-  typedef Trigger Table;
+struct TriggerTableBuilder {
+  typedef TriggerTable Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
   void add_id(int32_t id) {
-    fbb_.AddElement<int32_t>(Trigger::VT_ID, id, 0);
+    fbb_.AddElement<int32_t>(TriggerTable::VT_ID, id, 0);
   }
   void add_name(flatbuffers::Offset<flatbuffers::String> name) {
-    fbb_.AddOffset(Trigger::VT_NAME, name);
+    fbb_.AddOffset(TriggerTable::VT_NAME, name);
   }
   void add_type(SplayApi::TRIGGER_TYPE type) {
-    fbb_.AddElement<uint8_t>(Trigger::VT_TYPE, static_cast<uint8_t>(type), 0);
+    fbb_.AddElement<uint8_t>(TriggerTable::VT_TYPE, static_cast<uint8_t>(type), 0);
   }
   void add_active(bool active) {
-    fbb_.AddElement<uint8_t>(Trigger::VT_ACTIVE, static_cast<uint8_t>(active), 0);
+    fbb_.AddElement<uint8_t>(TriggerTable::VT_ACTIVE, static_cast<uint8_t>(active), 0);
   }
   void add_value(flatbuffers::Offset<flatbuffers::String> value) {
-    fbb_.AddOffset(Trigger::VT_VALUE, value);
+    fbb_.AddOffset(TriggerTable::VT_VALUE, value);
   }
   void add_start(uint32_t start) {
-    fbb_.AddElement<uint32_t>(Trigger::VT_START, start, 0);
+    fbb_.AddElement<uint32_t>(TriggerTable::VT_START, start, 0);
   }
-  explicit TriggerBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+  explicit TriggerTableBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  TriggerBuilder &operator=(const TriggerBuilder &);
-  flatbuffers::Offset<Trigger> Finish() {
+  TriggerTableBuilder &operator=(const TriggerTableBuilder &);
+  flatbuffers::Offset<TriggerTable> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<Trigger>(end);
+    auto o = flatbuffers::Offset<TriggerTable>(end);
     return o;
   }
 };
 
-inline flatbuffers::Offset<Trigger> CreateTrigger(
+inline flatbuffers::Offset<TriggerTable> CreateTriggerTable(
     flatbuffers::FlatBufferBuilder &_fbb,
     int32_t id = 0,
     flatbuffers::Offset<flatbuffers::String> name = 0,
@@ -227,7 +227,7 @@ inline flatbuffers::Offset<Trigger> CreateTrigger(
     bool active = false,
     flatbuffers::Offset<flatbuffers::String> value = 0,
     uint32_t start = 0) {
-  TriggerBuilder builder_(_fbb);
+  TriggerTableBuilder builder_(_fbb);
   builder_.add_start(start);
   builder_.add_value(value);
   builder_.add_name(name);
@@ -237,7 +237,7 @@ inline flatbuffers::Offset<Trigger> CreateTrigger(
   return builder_.Finish();
 }
 
-inline flatbuffers::Offset<Trigger> CreateTriggerDirect(
+inline flatbuffers::Offset<TriggerTable> CreateTriggerTableDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     int32_t id = 0,
     const char *name = nullptr,
@@ -247,7 +247,7 @@ inline flatbuffers::Offset<Trigger> CreateTriggerDirect(
     uint32_t start = 0) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
   auto value__ = value ? _fbb.CreateString(value) : 0;
-  return SplayApi::CreateTrigger(
+  return SplayApi::CreateTriggerTable(
       _fbb,
       id,
       name__,
@@ -257,8 +257,8 @@ inline flatbuffers::Offset<Trigger> CreateTriggerDirect(
       start);
 }
 
-struct Event FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  typedef EventBuilder Builder;
+struct EventTable FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef EventTableBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_NAME = 6,
@@ -299,41 +299,41 @@ struct Event FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   }
 };
 
-struct EventBuilder {
-  typedef Event Table;
+struct EventTableBuilder {
+  typedef EventTable Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
   void add_id(int32_t id) {
-    fbb_.AddElement<int32_t>(Event::VT_ID, id, 0);
+    fbb_.AddElement<int32_t>(EventTable::VT_ID, id, 0);
   }
   void add_name(flatbuffers::Offset<flatbuffers::String> name) {
-    fbb_.AddOffset(Event::VT_NAME, name);
+    fbb_.AddOffset(EventTable::VT_NAME, name);
   }
   void add_type(SplayApi::EVENT_TYPE type) {
-    fbb_.AddElement<uint8_t>(Event::VT_TYPE, static_cast<uint8_t>(type), 0);
+    fbb_.AddElement<uint8_t>(EventTable::VT_TYPE, static_cast<uint8_t>(type), 0);
   }
   void add_active(bool active) {
-    fbb_.AddElement<uint8_t>(Event::VT_ACTIVE, static_cast<uint8_t>(active), 0);
+    fbb_.AddElement<uint8_t>(EventTable::VT_ACTIVE, static_cast<uint8_t>(active), 0);
   }
   void add_value(flatbuffers::Offset<flatbuffers::String> value) {
-    fbb_.AddOffset(Event::VT_VALUE, value);
+    fbb_.AddOffset(EventTable::VT_VALUE, value);
   }
   void add_start(uint32_t start) {
-    fbb_.AddElement<uint32_t>(Event::VT_START, start, 0);
+    fbb_.AddElement<uint32_t>(EventTable::VT_START, start, 0);
   }
-  explicit EventBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+  explicit EventTableBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  EventBuilder &operator=(const EventBuilder &);
-  flatbuffers::Offset<Event> Finish() {
+  EventTableBuilder &operator=(const EventTableBuilder &);
+  flatbuffers::Offset<EventTable> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<Event>(end);
+    auto o = flatbuffers::Offset<EventTable>(end);
     return o;
   }
 };
 
-inline flatbuffers::Offset<Event> CreateEvent(
+inline flatbuffers::Offset<EventTable> CreateEventTable(
     flatbuffers::FlatBufferBuilder &_fbb,
     int32_t id = 0,
     flatbuffers::Offset<flatbuffers::String> name = 0,
@@ -341,7 +341,7 @@ inline flatbuffers::Offset<Event> CreateEvent(
     bool active = false,
     flatbuffers::Offset<flatbuffers::String> value = 0,
     uint32_t start = 0) {
-  EventBuilder builder_(_fbb);
+  EventTableBuilder builder_(_fbb);
   builder_.add_start(start);
   builder_.add_value(value);
   builder_.add_name(name);
@@ -351,7 +351,7 @@ inline flatbuffers::Offset<Event> CreateEvent(
   return builder_.Finish();
 }
 
-inline flatbuffers::Offset<Event> CreateEventDirect(
+inline flatbuffers::Offset<EventTable> CreateEventTableDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     int32_t id = 0,
     const char *name = nullptr,
@@ -361,7 +361,7 @@ inline flatbuffers::Offset<Event> CreateEventDirect(
     uint32_t start = 0) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
   auto value__ = value ? _fbb.CreateString(value) : 0;
-  return SplayApi::CreateEvent(
+  return SplayApi::CreateEventTable(
       _fbb,
       id,
       name__,

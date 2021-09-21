@@ -149,31 +149,31 @@ SplayApi.Playlist.prototype.hideFromHome = function() {
 };
 
 /**
- * @param {SplayApi.Trigger=} obj
- * @returns {SplayApi.Trigger|null}
+ * @param {SplayApi.TriggerTable=} obj
+ * @returns {SplayApi.TriggerTable|null}
  */
 SplayApi.Playlist.prototype.startTrigger = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 22);
-  return offset ? (obj || new SplayApi.Trigger).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
+  return offset ? (obj || new SplayApi.TriggerTable).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
 };
 
 /**
- * @param {SplayApi.Trigger=} obj
- * @returns {SplayApi.Trigger|null}
+ * @param {SplayApi.TriggerTable=} obj
+ * @returns {SplayApi.TriggerTable|null}
  */
 SplayApi.Playlist.prototype.stopTrigger = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 24);
-  return offset ? (obj || new SplayApi.Trigger).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
+  return offset ? (obj || new SplayApi.TriggerTable).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
 };
 
 /**
  * @param {number} index
- * @param {SplayApi.Trigger=} obj
- * @returns {SplayApi.Trigger}
+ * @param {SplayApi.TriggerTable=} obj
+ * @returns {SplayApi.TriggerTable}
  */
 SplayApi.Playlist.prototype.triggers = function(index, obj) {
   var offset = this.bb.__offset(this.bb_pos, 26);
-  return offset ? (obj || new SplayApi.Trigger).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
+  return offset ? (obj || new SplayApi.TriggerTable).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
 /**
@@ -186,12 +186,12 @@ SplayApi.Playlist.prototype.triggersLength = function() {
 
 /**
  * @param {number} index
- * @param {SplayApi.Event=} obj
- * @returns {SplayApi.Event}
+ * @param {SplayApi.EventTable=} obj
+ * @returns {SplayApi.EventTable}
  */
 SplayApi.Playlist.prototype.events = function(index, obj) {
   var offset = this.bb.__offset(this.bb_pos, 28);
-  return offset ? (obj || new SplayApi.Event).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
+  return offset ? (obj || new SplayApi.EventTable).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
 /**
@@ -204,12 +204,12 @@ SplayApi.Playlist.prototype.eventsLength = function() {
 
 /**
  * @param {number} index
- * @param {SplayApi.Cue=} obj
- * @returns {SplayApi.Cue}
+ * @param {SplayApi.CueTable=} obj
+ * @returns {SplayApi.CueTable}
  */
 SplayApi.Playlist.prototype.track1 = function(index, obj) {
   var offset = this.bb.__offset(this.bb_pos, 30);
-  return offset ? (obj || new SplayApi.Cue).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
+  return offset ? (obj || new SplayApi.CueTable).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
 /**
@@ -222,12 +222,12 @@ SplayApi.Playlist.prototype.track1Length = function() {
 
 /**
  * @param {number} index
- * @param {SplayApi.Cue=} obj
- * @returns {SplayApi.Cue}
+ * @param {SplayApi.CueTable=} obj
+ * @returns {SplayApi.CueTable}
  */
 SplayApi.Playlist.prototype.track2 = function(index, obj) {
   var offset = this.bb.__offset(this.bb_pos, 32);
-  return offset ? (obj || new SplayApi.Cue).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
+  return offset ? (obj || new SplayApi.CueTable).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
 /**
@@ -240,12 +240,12 @@ SplayApi.Playlist.prototype.track2Length = function() {
 
 /**
  * @param {number} index
- * @param {SplayApi.Cue=} obj
- * @returns {SplayApi.Cue}
+ * @param {SplayApi.CueTable=} obj
+ * @returns {SplayApi.CueTable}
  */
 SplayApi.Playlist.prototype.track3 = function(index, obj) {
   var offset = this.bb.__offset(this.bb_pos, 34);
-  return offset ? (obj || new SplayApi.Cue).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
+  return offset ? (obj || new SplayApi.CueTable).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
 /**
@@ -258,12 +258,12 @@ SplayApi.Playlist.prototype.track3Length = function() {
 
 /**
  * @param {number} index
- * @param {SplayApi.Cue=} obj
- * @returns {SplayApi.Cue}
+ * @param {SplayApi.CueTable=} obj
+ * @returns {SplayApi.CueTable}
  */
 SplayApi.Playlist.prototype.track4 = function(index, obj) {
   var offset = this.bb.__offset(this.bb_pos, 36);
-  return offset ? (obj || new SplayApi.Cue).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
+  return offset ? (obj || new SplayApi.CueTable).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
 /**

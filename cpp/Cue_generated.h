@@ -27,8 +27,8 @@ struct DynamicFrameBuilder;
 struct EffectRainbowFrame;
 struct EffectRainbowFrameBuilder;
 
-struct Cue;
-struct CueBuilder;
+struct CueTable;
+struct CueTableBuilder;
 
 struct GetCueReq;
 struct GetCueReqBuilder;
@@ -151,8 +151,8 @@ struct CueConfig FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   bool rec_control() const {
     return GetField<uint8_t>(VT_REC_CONTROL, 0) != 0;
   }
-  const SplayApi::Trigger *trigger() const {
-    return GetPointer<const SplayApi::Trigger *>(VT_TRIGGER);
+  const SplayApi::TriggerTable *trigger() const {
+    return GetPointer<const SplayApi::TriggerTable *>(VT_TRIGGER);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -182,7 +182,7 @@ struct CueConfigBuilder {
   void add_rec_control(bool rec_control) {
     fbb_.AddElement<uint8_t>(CueConfig::VT_REC_CONTROL, static_cast<uint8_t>(rec_control), 0);
   }
-  void add_trigger(flatbuffers::Offset<SplayApi::Trigger> trigger) {
+  void add_trigger(flatbuffers::Offset<SplayApi::TriggerTable> trigger) {
     fbb_.AddOffset(CueConfig::VT_TRIGGER, trigger);
   }
   explicit CueConfigBuilder(flatbuffers::FlatBufferBuilder &_fbb)
@@ -203,7 +203,7 @@ inline flatbuffers::Offset<CueConfig> CreateCueConfig(
     uint16_t ch_stop = 511,
     SplayApi::UNIVERSE_TYPE source = SplayApi::UNIVERSE_TYPE_DMX,
     bool rec_control = false,
-    flatbuffers::Offset<SplayApi::Trigger> trigger = 0) {
+    flatbuffers::Offset<SplayApi::TriggerTable> trigger = 0) {
   CueConfigBuilder builder_(_fbb);
   builder_.add_trigger(trigger);
   builder_.add_ch_stop(ch_stop);
@@ -448,8 +448,8 @@ inline flatbuffers::Offset<EffectRainbowFrame> CreateEffectRainbowFrameDirect(
       universes__);
 }
 
-struct Cue FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  typedef CueBuilder Builder;
+struct CueTable FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef CueTableBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_TYPE = 6,
@@ -506,56 +506,56 @@ struct Cue FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   }
 };
 
-template<> inline const SplayApi::StaticFrame *Cue::frame_as<SplayApi::StaticFrame>() const {
+template<> inline const SplayApi::StaticFrame *CueTable::frame_as<SplayApi::StaticFrame>() const {
   return frame_as_StaticFrame();
 }
 
-template<> inline const SplayApi::DynamicFrame *Cue::frame_as<SplayApi::DynamicFrame>() const {
+template<> inline const SplayApi::DynamicFrame *CueTable::frame_as<SplayApi::DynamicFrame>() const {
   return frame_as_DynamicFrame();
 }
 
-template<> inline const SplayApi::EffectRainbowFrame *Cue::frame_as<SplayApi::EffectRainbowFrame>() const {
+template<> inline const SplayApi::EffectRainbowFrame *CueTable::frame_as<SplayApi::EffectRainbowFrame>() const {
   return frame_as_EffectRainbowFrame();
 }
 
-struct CueBuilder {
-  typedef Cue Table;
+struct CueTableBuilder {
+  typedef CueTable Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
   void add_id(int32_t id) {
-    fbb_.AddElement<int32_t>(Cue::VT_ID, id, 0);
+    fbb_.AddElement<int32_t>(CueTable::VT_ID, id, 0);
   }
   void add_type(SplayApi::CUE_TYPE type) {
-    fbb_.AddElement<uint8_t>(Cue::VT_TYPE, static_cast<uint8_t>(type), 0);
+    fbb_.AddElement<uint8_t>(CueTable::VT_TYPE, static_cast<uint8_t>(type), 0);
   }
   void add_name(flatbuffers::Offset<flatbuffers::String> name) {
-    fbb_.AddOffset(Cue::VT_NAME, name);
+    fbb_.AddOffset(CueTable::VT_NAME, name);
   }
   void add_duration(uint32_t duration) {
-    fbb_.AddElement<uint32_t>(Cue::VT_DURATION, duration, 0);
+    fbb_.AddElement<uint32_t>(CueTable::VT_DURATION, duration, 0);
   }
   void add_frame_type(SplayApi::Frame frame_type) {
-    fbb_.AddElement<uint8_t>(Cue::VT_FRAME_TYPE, static_cast<uint8_t>(frame_type), 0);
+    fbb_.AddElement<uint8_t>(CueTable::VT_FRAME_TYPE, static_cast<uint8_t>(frame_type), 0);
   }
   void add_frame(flatbuffers::Offset<void> frame) {
-    fbb_.AddOffset(Cue::VT_FRAME, frame);
+    fbb_.AddOffset(CueTable::VT_FRAME, frame);
   }
   void add_config(flatbuffers::Offset<SplayApi::CueConfig> config) {
-    fbb_.AddOffset(Cue::VT_CONFIG, config);
+    fbb_.AddOffset(CueTable::VT_CONFIG, config);
   }
-  explicit CueBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+  explicit CueTableBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  CueBuilder &operator=(const CueBuilder &);
-  flatbuffers::Offset<Cue> Finish() {
+  CueTableBuilder &operator=(const CueTableBuilder &);
+  flatbuffers::Offset<CueTable> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<Cue>(end);
+    auto o = flatbuffers::Offset<CueTable>(end);
     return o;
   }
 };
 
-inline flatbuffers::Offset<Cue> CreateCue(
+inline flatbuffers::Offset<CueTable> CreateCueTable(
     flatbuffers::FlatBufferBuilder &_fbb,
     int32_t id = 0,
     SplayApi::CUE_TYPE type = SplayApi::CUE_TYPE_STATIC,
@@ -564,7 +564,7 @@ inline flatbuffers::Offset<Cue> CreateCue(
     SplayApi::Frame frame_type = SplayApi::Frame_NONE,
     flatbuffers::Offset<void> frame = 0,
     flatbuffers::Offset<SplayApi::CueConfig> config = 0) {
-  CueBuilder builder_(_fbb);
+  CueTableBuilder builder_(_fbb);
   builder_.add_config(config);
   builder_.add_frame(frame);
   builder_.add_duration(duration);
@@ -575,7 +575,7 @@ inline flatbuffers::Offset<Cue> CreateCue(
   return builder_.Finish();
 }
 
-inline flatbuffers::Offset<Cue> CreateCueDirect(
+inline flatbuffers::Offset<CueTable> CreateCueTableDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     int32_t id = 0,
     SplayApi::CUE_TYPE type = SplayApi::CUE_TYPE_STATIC,
@@ -585,7 +585,7 @@ inline flatbuffers::Offset<Cue> CreateCueDirect(
     flatbuffers::Offset<void> frame = 0,
     flatbuffers::Offset<SplayApi::CueConfig> config = 0) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
-  return SplayApi::CreateCue(
+  return SplayApi::CreateCueTable(
       _fbb,
       id,
       type,
@@ -653,8 +653,8 @@ struct GetCueRes FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_CUE = 4
   };
-  const SplayApi::Cue *cue() const {
-    return GetPointer<const SplayApi::Cue *>(VT_CUE);
+  const SplayApi::CueTable *cue() const {
+    return GetPointer<const SplayApi::CueTable *>(VT_CUE);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -668,7 +668,7 @@ struct GetCueResBuilder {
   typedef GetCueRes Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_cue(flatbuffers::Offset<SplayApi::Cue> cue) {
+  void add_cue(flatbuffers::Offset<SplayApi::CueTable> cue) {
     fbb_.AddOffset(GetCueRes::VT_CUE, cue);
   }
   explicit GetCueResBuilder(flatbuffers::FlatBufferBuilder &_fbb)
@@ -685,7 +685,7 @@ struct GetCueResBuilder {
 
 inline flatbuffers::Offset<GetCueRes> CreateGetCueRes(
     flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<SplayApi::Cue> cue = 0) {
+    flatbuffers::Offset<SplayApi::CueTable> cue = 0) {
   GetCueResBuilder builder_(_fbb);
   builder_.add_cue(cue);
   return builder_.Finish();
@@ -738,8 +738,8 @@ struct GetAllCuesRes FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_CUES = 4
   };
-  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>> *cues() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>> *>(VT_CUES);
+  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>> *cues() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>> *>(VT_CUES);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -754,7 +754,7 @@ struct GetAllCuesResBuilder {
   typedef GetAllCuesRes Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_cues(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>>> cues) {
+  void add_cues(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>>> cues) {
     fbb_.AddOffset(GetAllCuesRes::VT_CUES, cues);
   }
   explicit GetAllCuesResBuilder(flatbuffers::FlatBufferBuilder &_fbb)
@@ -771,7 +771,7 @@ struct GetAllCuesResBuilder {
 
 inline flatbuffers::Offset<GetAllCuesRes> CreateGetAllCuesRes(
     flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::Cue>>> cues = 0) {
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>>> cues = 0) {
   GetAllCuesResBuilder builder_(_fbb);
   builder_.add_cues(cues);
   return builder_.Finish();
@@ -779,8 +779,8 @@ inline flatbuffers::Offset<GetAllCuesRes> CreateGetAllCuesRes(
 
 inline flatbuffers::Offset<GetAllCuesRes> CreateGetAllCuesResDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<flatbuffers::Offset<SplayApi::Cue>> *cues = nullptr) {
-  auto cues__ = cues ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::Cue>>(*cues) : 0;
+    const std::vector<flatbuffers::Offset<SplayApi::CueTable>> *cues = nullptr) {
+  auto cues__ = cues ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::CueTable>>(*cues) : 0;
   return SplayApi::CreateGetAllCuesRes(
       _fbb,
       cues__);

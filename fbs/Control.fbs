@@ -28,7 +28,7 @@ enum EVENT_TYPE:uint8 {
   UDP,
 }
 
-table Trigger {
+table TriggerTable {
   id:int;
   name:string;
   type:TRIGGER_TYPE;
@@ -37,7 +37,7 @@ table Trigger {
   start:uint32;
 }
 
-table Event {
+table EventTable {
   id:int;
   name:string;
   type:EVENT_TYPE;
