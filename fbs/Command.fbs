@@ -67,5 +67,13 @@ enum COMMAND : uint8 {
   UPDATE_INTERFACE = 72, // Update/Create Interface page
   DELETE_INTERFACE = 73, // Delete Interface by id
 
+  GET_VERSION = 80,
+  GET_NETWORK = 81,
+  SET_NETWORK = 82,
+  GET_TIME = 83,
+  SET_TIME = 84,
+  GET_STORAGES = 85,
+  SELECT_STORAGE = 86,
+
   REFRESH_SETTING = 254,
 }

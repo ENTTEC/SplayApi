@@ -8,6 +8,11 @@ enum UNIVERSE_TYPE:uint8 {
   NONE
 }
 
+enum WEBSOCKET_OUTPUT:int{
+  NOTHING = -2,
+  ALL = -1
+}
+
 /// Don't change order
 enum PIXEL_ORDER:uint8 {
   RGB, RBG, GRB, GBR, BRG, BGR,

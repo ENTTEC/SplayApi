@@ -44,6 +44,36 @@ inline const char *EnumNameUNIVERSE_TYPE(UNIVERSE_TYPE e) {
   return EnumNamesUNIVERSE_TYPE()[index];
 }
 
+enum WEBSOCKET_OUTPUT {
+  WEBSOCKET_OUTPUT_NOTHING = -2,
+  WEBSOCKET_OUTPUT_ALL = -1,
+  WEBSOCKET_OUTPUT_MIN = WEBSOCKET_OUTPUT_NOTHING,
+  WEBSOCKET_OUTPUT_MAX = WEBSOCKET_OUTPUT_ALL
+};
+
+inline const WEBSOCKET_OUTPUT (&EnumValuesWEBSOCKET_OUTPUT())[2] {
+  static const WEBSOCKET_OUTPUT values[] = {
+    WEBSOCKET_OUTPUT_NOTHING,
+    WEBSOCKET_OUTPUT_ALL
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesWEBSOCKET_OUTPUT() {
+  static const char * const names[3] = {
+    "NOTHING",
+    "ALL",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameWEBSOCKET_OUTPUT(WEBSOCKET_OUTPUT e) {
+  if (flatbuffers::IsOutRange(e, WEBSOCKET_OUTPUT_NOTHING, WEBSOCKET_OUTPUT_ALL)) return "";
+  const size_t index = static_cast<size_t>(e) - static_cast<size_t>(WEBSOCKET_OUTPUT_NOTHING);
+  return EnumNamesWEBSOCKET_OUTPUT()[index];
+}
+
 /// Don't change order
 enum PIXEL_ORDER {
   PIXEL_ORDER_RGB = 0,

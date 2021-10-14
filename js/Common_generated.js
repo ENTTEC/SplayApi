@@ -27,6 +27,22 @@ SplayApi.UNIVERSE_TYPEName = {
 };
 
 /**
+ * @enum {number}
+ */
+SplayApi.WEBSOCKET_OUTPUT = {
+  NOTHING: -2,
+  ALL: -1
+};
+
+/**
+ * @enum {string}
+ */
+SplayApi.WEBSOCKET_OUTPUTName = {
+  '-2': 'NOTHING',
+  '-1': 'ALL'
+};
+
+/**
  * Don't change order
  *
  * @enum {number}
