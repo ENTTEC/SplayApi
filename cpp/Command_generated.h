@@ -70,12 +70,13 @@ enum COMMAND {
   COMMAND_SET_TIME = 84,
   COMMAND_GET_STORAGES = 85,
   COMMAND_SELECT_STORAGE = 86,
+  COMMAND_FACTORY_RESET = 87,
   COMMAND_REFRESH_SETTING = 254,
   COMMAND_MIN = COMMAND_PLAY,
   COMMAND_MAX = COMMAND_REFRESH_SETTING
 };
 
-inline const COMMAND (&EnumValuesCOMMAND())[62] {
+inline const COMMAND (&EnumValuesCOMMAND())[63] {
   static const COMMAND values[] = {
     COMMAND_PLAY,
     COMMAND_PAUSE,
@@ -138,6 +139,7 @@ inline const COMMAND (&EnumValuesCOMMAND())[62] {
     COMMAND_SET_TIME,
     COMMAND_GET_STORAGES,
     COMMAND_SELECT_STORAGE,
+    COMMAND_FACTORY_RESET,
     COMMAND_REFRESH_SETTING
   };
   return values;
@@ -232,7 +234,7 @@ inline const char * const *EnumNamesCOMMAND() {
     "SET_TIME",
     "GET_STORAGES",
     "SELECT_STORAGE",
-    "",
+    "FACTORY_RESET",
     "",
     "",
     "",

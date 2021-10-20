@@ -28,7 +28,7 @@ enum COMMAND : uint8 {
   GET_SETTING = 21, // Get Setting by id
 
   SET_PLAYLIST_TIME_POSITION = 22, // Set playback position of a playlist
-  SET_WEBSOCKET_INPUT = 23, // Sets universe to monitor in Cue recording
+  SET_WEBSOCKET_INPUT = 23, // Sets universe to monitor in Cue recording, use Universe number or WEBSOCKET_OUTPUT:NOTHING/ALL
 
   PLAY_CUE = 25, // Play cue with given id
   PAUSE_CUE = 26, // Pause cue with given id
@@ -74,6 +74,7 @@ enum COMMAND : uint8 {
   SET_TIME = 84,
   GET_STORAGES = 85,
   SELECT_STORAGE = 86,
+  FACTORY_RESET = 87,
 
   REFRESH_SETTING = 254,
 }
