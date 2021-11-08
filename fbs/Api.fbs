@@ -20,13 +20,14 @@ union Body {
   PausePlaylistReq,
   StopPlaylistReq,
   GetPlaylistReq,
-  GetAllPlaylistsReq,
   GetPlaylistRes,
+  GetAllPlaylistsReq,
   GetAllPlaylistsRes,
   GetCueReq,
   GetCueRes,
   GetAllCuesReq,
-  GetAllCuesRes
+  GetAllCuesRes,
+  GetFirmwareUpdateStatus,
 }
 
 table Message {

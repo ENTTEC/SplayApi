@@ -186,5 +186,112 @@ SplayApi.SETTINGName = {
   '26': 'DB_VERSION'
 };
 
+/**
+ * @constructor
+ */
+SplayApi.GetFirmwareUpdateStatus = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {SplayApi.GetFirmwareUpdateStatus}
+ */
+SplayApi.GetFirmwareUpdateStatus.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.GetFirmwareUpdateStatus=} obj
+ * @returns {SplayApi.GetFirmwareUpdateStatus}
+ */
+SplayApi.GetFirmwareUpdateStatus.getRootAsGetFirmwareUpdateStatus = function(bb, obj) {
+  return (obj || new SplayApi.GetFirmwareUpdateStatus).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.GetFirmwareUpdateStatus=} obj
+ * @returns {SplayApi.GetFirmwareUpdateStatus}
+ */
+SplayApi.GetFirmwareUpdateStatus.getSizePrefixedRootAsGetFirmwareUpdateStatus = function(bb, obj) {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new SplayApi.GetFirmwareUpdateStatus).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {number}
+ */
+SplayApi.GetFirmwareUpdateStatus.prototype.progress = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+SplayApi.GetFirmwareUpdateStatus.prototype.error = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+SplayApi.GetFirmwareUpdateStatus.startGetFirmwareUpdateStatus = function(builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} progress
+ */
+SplayApi.GetFirmwareUpdateStatus.addProgress = function(builder, progress) {
+  builder.addFieldInt8(0, progress, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} errorOffset
+ */
+SplayApi.GetFirmwareUpdateStatus.addError = function(builder, errorOffset) {
+  builder.addFieldOffset(1, errorOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.GetFirmwareUpdateStatus.endGetFirmwareUpdateStatus = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} progress
+ * @param {flatbuffers.Offset} errorOffset
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.GetFirmwareUpdateStatus.createGetFirmwareUpdateStatus = function(builder, progress, errorOffset) {
+  SplayApi.GetFirmwareUpdateStatus.startGetFirmwareUpdateStatus(builder);
+  SplayApi.GetFirmwareUpdateStatus.addProgress(builder, progress);
+  SplayApi.GetFirmwareUpdateStatus.addError(builder, errorOffset);
+  return SplayApi.GetFirmwareUpdateStatus.endGetFirmwareUpdateStatus(builder);
+}
+
 // Exports for ECMAScript6 Modules
 export {SplayApi};

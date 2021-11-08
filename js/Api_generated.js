@@ -16,13 +16,14 @@ SplayApi.Body = {
   PausePlaylistReq: 3,
   StopPlaylistReq: 4,
   GetPlaylistReq: 5,
-  GetAllPlaylistsReq: 6,
-  GetPlaylistRes: 7,
+  GetPlaylistRes: 6,
+  GetAllPlaylistsReq: 7,
   GetAllPlaylistsRes: 8,
   GetCueReq: 9,
   GetCueRes: 10,
   GetAllCuesReq: 11,
-  GetAllCuesRes: 12
+  GetAllCuesRes: 12,
+  GetFirmwareUpdateStatus: 13
 };
 
 /**
@@ -35,13 +36,14 @@ SplayApi.BodyName = {
   '3': 'PausePlaylistReq',
   '4': 'StopPlaylistReq',
   '5': 'GetPlaylistReq',
-  '6': 'GetAllPlaylistsReq',
-  '7': 'GetPlaylistRes',
+  '6': 'GetPlaylistRes',
+  '7': 'GetAllPlaylistsReq',
   '8': 'GetAllPlaylistsRes',
   '9': 'GetCueReq',
   '10': 'GetCueRes',
   '11': 'GetAllCuesReq',
-  '12': 'GetAllCuesRes'
+  '12': 'GetAllCuesRes',
+  '13': 'GetFirmwareUpdateStatus'
 };
 
 /**

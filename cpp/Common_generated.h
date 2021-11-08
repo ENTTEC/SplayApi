@@ -8,6 +8,9 @@
 
 namespace SplayApi {
 
+struct GetFirmwareUpdateStatus;
+struct GetFirmwareUpdateStatusBuilder;
+
 enum UNIVERSE_TYPE {
   UNIVERSE_TYPE_DMX = 0,
   UNIVERSE_TYPE_ARTNET = 1,
@@ -295,6 +298,70 @@ inline const char *EnumNameSETTING(SETTING e) {
   if (flatbuffers::IsOutRange(e, SETTING_IS_SPARE, SETTING_DB_VERSION)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesSETTING()[index];
+}
+
+struct GetFirmwareUpdateStatus FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef GetFirmwareUpdateStatusBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PROGRESS = 4,
+    VT_ERROR = 6
+  };
+  uint8_t progress() const {
+    return GetField<uint8_t>(VT_PROGRESS, 0);
+  }
+  const flatbuffers::String *error() const {
+    return GetPointer<const flatbuffers::String *>(VT_ERROR);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_PROGRESS) &&
+           VerifyOffset(verifier, VT_ERROR) &&
+           verifier.VerifyString(error()) &&
+           verifier.EndTable();
+  }
+};
+
+struct GetFirmwareUpdateStatusBuilder {
+  typedef GetFirmwareUpdateStatus Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_progress(uint8_t progress) {
+    fbb_.AddElement<uint8_t>(GetFirmwareUpdateStatus::VT_PROGRESS, progress, 0);
+  }
+  void add_error(flatbuffers::Offset<flatbuffers::String> error) {
+    fbb_.AddOffset(GetFirmwareUpdateStatus::VT_ERROR, error);
+  }
+  explicit GetFirmwareUpdateStatusBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  GetFirmwareUpdateStatusBuilder &operator=(const GetFirmwareUpdateStatusBuilder &);
+  flatbuffers::Offset<GetFirmwareUpdateStatus> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<GetFirmwareUpdateStatus>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<GetFirmwareUpdateStatus> CreateGetFirmwareUpdateStatus(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint8_t progress = 0,
+    flatbuffers::Offset<flatbuffers::String> error = 0) {
+  GetFirmwareUpdateStatusBuilder builder_(_fbb);
+  builder_.add_error(error);
+  builder_.add_progress(progress);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<GetFirmwareUpdateStatus> CreateGetFirmwareUpdateStatusDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint8_t progress = 0,
+    const char *error = nullptr) {
+  auto error__ = error ? _fbb.CreateString(error) : 0;
+  return SplayApi::CreateGetFirmwareUpdateStatus(
+      _fbb,
+      progress,
+      error__);
 }
 
 }  // namespace SplayApi

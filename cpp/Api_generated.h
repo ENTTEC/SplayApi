@@ -30,18 +30,19 @@ enum Body {
   Body_PausePlaylistReq = 3,
   Body_StopPlaylistReq = 4,
   Body_GetPlaylistReq = 5,
-  Body_GetAllPlaylistsReq = 6,
-  Body_GetPlaylistRes = 7,
+  Body_GetPlaylistRes = 6,
+  Body_GetAllPlaylistsReq = 7,
   Body_GetAllPlaylistsRes = 8,
   Body_GetCueReq = 9,
   Body_GetCueRes = 10,
   Body_GetAllCuesReq = 11,
   Body_GetAllCuesRes = 12,
+  Body_GetFirmwareUpdateStatus = 13,
   Body_MIN = Body_NONE,
-  Body_MAX = Body_GetAllCuesRes
+  Body_MAX = Body_GetFirmwareUpdateStatus
 };
 
-inline const Body (&EnumValuesBody())[13] {
+inline const Body (&EnumValuesBody())[14] {
   static const Body values[] = {
     Body_NONE,
     Body_StatusRes,
@@ -49,39 +50,41 @@ inline const Body (&EnumValuesBody())[13] {
     Body_PausePlaylistReq,
     Body_StopPlaylistReq,
     Body_GetPlaylistReq,
-    Body_GetAllPlaylistsReq,
     Body_GetPlaylistRes,
+    Body_GetAllPlaylistsReq,
     Body_GetAllPlaylistsRes,
     Body_GetCueReq,
     Body_GetCueRes,
     Body_GetAllCuesReq,
-    Body_GetAllCuesRes
+    Body_GetAllCuesRes,
+    Body_GetFirmwareUpdateStatus
   };
   return values;
 }
 
 inline const char * const *EnumNamesBody() {
-  static const char * const names[14] = {
+  static const char * const names[15] = {
     "NONE",
     "StatusRes",
     "PlayPlaylistReq",
     "PausePlaylistReq",
     "StopPlaylistReq",
     "GetPlaylistReq",
-    "GetAllPlaylistsReq",
     "GetPlaylistRes",
+    "GetAllPlaylistsReq",
     "GetAllPlaylistsRes",
     "GetCueReq",
     "GetCueRes",
     "GetAllCuesReq",
     "GetAllCuesRes",
+    "GetFirmwareUpdateStatus",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameBody(Body e) {
-  if (flatbuffers::IsOutRange(e, Body_NONE, Body_GetAllCuesRes)) return "";
+  if (flatbuffers::IsOutRange(e, Body_NONE, Body_GetFirmwareUpdateStatus)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesBody()[index];
 }
@@ -110,12 +113,12 @@ template<> struct BodyTraits<SplayApi::GetPlaylistReq> {
   static const Body enum_value = Body_GetPlaylistReq;
 };
 
-template<> struct BodyTraits<SplayApi::GetAllPlaylistsReq> {
-  static const Body enum_value = Body_GetAllPlaylistsReq;
-};
-
 template<> struct BodyTraits<SplayApi::GetPlaylistRes> {
   static const Body enum_value = Body_GetPlaylistRes;
+};
+
+template<> struct BodyTraits<SplayApi::GetAllPlaylistsReq> {
+  static const Body enum_value = Body_GetAllPlaylistsReq;
 };
 
 template<> struct BodyTraits<SplayApi::GetAllPlaylistsRes> {
@@ -136,6 +139,10 @@ template<> struct BodyTraits<SplayApi::GetAllCuesReq> {
 
 template<> struct BodyTraits<SplayApi::GetAllCuesRes> {
   static const Body enum_value = Body_GetAllCuesRes;
+};
+
+template<> struct BodyTraits<SplayApi::GetFirmwareUpdateStatus> {
+  static const Body enum_value = Body_GetFirmwareUpdateStatus;
 };
 
 bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body type);
@@ -289,11 +296,11 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const SplayApi::GetPlaylistReq *body_as_GetPlaylistReq() const {
     return body_type() == SplayApi::Body_GetPlaylistReq ? static_cast<const SplayApi::GetPlaylistReq *>(body()) : nullptr;
   }
-  const SplayApi::GetAllPlaylistsReq *body_as_GetAllPlaylistsReq() const {
-    return body_type() == SplayApi::Body_GetAllPlaylistsReq ? static_cast<const SplayApi::GetAllPlaylistsReq *>(body()) : nullptr;
-  }
   const SplayApi::GetPlaylistRes *body_as_GetPlaylistRes() const {
     return body_type() == SplayApi::Body_GetPlaylistRes ? static_cast<const SplayApi::GetPlaylistRes *>(body()) : nullptr;
+  }
+  const SplayApi::GetAllPlaylistsReq *body_as_GetAllPlaylistsReq() const {
+    return body_type() == SplayApi::Body_GetAllPlaylistsReq ? static_cast<const SplayApi::GetAllPlaylistsReq *>(body()) : nullptr;
   }
   const SplayApi::GetAllPlaylistsRes *body_as_GetAllPlaylistsRes() const {
     return body_type() == SplayApi::Body_GetAllPlaylistsRes ? static_cast<const SplayApi::GetAllPlaylistsRes *>(body()) : nullptr;
@@ -309,6 +316,9 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   }
   const SplayApi::GetAllCuesRes *body_as_GetAllCuesRes() const {
     return body_type() == SplayApi::Body_GetAllCuesRes ? static_cast<const SplayApi::GetAllCuesRes *>(body()) : nullptr;
+  }
+  const SplayApi::GetFirmwareUpdateStatus *body_as_GetFirmwareUpdateStatus() const {
+    return body_type() == SplayApi::Body_GetFirmwareUpdateStatus ? static_cast<const SplayApi::GetFirmwareUpdateStatus *>(body()) : nullptr;
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -341,12 +351,12 @@ template<> inline const SplayApi::GetPlaylistReq *Message::body_as<SplayApi::Get
   return body_as_GetPlaylistReq();
 }
 
-template<> inline const SplayApi::GetAllPlaylistsReq *Message::body_as<SplayApi::GetAllPlaylistsReq>() const {
-  return body_as_GetAllPlaylistsReq();
-}
-
 template<> inline const SplayApi::GetPlaylistRes *Message::body_as<SplayApi::GetPlaylistRes>() const {
   return body_as_GetPlaylistRes();
+}
+
+template<> inline const SplayApi::GetAllPlaylistsReq *Message::body_as<SplayApi::GetAllPlaylistsReq>() const {
+  return body_as_GetAllPlaylistsReq();
 }
 
 template<> inline const SplayApi::GetAllPlaylistsRes *Message::body_as<SplayApi::GetAllPlaylistsRes>() const {
@@ -367,6 +377,10 @@ template<> inline const SplayApi::GetAllCuesReq *Message::body_as<SplayApi::GetA
 
 template<> inline const SplayApi::GetAllCuesRes *Message::body_as<SplayApi::GetAllCuesRes>() const {
   return body_as_GetAllCuesRes();
+}
+
+template<> inline const SplayApi::GetFirmwareUpdateStatus *Message::body_as<SplayApi::GetFirmwareUpdateStatus>() const {
+  return body_as_GetFirmwareUpdateStatus();
 }
 
 struct MessageBuilder {
@@ -431,12 +445,12 @@ inline bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body ty
       auto ptr = reinterpret_cast<const SplayApi::GetPlaylistReq *>(obj);
       return verifier.VerifyTable(ptr);
     }
-    case Body_GetAllPlaylistsReq: {
-      auto ptr = reinterpret_cast<const SplayApi::GetAllPlaylistsReq *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
     case Body_GetPlaylistRes: {
       auto ptr = reinterpret_cast<const SplayApi::GetPlaylistRes *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case Body_GetAllPlaylistsReq: {
+      auto ptr = reinterpret_cast<const SplayApi::GetAllPlaylistsReq *>(obj);
       return verifier.VerifyTable(ptr);
     }
     case Body_GetAllPlaylistsRes: {
@@ -457,6 +471,10 @@ inline bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body ty
     }
     case Body_GetAllCuesRes: {
       auto ptr = reinterpret_cast<const SplayApi::GetAllCuesRes *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case Body_GetFirmwareUpdateStatus: {
+      auto ptr = reinterpret_cast<const SplayApi::GetFirmwareUpdateStatus *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;
