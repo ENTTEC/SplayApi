@@ -110,11 +110,12 @@ enum PIXEL_ORDER {
   PIXEL_ORDER_BRWG = 28,
   PIXEL_ORDER_BGWR = 29,
   PIXEL_ORDER_W = 30,
+  PIXEL_ORDER_RRGGBBWW = 31,
   PIXEL_ORDER_MIN = PIXEL_ORDER_RGB,
-  PIXEL_ORDER_MAX = PIXEL_ORDER_W
+  PIXEL_ORDER_MAX = PIXEL_ORDER_RRGGBBWW
 };
 
-inline const PIXEL_ORDER (&EnumValuesPIXEL_ORDER())[31] {
+inline const PIXEL_ORDER (&EnumValuesPIXEL_ORDER())[32] {
   static const PIXEL_ORDER values[] = {
     PIXEL_ORDER_RGB,
     PIXEL_ORDER_RBG,
@@ -146,13 +147,14 @@ inline const PIXEL_ORDER (&EnumValuesPIXEL_ORDER())[31] {
     PIXEL_ORDER_GBWR,
     PIXEL_ORDER_BRWG,
     PIXEL_ORDER_BGWR,
-    PIXEL_ORDER_W
+    PIXEL_ORDER_W,
+    PIXEL_ORDER_RRGGBBWW
   };
   return values;
 }
 
 inline const char * const *EnumNamesPIXEL_ORDER() {
-  static const char * const names[32] = {
+  static const char * const names[33] = {
     "RGB",
     "RBG",
     "GRB",
@@ -184,13 +186,14 @@ inline const char * const *EnumNamesPIXEL_ORDER() {
     "BRWG",
     "BGWR",
     "W",
+    "RRGGBBWW",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamePIXEL_ORDER(PIXEL_ORDER e) {
-  if (flatbuffers::IsOutRange(e, PIXEL_ORDER_RGB, PIXEL_ORDER_W)) return "";
+  if (flatbuffers::IsOutRange(e, PIXEL_ORDER_RGB, PIXEL_ORDER_RRGGBBWW)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesPIXEL_ORDER()[index];
 }
