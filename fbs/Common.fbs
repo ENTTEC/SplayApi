@@ -20,7 +20,7 @@ enum PIXEL_ORDER:uint8 {
   WRGB, WRBG, WGRB, WGBR, WBRG, WBGR,
   RWGB, RWBG, GWRB, GWBR, BWRG, BWGR,
   RGWB, RBWG, GRWB, GBWR, BRWG, BGWR,
-  W, RRGGBBWW
+  W,  RRGGBB, RRGGBBWW
 }
 
 enum SETTING:uint8 {
@@ -53,7 +53,10 @@ enum SETTING:uint8 {
   DB_VERSION = 26,
 }
 
-table GetFirmwareUpdateStatus {
-   progress:uint8;
-   error:string;
+table GetFirmwareUpdateStatus
+{
+progress:
+    uint8;
+error:
+    string;
 }

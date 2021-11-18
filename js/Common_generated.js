@@ -79,7 +79,8 @@ SplayApi.PIXEL_ORDER = {
   BRWG: 28,
   BGWR: 29,
   W: 30,
-  RRGGBBWW: 31
+  RRGGBB: 31,
+  RRGGBBWW: 32
 };
 
 /**
@@ -119,7 +120,8 @@ SplayApi.PIXEL_ORDERName = {
   '28': 'BRWG',
   '29': 'BGWR',
   '30': 'W',
-  '31': 'RRGGBBWW'
+  '31': 'RRGGBB',
+  '32': 'RRGGBBWW'
 };
 
 /**

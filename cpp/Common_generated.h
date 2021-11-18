@@ -110,12 +110,13 @@ enum PIXEL_ORDER {
   PIXEL_ORDER_BRWG = 28,
   PIXEL_ORDER_BGWR = 29,
   PIXEL_ORDER_W = 30,
-  PIXEL_ORDER_RRGGBBWW = 31,
+  PIXEL_ORDER_RRGGBB = 31,
+  PIXEL_ORDER_RRGGBBWW = 32,
   PIXEL_ORDER_MIN = PIXEL_ORDER_RGB,
   PIXEL_ORDER_MAX = PIXEL_ORDER_RRGGBBWW
 };
 
-inline const PIXEL_ORDER (&EnumValuesPIXEL_ORDER())[32] {
+inline const PIXEL_ORDER (&EnumValuesPIXEL_ORDER())[33] {
   static const PIXEL_ORDER values[] = {
     PIXEL_ORDER_RGB,
     PIXEL_ORDER_RBG,
@@ -148,13 +149,14 @@ inline const PIXEL_ORDER (&EnumValuesPIXEL_ORDER())[32] {
     PIXEL_ORDER_BRWG,
     PIXEL_ORDER_BGWR,
     PIXEL_ORDER_W,
+    PIXEL_ORDER_RRGGBB,
     PIXEL_ORDER_RRGGBBWW
   };
   return values;
 }
 
 inline const char * const *EnumNamesPIXEL_ORDER() {
-  static const char * const names[33] = {
+  static const char * const names[34] = {
     "RGB",
     "RBG",
     "GRB",
@@ -186,6 +188,7 @@ inline const char * const *EnumNamesPIXEL_ORDER() {
     "BRWG",
     "BGWR",
     "W",
+    "RRGGBB",
     "RRGGBBWW",
     nullptr
   };
