@@ -68,14 +68,14 @@ enum COMMAND : uint8 {
   UPDATE_INTERFACE = 72, // Update/Create Interface page
   DELETE_INTERFACE = 73, // Delete Interface by id
 
-  GET_VERSION = 80,
-  GET_NETWORK = 81,
-  SET_NETWORK = 82,
-  GET_TIME = 83,
-  SET_TIME = 84,
-  GET_STORAGES = 85,
-  SET_STORAGE = 86,
-  FACTORY_RESET = 87,
+  GET_VERSION = 80, // Get Engine version
+  GET_NETWORK = 81, // Get network settings
+  SET_NETWORK = 82, // Set network settings
+  GET_TIME = 83, // Get system time, timezone and custom NTP server if used
+  SET_TIME = 84, // Set system time, timezone and custom NTP server
+  GET_STORAGES = 85, // Get available storages (internal, sd, etc.)
+  SET_STORAGE = 86, // Set current storage from available
+  FACTORY_RESET = 87, // Execute factory reset logic
 
   REFRESH_SETTING = 254,
 }

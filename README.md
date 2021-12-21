@@ -5,7 +5,7 @@ This HTTP API allows for control over the ENTTEC S-Play (SKU: 70092), playback e
 
 ENTTEC recommend that the S-Plays IP is set to be static before communicating using this API.
 
-To ensure this API functions as intended, ensure you are running a software version of at least **v1.6**.
+To ensure this API functions as intended, ensure you are running a software version of at least **v1.7**.
 
 ## HTTP POST Commands for S-Play's playback.
 Enum CONTROL_COMMANDS below presents the list of available playback commands.
@@ -33,56 +33,57 @@ git config --local core.hooksPath .githooks/
 All control commands supported by the device are listed in `fbs/Command.fbs`.
 These ids can be used to fully control S-Play device
 ```c++
-enum CONTROL_COMMANDS {
-  PLAY_COMMAND = 0, // Play playlist by id
-  PAUSE_COMMAND = 1, // Pause the playing playlist by id
-  STOP_COMMAND = 2, // Stop the playlist if in PAUSE or PLAY status
-  GET_PLAYLIST_COMMAND = 3, // Get full information about playlist with Tracks, Triggers & Events
-  UPDATE_PLAYLISTS_ORDER_COMMAND = 4, // Update playlists by ids with given orders
-  PLAY_ALL_PLAYLISTS_COMMAND = 5, // Play all playlists on the device
-  PAUSE_ALL_PLAYLISTS_COMMAND = 6, // Pause all playing playlists
-  STOP_ALL_PLAYLISTS_COMMAND = 7, // Stop all playlists is in PAUSE or PLAY status.
-  GET_ALL_PLAYLISTS_COMMAND = 8, // Get status of all currently playing playlists
-  SET_PLAYLIST_INTENSITY_COMMAND = 9, // Output intensity (Master Fader) of the given playlist, persists until power cycle
-  
-  SET_TRACK_INTENSITY_COMMAND = 11, // Output intensity of particular track in the given playlist (not implemented)
-  GET_TRACK_INTENSITY_COMMAND = 12, // Return the current Intensity (not implemented)
+enum COMMAND {
+  PLAY = 0, // Play playlist on the device
+  PAUSE = 1, // Pause the playing playlist
+  STOP = 2, // Stop the playlist is in PAUSE or PLAY status.
+  GET_PLAYLIST = 3, // Get full information about playlist with Tracks, Triggers & Events
+  UPDATE_PLAYLISTS_ORDER = 4, // Update playlists by ids with given orders
+  PLAY_ALL_PLAYLISTS = 5, // Play all playlists on the device
+  PAUSE_ALL_PLAYLISTS = 6, // Pause all playing playlists
+  STOP_ALL_PLAYLISTS = 7, // Stop all playlists is in PAUSE or PLAY status.
+  GET_ALL_PLAYLISTS = 8, // Get status of all currently playing playlists
+  SET_PLAYLIST_INTENSITY = 9, // Output intensity (Master Fader) of the given playlist, persists until power cycle
+  GET_PLAYLIST_INTENSITY = 10, // Return the current Intensity
+  SET_TRACK_INTENSITY = 11, // Output intensity of particular track in the given playlist (not implemented)
+  GET_TRACK_INTENSITY = 12, // Return the current Intensity (not implemented)
 
-  CAPTURE_DMX_FRAME_COMMAND = 13, // Static frame recording
-  RECORD_DMX_FRAME_COMMAND = 14, // Dynamic frame recording
-  STOP_RECORD_COMMAND = 15, // Stop any recording
-  SAVE_CUE_COMMAND = 16, // Save cue state
-  DELETE_CUE_COMMAND = 17, // Delete Cue by id
+  CAPTURE_DMX_FRAME = 13, // Static frame recording
+  RECORD_DMX_FRAME = 14, // Dynamic frame recording
+  STOP_RECORD = 15, // Stop any recording
+  SAVE_CUE = 16, // Save cue state
+  DELETE_CUE = 17, // Delete Cue by id
 
-  UPDATE_PLAYLIST_COMMAND = 18, // Update/Create Playlist with json struct as received from GET_PLAYLIST_COMMAND
-  DELETE_PLAYLIST_COMMAND = 19, // Delete Playlist by id
-  
-  UPDATE_SETTING_COMMAND = 20, // Update Setting by id
-  GET_SETTING_COMMAND = 21, // Get Setting by id
-  
-  SET_PLAYLIST_TIME_POSITION_COMMAND = 22, // Set playback position of a playlist
-  SET_WEBSOCKET_INPUT_COMMAND = 23, // Sets universe to monitor in Cue recording
+  UPDATE_PLAYLIST = 18, // Update/Create Playlist with json struct as gets from GET_PLAYLIST
+  DELETE_PLAYLIST = 19, // Delete Playlist by id
 
-  PLAY_CUE_COMMAND = 25, // Play cue with given id
-  PAUSE_CUE_COMMAND = 26, // Pause cue with given id (not implemented)
-  STOP_CUE_COMMAND = 27, // Stop playback of playing cue by given id
-  GET_CUE_COMMAND = 28, // Get full info on cue by given id
-  GET_ALL_CUES_COMMAND = 29, // Get list of all cues
-  EXIT_CUE_EDIT_COMMAND = 30, // Frontend notifies on Cue editing finished
+  UPDATE_SETTING = 20, // Update Setting by id
+  GET_SETTING = 21, // Get Setting by id
+
+  SET_PLAYLIST_TIME_POSITION = 22, // Set playback position of a playlist
+  SET_WEBSOCKET_INPUT = 23, // Sets universe to monitor in Cue recording, use Universe number or WEBSOCKET_OUTPUT:NOTHING/ALL
+
+  PLAY_CUE = 25, // Play cue with given id
+  PAUSE_CUE = 26, // Pause cue with given id
+  STOP_CUE = 27, // Stop playback of playing cue by given id
+  GET_CUE = 28, // Get full info on cue by given id
+  GET_ALL_CUES = 29, // Get list of all cues
+  EXIT_CUE_EDIT = 30, // Frontend notifies on Cue editing finished
+  DUPLICATE_CUE = 31, // Duplicate cue by given id
 
   UPDATE_STORAGE_PATH = 34, // Update storage path using internal DB check for BASE_PATH setting
 
-  GET_EVENT_COMMAND = 36, // Get Event by id
-  GET_ALL_EVENTS_COMMAND = 37, // Get all existing Events
-  UPDATE_EVENT_COMMAND = 38, // Update/Create Event
-  DELETE_EVENT_COMMAND = 39, // Delete Event by id
-  GET_TRIGGER_COMMAND = 40, // Get Trigger by id
-  GET_ALL_TRIGGERS_COMMAND = 41, // Get all existing Triggers
-  UPDATE_TRIGGER_COMMAND = 42, // Update/Create Trigger
-  DELETE_TRIGGER_COMMAND = 43, // Delete Trigger by id
-  SEND_EVENT_COMMAND = 44, // Send given event
-  WAIT_TRIGGER_COMMAND = 45, // Add trigger to check
-  CHECK_TRIGGER_COMMAND = 46, // Check if added trigger happen
+  GET_EVENT = 36, // Get Event by id
+  GET_ALL_EVENTS = 37, // Get all existing Events
+  UPDATE_EVENT = 38, // Update/Create Event
+  DELETE_EVENT = 39, // Delete Event by id
+  GET_TRIGGER = 40, // Get Trigger by id
+  GET_ALL_TRIGGERS = 41, // Get all existing Triggers
+  UPDATE_TRIGGER = 42, // Update/Create Trigger
+  DELETE_TRIGGER = 43, // Delete Trigger by id
+  SEND_EVENT = 44, // Send given event
+  WAIT_TRIGGER = 45, // Add trigger to check
+  CHECK_TRIGGER = 46, // Check if added trigger happen
 
   UDP_MESSAGE = 50, // Accepts messages to interpret as UDP input
   OSC_MESSAGE = 51, // Accepts messages to interpret as OSC input
@@ -90,15 +91,26 @@ enum CONTROL_COMMANDS {
   GET_MASTER_INTENSITY = 55, // Get / Set overall S-Play output intensity (Master Fader), persists until power cycle
   SET_MASTER_INTENSITY = 56,
 
-  GET_SCHEDULES_COMMAND = 60, // Get all existing Schedules
-  UPDATE_SCHEDULE_COMMAND = 61, // Update Schedule to file already exist.
-  DELETE_SCHEDULE_COMMAND = 62, // Delete Schedule. it will be removed from database and storage.
-  ENABLE_SCHEDULE_COMMAND = 63, // Change the Schedule state enable ACTIVE = 1 / PAUSED = 2
+  GET_SCHEDULES = 60, // Get all existing Schedules
+  UPDATE_SCHEDULE = 61, // Update Schedule to file already exist.
+  DELETE_SCHEDULE = 62, // Delete Schedule. it will be removed from database and storage.
+  ENABLE_SCHEDULE = 63, // Change the Schedule state enable ACTIVE = 1 / PAUSED = 2
 
-  GET_INTERFACE_COMMAND = 70, // Get Interface page by id or URL
-  GET_ALL_INTERFACES_COMMAND = 71, // Get all created Interfaces
-  UPDATE_INTERFACE_COMMAND = 72, // Update/Create Interface page
-  DELETE_INTERFACE_COMMAND = 73, // Delete Interface by id
+  GET_INTERFACE = 70, // Get Iterface page by id or URL
+  GET_ALL_INTERFACES = 71, // Get all created Interfaces
+  UPDATE_INTERFACE = 72, // Update/Create Interface page
+  DELETE_INTERFACE = 73, // Delete Interface by id
+
+  GET_VERSION = 80, // Get Engine version
+  GET_NETWORK = 81, // Get network settings
+  SET_NETWORK = 82, // Set network settings
+  GET_TIME = 83, // Get system time, timezone and custom NTP server if used
+  SET_TIME = 84, // Set system time, timezone and custom NTP server
+  GET_STORAGES = 85, // Get available storages (internal, sd, etc.)
+  SET_STORAGE = 86, // Set current storage from available
+  FACTORY_RESET = 87, // Execute factory reset logic
+
+  REFRESH_SETTING = 254,
 }
 ```
 
@@ -118,7 +130,7 @@ For example if unsupported command is sent it Response:
 
 #### Supported Playlists Statuses returned in "status" field
 ```c++
-enum PLAYLIST_STATUS_TYPES {
+enum PLAYLIST_STATUS {
   PLAYLIST_STATUS_IDLE = 0,
   PLAYLIST_STATUS_PLAYING = 1,
   PLAYLIST_STATUS_PAUSED = 2,
@@ -917,41 +929,41 @@ Response:
 
 ### Settings Control Description and JSON Requests/Responses Examples
 
-> Be very careful while editing settings improper config can break S-Play logic and only factory reset will fix it.
+> Be very careful while editing settings improper config can break S-Play logic. 
+> On reboot each setting is verified, if verification fails - setting sets to default.
 > First get the setting parameter then keeping the syntax and fields names the same modify values
 
 List of setting ids:
 ```c++
-enum SETTING_CATEGORIES {
-    IS_SPARE = 0,
-    SYSTEM_NAME = 1,
-    PLAYBACK_CONFIG = 2,
-    PASSWORD = 3,
-    HELP_HINTS = 4,
-    SERIALNO = 5,
-    ENABLE_PASSWORD = 6,
-    SMTP = 7,
-    EMAIL = 8,
-    INPUT = 9,
-    OUTPUT = 10,
-    DMX = 11,
-    ARTNET = 12,
-    SACN = 13,
-    LOCATION = 14,
-    NTP = 15,
-    BASE_PATH = 16,
-    CUE_PATH = 17,
-    HOME_INTERFACE = 18,
-    UDP = 19,
-    TCP = 20,
-    RS232C = 21,
-    OSC = 22,
-    IEEE1588_CONFIG = 23,
-    IEEE1588_ACTIVE = 24,
-    LOCK_STATUS = 25,
-    DB_VERSION = 26,
-    SIZE_OF_SETTING_CATEGORIES
-};
+enum SETTING {
+  IS_SPARE = 0,
+  SYSTEM_NAME = 1,
+  PLAYBACK_CONFIG = 2,
+  PASSWORD = 3,
+  HELP_HINTS = 4,
+  SERIALNO = 5,
+  ENABLE_PASSWORD = 6,
+  SMTP = 7,
+  EMAIL = 8,
+  INPUT = 9,
+  OUTPUT = 10,
+  DMX = 11,
+  ARTNET = 12,
+  SACN = 13,
+  LOCATION = 14,
+  NTP = 15,
+  BASE_PATH = 16,
+  CUE_PATH = 17,
+  HOME_INTERFACE = 18,
+  UDP = 19,
+  TCP = 20,
+  RS232C = 21,
+  OSC = 22,
+  IEEE1588_CONFIG = 23,
+  IEEE1588_ACTIVE = 24,
+  LOCK_STATUS = 25,
+  DB_VERSION = 26,
+}
 ```
 
 #### GET_SETTING_COMMAND: Get Setting by id
@@ -998,6 +1010,85 @@ Request:
 Response:
 ```json
 { "result": true }
+```
+
+### Additional requests for S-Play config
+#### GET_NETWORK - Get network settings
+Request:
+```json
+{ "command": 81 }
+```
+Response:
+```json
+{ 
+  "result": true 
+}
+```
+#### SET_NETWORK - Set network settings
+Request:
+```json
+{ "command": 82 }
+```
+Response:
+```json
+{ 
+  "result": true 
+}
+```
+#### GET_TIME - Get system time, timezone and custom NTP server if used
+Request:
+```json
+{ "command": 83 }
+```
+Response:
+```json
+{ 
+  "result": true 
+}
+```
+#### SET_TIME - Set system time, timezone and custom NTP server
+Request:
+```json
+{ "command": 84 }
+```
+Response:
+```json
+{ 
+  "result": true 
+}
+```
+#### GET_STORAGES - Get available storages (internal, sd, etc.)
+Request:
+```json
+{ "command": 85 }
+```
+Response:
+```json
+{ 
+  "result": true 
+}
+```
+#### SET_STORAGE - Set current storage from available
+Request:
+```json
+{ "command": 86 }
+```
+Response:
+```json
+{ 
+  "result": true 
+}
+```
+#### FACTORY_RESET - Execute factory reset logic
+Request:
+```json
+{ "command": 87 }
+```
+Response:
+```json
+{ 
+  "result": true 
+}
 ```
 
 -------------------------------------------------
