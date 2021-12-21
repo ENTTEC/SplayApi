@@ -8,7 +8,7 @@ ENTTEC recommend that the S-Plays IP is set to be static before communicating us
 To ensure this API functions as intended, ensure you are running a software version of at least **v1.7**.
 
 ## HTTP POST Commands for S-Play's playback.
-Enum CONTROL_COMMANDS below presents the list of available playback commands.
+Enum COMMAND below presents the list of available playback commands.
 They can be sent using HTTP POST requests to the device IP on the`55555` port and path`/api`.
 
 e.g. URL: ` http://192.168.1.13:55555/api`
@@ -141,7 +141,7 @@ enum PLAYLIST_STATUS {
 
 ```
 
-#### PLAY_COMMAND: Play playlist by id
+#### PLAY: Play playlist by id
 Request:
 ```json
 {
@@ -154,7 +154,7 @@ Response:
 { "result": true }
 ```
 
-#### PAUSE_COMMAND: Pause the playing playlist by id
+#### PAUSE: Pause the playing playlist by id
 Request:
 ```json
 {
@@ -168,7 +168,7 @@ Response:
 ```
 
 
-#### STOP_COMMAND: Stop the playlist if in PAUSE or PLAY status
+#### STOP: Stop the playlist if in PAUSE or PLAY status
 This will perform STOP action, if Playlist's has Fade Out time not 0 the status become PLAYLIST_STATUS_STOPPING and 
 with the repeated STOP command Playlist will stop immediately, else it will stop.
 Request:
@@ -183,7 +183,7 @@ Response:
 { "result": true }
 ```
 
-#### GET_PLAYLIST_COMMAND: Get full information about playlist with Tracks, Triggers & Events
+#### GET_PLAYLIST: Get full information about playlist with Tracks, Triggers & Events
 Request:
 ```json
 {
@@ -265,7 +265,7 @@ Response:
 }
 ```
 
-#### UPDATE_PLAYLISTS_ORDER_COMMAND: Update playlists by ids with given orders
+#### UPDATE_PLAYLISTS_ORDER: Update playlists by ids with given orders
 Request:
 ```json
 {
@@ -281,7 +281,7 @@ Response:
 { "result": true }
 ```
 
-#### PLAY_ALL_PLAYLISTS_COMMAND: Play all playlists on the device
+#### PLAY_ALL_PLAYLISTS: Play all playlists on the device
 Request:
 ```json
 {"command": 5}
@@ -291,7 +291,7 @@ Response:
 { "result": true }
 ```
 
-#### PAUSE_ALL_PLAYLISTS_COMMAND: Pause all playing playlists
+#### PAUSE_ALL_PLAYLISTS: Pause all playing playlists
 Request:
 ```json
 {"command": 6}
@@ -301,7 +301,7 @@ Response:
 { "result": true }
 ```
 
-#### STOP_ALL_PLAYLISTS_COMMAND: Stop all playlists is in PAUSE or PLAY status.
+#### STOP_ALL_PLAYLISTS: Stop all playlists is in PAUSE or PLAY status.
 Request:
 ```json
 {"command": 7}
@@ -311,7 +311,7 @@ Response:
 { "result": true }
 ```
 
-#### GET_ALL_PLAYLISTS_COMMAND: Get status of all currently playing playlists
+#### GET_ALL_PLAYLISTS: Get status of all currently playing playlists
 This will return all the playlist IDs and its status and playing time.
 Playlist with id 1 is stopped and is hidden from home page.
 Playlist with id 2 is playing on 6th second with overall duration of 12 seconds/
@@ -351,7 +351,7 @@ Response:
 }
 ```
 
-#### SET_PLAYLIST_INTENSITY_COMMAND: Output intensity (Master Fader) of the given playlist, persists until power cycle
+#### SET_PLAYLIST_INTENSITY: Output intensity (Master Fader) of the given playlist, persists until power cycle
 Request - Set playlist intensity to 50%
 ```json
 {
@@ -364,7 +364,7 @@ Response:
 { "result": true }
 ```
 
-#### UPDATE_PLAYLIST_COMMAND: Update/Create Playlist with json struct as received from GET_PLAYLIST_COMMAND
+#### UPDATE_PLAYLIST: Update/Create Playlist with json struct as received from GET_PLAYLIST
 Update the properties of a playlist. To create new playlist `"playlist_id": 0` or no `"playlist_id"` key must be passsed  
 
 Create new Playlist with 
@@ -476,7 +476,7 @@ It should return true.
 { "result": true }
 ```
 
-#### DELETE_PLAYLIST_COMMAND
+#### DELETE_PLAYLIST
 Remove the playlist from active list (e.g. from PlayAll).
 Request:
 ```json
@@ -490,7 +490,7 @@ Response:
 { "result": true }
 ```
 
-#### SET_PLAYLIST_TIME_POSITION_COMMAND: Set playback position of given playlist and continue to play, if playlist was STOPPED it becomes PAUSED
+#### SET_PLAYLIST_TIME_POSITION: Set playback position of given playlist and continue to play, if playlist was STOPPED it becomes PAUSED
 Send request with needed timeline position for playlist playing currently, the position is set with current_time as float which represents seconds (ms after dot) and playlist_id
 Request:
 ```json
@@ -525,7 +525,7 @@ enum CUE_TYPE:uint8 {
 }
 ```
 
-#### GET_ALL_CUES_COMMAND: Get list of all available cues
+#### GET_ALL_CUES: Get list of all available cues
 
 Request:
 ```json
@@ -564,14 +564,14 @@ Response:
 
 > "universes" - array of 32 inputs with universe selected: No input: `-1`; DMX: `1 - 2`; ArtNet: `0 - 32767`; sACN: `1 - 65535`.
 > 
-> "frames" - returns empty because of the size: 32 arrays * 512 bytes, to get "frames" for the particular Static cue use GET_CUE_COMMAND
+> "frames" - returns empty because of the size: 32 arrays * 512 bytes, to get "frames" for the particular Static cue use GET_CUE
 > 
 > "duration" - Dynamic cue recording length in milliseconds
 >
 > "ch_start" & "ch_stop" defines universe channels range to output during playback, beyond the range '0' will be send
 
 
-#### GET_CUE_COMMAND: Get full info on cue by given id
+#### GET_CUE: Get full info on cue by given id
 Returns extended info about Cue with "frames": universes state in Static Cue and 1st frame of Dynamic Cue. Effect Cue API is in progress.
 
 Below Dynamic Cue ("type" == CUE_TYPE_DYNAMIC) with only first 8 frames states of universes are shown, other 24 are zeroed arrays as the last here
@@ -624,7 +624,7 @@ Response:
 }
 ```
 
-#### PLAY_CUE_COMMAND: Play cue with given id
+#### PLAY_CUE: Play cue with given id
 Request:
 ```json
 {
@@ -673,7 +673,7 @@ Response:
 ```
 
 
-#### PAUSE_CUE_COMMAND: Pause cue with given id (not implemented)
+#### PAUSE_CUE: Pause cue with given id (not implemented)
 Request:
 ```json
 {
@@ -686,7 +686,7 @@ Response:
 { "result": true }
 ```
 
-#### STOP_CUE_COMMAND: Stop playback of playing cue by given id
+#### STOP_CUE: Stop playback of playing cue by given id
 Request:
 ```json
 {
@@ -699,7 +699,7 @@ Response:
 { "result": true }
 ```
 
-#### CAPTURE_DMX_FRAME_COMMAND: Start Static frame recording
+#### CAPTURE_DMX_FRAME: Start Static frame recording
 Capture Static cue with id 2 from ArtNet
 - "universe_type" = 2 (ARTNET_TYPE)
 - "universes" - all universes from 0 to 31 will be listened
@@ -722,7 +722,7 @@ Response:
 { "result": true }
 ```
 
-#### RECORD_DMX_FRAME_COMMAND: Start Dynamic frame recording
+#### RECORD_DMX_FRAME: Start Dynamic frame recording
 Start recording of Dynamic cue with id 21, with params:
 - "live_preview" enabled - send recorded data to output during recording 
 - "loop" disabled - don't check for the first 5 frames repeat to create perfect loop
@@ -757,7 +757,7 @@ Response:
 { "result": true }
 ```
 
-#### STOP_RECORD_COMMAND: Stop any recording
+#### STOP_RECORD: Stop any recording
 This command will stop the DMX/ArtNet/sACN frame recording if any
 Request:
 ```json
@@ -768,7 +768,7 @@ Response:
 { "result": true }
 ```
 
-#### SAVE_CUE_COMMAND: Save cue state
+#### SAVE_CUE: Save cue state
 Saves Cue config and for Static saves "frames" state / for Dynamic persists temporary recorded file.
 If "cue_id" = 0 , engine will create new Cue from given data 
 
@@ -843,7 +843,7 @@ Response:
 { "result": true }
 ```
 
-#### DELETE_CUE_COMMAND: Delete Cue by id
+#### DELETE_CUE: Delete Cue by id
 Request:
 ```json
 { 
@@ -856,7 +856,7 @@ Response - returns `true` if Cue with id 2 existed and was removed else `false`
 { "result": true }
 ```
   
-#### EXIT_CUE_EDIT_COMMAND: Frontend notifies on Cue editing finished, remove not persisted recorded files
+#### EXIT_CUE_EDIT: Frontend notifies on Cue editing finished, remove not persisted recorded files
 
 Request:
 ```json
@@ -966,7 +966,7 @@ enum SETTING {
 }
 ```
 
-#### GET_SETTING_COMMAND: Get Setting by id
+#### GET_SETTING: Get Setting by id
 Get output settings
 Request:
 ```json
@@ -990,7 +990,7 @@ Next 8 outputs goes to ArtNet 1 to 8
 Next 8 outputs goes to sACN 1 to 8
 Other 14 are not assigned to any output
 
-#### UPDATE_SETTING_COMMAND: Update Setting by id
+#### UPDATE_SETTING: Update Setting by id
 Update playback configuration, set:
 "Send black frame on playlist stop" to false
 "Restrict to one active playlist per Group" to true
@@ -1012,7 +1012,7 @@ Response:
 { "result": true }
 ```
 
-### Additional requests for S-Play config
+### Additional requests for S-Play configuration
 #### GET_NETWORK - Get network settings
 Request:
 ```json
@@ -1020,20 +1020,29 @@ Request:
 ```
 Response:
 ```json
-{ 
-  "result": true 
+{
+  "result": true,
+  "network": {
+    "dhcp": false,
+    "ip": "192.168.2.7",
+    "gateway": "192.168.0.10",
+    "mask": "255.255.255.0"
+  }
 }
 ```
 #### SET_NETWORK - Set network settings
-Request:
+Request to enable DHCP:
 ```json
-{ "command": 82 }
+{ 
+  "command": 82,
+  "network": {
+    "dhcp": true
+  }
+}
 ```
 Response:
 ```json
-{ 
-  "result": true 
-}
+{ "result": true }
 ```
 #### GET_TIME - Get system time, timezone and custom NTP server if used
 Request:
@@ -1043,19 +1052,31 @@ Request:
 Response:
 ```json
 { 
-  "result": true 
+  "result": true,
+  "time": {
+    "now": "2021-12-25 23:26:35",
+    "ntp": false,
+    "server": "bg.pool.ntp.org",
+    "timezone": "Europe/Sofia"
+  }
 }
 ```
 #### SET_TIME - Set system time, timezone and custom NTP server
-Request:
+Request to set manual time for Christmas eve with default NTP servers for London timezone:
 ```json
-{ "command": 84 }
+{ 
+  "command": 84,
+  "time": {
+    "now": "2021-12-25 23:59:00",
+    "ntp": false,
+    "server": "",
+    "timezone": "Europe/London"
+  }
+}
 ```
 Response:
 ```json
-{ 
-  "result": true 
-}
+{ "result": true }
 ```
 #### GET_STORAGES - Get available storages (internal, sd, etc.)
 Request:
@@ -1065,13 +1086,23 @@ Request:
 Response:
 ```json
 { 
-  "result": true 
+  "result": true,
+  "storages": {
+    "available": [
+      "sd",
+      "internal"
+    ],
+    "selected": "sd"
+  }
 }
 ```
 #### SET_STORAGE - Set current storage from available
-Request:
+Request to select "sd" storage:
 ```json
-{ "command": 86 }
+{ 
+  "command": 86,
+  "storage": "sd"
+}
 ```
 Response:
 ```json
@@ -1086,9 +1117,7 @@ Request:
 ```
 Response:
 ```json
-{ 
-  "result": true 
-}
+{ "result": true }
 ```
 
 -------------------------------------------------
@@ -1110,7 +1139,7 @@ enum EVENT_TYPE {
 };
 ```
 
-#### GET_EVENT_COMMAND: Get Event by id
+#### GET_EVENT: Get Event by id
 
 Request - Get Event with id = 1
 ```json
@@ -1139,7 +1168,7 @@ Response - broadcast Art Net event for universe 11 with value 127 on channel 1
 }
 ```
 
-#### GET_ALL_EVENTS_COMMAND: Get all existing Events
+#### GET_ALL_EVENTS: Get all existing Events
 Request:
 ```json
 { "command": 37 }
@@ -1254,7 +1283,7 @@ Response:
 }
 ```
 
-#### UPDATE_EVENT_COMMAND: Update/Create Event
+#### UPDATE_EVENT: Update/Create Event
 Request - Create new event (`"event_id": 0`) with Relay Type (EVENT_TYPE_IO) for Second Relay NC state
 ```json
 {
@@ -1276,7 +1305,7 @@ Response:
 { "result": true }
 ```
 
-#### DELETE_EVENT_COMMAND: Delete Event by id
+#### DELETE_EVENT: Delete Event by id
 
 Request - Delete Event with id = 1
 ```json
@@ -1290,7 +1319,7 @@ Response - returns `true` if Event with id 1 existed and was removed else `false
 { "result": true }
 ```
 
-#### SEND_EVENT_COMMAND: Send given event
+#### SEND_EVENT: Send given event
 Request - send OSC event to 192.168.0.100 port 8000 with address "/hello" and string value "yo"
 ```json
 {
@@ -1344,7 +1373,7 @@ triggerTypeIdToName = { {
 }};
 ```
 
-#### GET_TRIGGER_COMMAND: Get Trigger by id
+#### GET_TRIGGER: Get Trigger by id
 Request - get Trigger with id = 1
 ```json
 {
@@ -1369,7 +1398,7 @@ Response - trigger for Digital input 1 Activate on Make
 }
 ```
 
-#### GET_ALL_TRIGGERS_COMMAND: Get all existing Triggers
+#### GET_ALL_TRIGGERS: Get all existing Triggers
 
 Request:
 ```json
@@ -1476,7 +1505,7 @@ Response:
 }
 ```
 
-#### UPDATE_TRIGGER_COMMAND: Update/Create Trigger
+#### UPDATE_TRIGGER: Update/Create Trigger
 Request - Create new sACN trigger for universe: 200 channel: 100 value: 150
 ```json
 {
@@ -1514,7 +1543,7 @@ Response - returns result: true and generated trigger_id: 211
 }
 ```
 
-#### DELETE_TRIGGER_COMMAND: Delete Trigger by id
+#### DELETE_TRIGGER: Delete Trigger by id
 Request:
 ```json
 {
@@ -1527,7 +1556,7 @@ Response - returns `true` if Trigger with id 211 existed and was removed else `f
 { "result": true }
 ```
 
-#### WAIT_TRIGGER_COMMAND: Add temporary trigger to check with CHECK_TRIGGER_COMMAND
+#### WAIT_TRIGGER: Add temporary trigger to check with CHECK_TRIGGER
 Request - add OSC Trigger with address "/start" and string value "broadcast" 
 ```json
 {
@@ -1549,7 +1578,7 @@ Response - successfully added
 { "result": true }
 ```
 
-#### CHECK_TRIGGER_COMMAND: Check if added trigger happen
+#### CHECK_TRIGGER: Check if added trigger happen
 Request:
 ```json
 { "command": 46 }
