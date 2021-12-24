@@ -77,5 +77,9 @@ enum COMMAND : uint8 {
   SET_STORAGE = 86, // Set current storage from available
   FACTORY_RESET = 87, // Execute factory reset logic
 
+  GET_SSH_TUNNEL_STATUS = 90, // Check if ssh tunnel is enabled and active
+  GET_SSH_TUNNEL_CONFIG = 91, // Get current ssh tunnel settings
+  SET_SSH_TUNNEL_CONFIG = 92, // Set ssh tunnel settings
+
   REFRESH_SETTING = 254,
 }
