@@ -75,12 +75,13 @@ enum COMMAND {
   COMMAND_GET_SSH_TUNNEL_STATUS = 90,
   COMMAND_GET_SSH_TUNNEL_CONFIG = 91,
   COMMAND_SET_SSH_TUNNEL_CONFIG = 92,
-  COMMAND_SHUTDOWN = 254,
+  COMMAND_SHUTDOWN = 222,
+  COMMAND_REFRESH_SETTING = 254,
   COMMAND_MIN = COMMAND_PLAY,
-  COMMAND_MAX = COMMAND_SHUTDOWN
+  COMMAND_MAX = COMMAND_REFRESH_SETTING
 };
 
-inline const COMMAND (&EnumValuesCOMMAND())[67] {
+inline const COMMAND (&EnumValuesCOMMAND())[68] {
   static const COMMAND values[] = {
     COMMAND_PLAY,
     COMMAND_PAUSE,
@@ -148,7 +149,8 @@ inline const COMMAND (&EnumValuesCOMMAND())[67] {
     COMMAND_GET_SSH_TUNNEL_STATUS,
     COMMAND_GET_SSH_TUNNEL_CONFIG,
     COMMAND_SET_SSH_TUNNEL_CONFIG,
-    COMMAND_SHUTDOWN
+    COMMAND_SHUTDOWN,
+    COMMAND_REFRESH_SETTING
   };
   return values;
 }
@@ -377,46 +379,46 @@ inline const char * const *EnumNamesCOMMAND() {
     "",
     "",
     "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
     "SHUTDOWN",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "REFRESH_SETTING",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameCOMMAND(COMMAND e) {
-  if (flatbuffers::IsOutRange(e, COMMAND_PLAY, COMMAND_SHUTDOWN)) return "";
+  if (flatbuffers::IsOutRange(e, COMMAND_PLAY, COMMAND_REFRESH_SETTING)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesCOMMAND()[index];
 }
