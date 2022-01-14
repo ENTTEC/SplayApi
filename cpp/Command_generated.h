@@ -75,9 +75,9 @@ enum COMMAND {
   COMMAND_GET_SSH_TUNNEL_STATUS = 90,
   COMMAND_GET_SSH_TUNNEL_CONFIG = 91,
   COMMAND_SET_SSH_TUNNEL_CONFIG = 92,
-  COMMAND_REFRESH_SETTING = 254,
+  COMMAND_SHUTDOWN = 254,
   COMMAND_MIN = COMMAND_PLAY,
-  COMMAND_MAX = COMMAND_REFRESH_SETTING
+  COMMAND_MAX = COMMAND_SHUTDOWN
 };
 
 inline const COMMAND (&EnumValuesCOMMAND())[67] {
@@ -148,7 +148,7 @@ inline const COMMAND (&EnumValuesCOMMAND())[67] {
     COMMAND_GET_SSH_TUNNEL_STATUS,
     COMMAND_GET_SSH_TUNNEL_CONFIG,
     COMMAND_SET_SSH_TUNNEL_CONFIG,
-    COMMAND_REFRESH_SETTING
+    COMMAND_SHUTDOWN
   };
   return values;
 }
@@ -409,14 +409,14 @@ inline const char * const *EnumNamesCOMMAND() {
     "",
     "",
     "",
-    "REFRESH_SETTING",
+    "SHUTDOWN",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameCOMMAND(COMMAND e) {
-  if (flatbuffers::IsOutRange(e, COMMAND_PLAY, COMMAND_REFRESH_SETTING)) return "";
+  if (flatbuffers::IsOutRange(e, COMMAND_PLAY, COMMAND_SHUTDOWN)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesCOMMAND()[index];
 }
