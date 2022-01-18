@@ -82,6 +82,9 @@ enum COMMAND : uint8 {
   GET_SSH_TUNNEL_CONFIG = 91, // Get current ssh tunnel settings
   SET_SSH_TUNNEL_CONFIG = 92, // Set ssh tunnel settings
 
+  LOGIN = 95,
+  CHANGE_PASSWORD = 96,
+
   SHUTDOWN = 222,
   REFRESH_SETTING = 254,
 }
