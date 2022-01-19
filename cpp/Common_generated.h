@@ -11,6 +11,9 @@ namespace SplayApi {
 struct GetFirmwareUpdateStatus;
 struct GetFirmwareUpdateStatusBuilder;
 
+struct SystemInfo;
+struct SystemInfoBuilder;
+
 enum UNIVERSE_TYPE {
   UNIVERSE_TYPE_DMX = 0,
   UNIVERSE_TYPE_ARTNET = 1,
@@ -368,6 +371,82 @@ inline flatbuffers::Offset<GetFirmwareUpdateStatus> CreateGetFirmwareUpdateStatu
       _fbb,
       progress,
       error__);
+}
+
+struct SystemInfo FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef SystemInfoBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CPU_USAGE = 4,
+    VT_TEMPERATURE = 6,
+    VT_TIME = 8
+  };
+  float cpu_usage() const {
+    return GetField<float>(VT_CPU_USAGE, 0.0f);
+  }
+  float temperature() const {
+    return GetField<float>(VT_TEMPERATURE, 0.0f);
+  }
+  const flatbuffers::String *time() const {
+    return GetPointer<const flatbuffers::String *>(VT_TIME);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<float>(verifier, VT_CPU_USAGE) &&
+           VerifyField<float>(verifier, VT_TEMPERATURE) &&
+           VerifyOffset(verifier, VT_TIME) &&
+           verifier.VerifyString(time()) &&
+           verifier.EndTable();
+  }
+};
+
+struct SystemInfoBuilder {
+  typedef SystemInfo Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_cpu_usage(float cpu_usage) {
+    fbb_.AddElement<float>(SystemInfo::VT_CPU_USAGE, cpu_usage, 0.0f);
+  }
+  void add_temperature(float temperature) {
+    fbb_.AddElement<float>(SystemInfo::VT_TEMPERATURE, temperature, 0.0f);
+  }
+  void add_time(flatbuffers::Offset<flatbuffers::String> time) {
+    fbb_.AddOffset(SystemInfo::VT_TIME, time);
+  }
+  explicit SystemInfoBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  SystemInfoBuilder &operator=(const SystemInfoBuilder &);
+  flatbuffers::Offset<SystemInfo> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<SystemInfo>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<SystemInfo> CreateSystemInfo(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    float cpu_usage = 0.0f,
+    float temperature = 0.0f,
+    flatbuffers::Offset<flatbuffers::String> time = 0) {
+  SystemInfoBuilder builder_(_fbb);
+  builder_.add_time(time);
+  builder_.add_temperature(temperature);
+  builder_.add_cpu_usage(cpu_usage);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<SystemInfo> CreateSystemInfoDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    float cpu_usage = 0.0f,
+    float temperature = 0.0f,
+    const char *time = nullptr) {
+  auto time__ = time ? _fbb.CreateString(time) : 0;
+  return SplayApi::CreateSystemInfo(
+      _fbb,
+      cpu_usage,
+      temperature,
+      time__);
 }
 
 }  // namespace SplayApi

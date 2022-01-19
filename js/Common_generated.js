@@ -297,5 +297,130 @@ SplayApi.GetFirmwareUpdateStatus.createGetFirmwareUpdateStatus = function(builde
   return SplayApi.GetFirmwareUpdateStatus.endGetFirmwareUpdateStatus(builder);
 }
 
+/**
+ * @constructor
+ */
+SplayApi.SystemInfo = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {SplayApi.SystemInfo}
+ */
+SplayApi.SystemInfo.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.SystemInfo=} obj
+ * @returns {SplayApi.SystemInfo}
+ */
+SplayApi.SystemInfo.getRootAsSystemInfo = function(bb, obj) {
+  return (obj || new SplayApi.SystemInfo).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.SystemInfo=} obj
+ * @returns {SplayApi.SystemInfo}
+ */
+SplayApi.SystemInfo.getSizePrefixedRootAsSystemInfo = function(bb, obj) {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new SplayApi.SystemInfo).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {number}
+ */
+SplayApi.SystemInfo.prototype.cpuUsage = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
+ * @returns {number}
+ */
+SplayApi.SystemInfo.prototype.temperature = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+SplayApi.SystemInfo.prototype.time = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+SplayApi.SystemInfo.startSystemInfo = function(builder) {
+  builder.startObject(3);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} cpuUsage
+ */
+SplayApi.SystemInfo.addCpuUsage = function(builder, cpuUsage) {
+  builder.addFieldFloat32(0, cpuUsage, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} temperature
+ */
+SplayApi.SystemInfo.addTemperature = function(builder, temperature) {
+  builder.addFieldFloat32(1, temperature, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} timeOffset
+ */
+SplayApi.SystemInfo.addTime = function(builder, timeOffset) {
+  builder.addFieldOffset(2, timeOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.SystemInfo.endSystemInfo = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} cpuUsage
+ * @param {number} temperature
+ * @param {flatbuffers.Offset} timeOffset
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.SystemInfo.createSystemInfo = function(builder, cpuUsage, temperature, timeOffset) {
+  SplayApi.SystemInfo.startSystemInfo(builder);
+  SplayApi.SystemInfo.addCpuUsage(builder, cpuUsage);
+  SplayApi.SystemInfo.addTemperature(builder, temperature);
+  SplayApi.SystemInfo.addTime(builder, timeOffset);
+  return SplayApi.SystemInfo.endSystemInfo(builder);
+}
+
 // Exports for ECMAScript6 Modules
 export {SplayApi};
