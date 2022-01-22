@@ -1129,16 +1129,17 @@ Request:
 Response:
 ```json
 {
- "result": {
-  "dmx_version": "1.6",
-  "engine_version": "20220114.1",
-  "hardware_id": "1651661505c15055",
-  "os_build_date": "Fri 08 May 2020 09:35:05 AM UTC",
-  "serial": "021505c15058",
-  "soft_version": "1.7.0",
-  "uptime": "4:34",
-  "web_version": "20220115.1"
- }
+  "result": true, 
+  "info": {
+      "dmx_version": "1.6",
+      "engine_version": "20220114.1",
+      "hardware_id": "1651661505c15055",
+      "os_build_date": "Fri 08 May 2020 09:35:05 AM UTC",
+      "serial": "021505c15058",
+      "soft_version": "1.7.0",
+      "uptime": "4:34",
+      "web_version": "20220115.1"
+     }
 }
 ```
 
