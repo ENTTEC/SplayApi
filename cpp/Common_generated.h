@@ -14,6 +14,9 @@ struct GetFirmwareUpdateStatusBuilder;
 struct SystemInfo;
 struct SystemInfoBuilder;
 
+struct BackupPackage;
+struct BackupPackageBuilder;
+
 enum UNIVERSE_TYPE {
   UNIVERSE_TYPE_DMX = 0,
   UNIVERSE_TYPE_ARTNET = 1,
@@ -447,6 +450,94 @@ inline flatbuffers::Offset<SystemInfo> CreateSystemInfoDirect(
       cpu_usage,
       temperature,
       time__);
+}
+
+struct BackupPackage FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef BackupPackageBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_IS_START = 4,
+    VT_IS_END = 6,
+    VT_SEQUENCE = 8,
+    VT_DATA = 10
+  };
+  bool is_start() const {
+    return GetField<uint8_t>(VT_IS_START, 0) != 0;
+  }
+  bool is_end() const {
+    return GetField<uint8_t>(VT_IS_END, 0) != 0;
+  }
+  uint16_t sequence() const {
+    return GetField<uint16_t>(VT_SEQUENCE, 0);
+  }
+  const flatbuffers::Vector<int8_t> *data() const {
+    return GetPointer<const flatbuffers::Vector<int8_t> *>(VT_DATA);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_IS_START) &&
+           VerifyField<uint8_t>(verifier, VT_IS_END) &&
+           VerifyField<uint16_t>(verifier, VT_SEQUENCE) &&
+           VerifyOffset(verifier, VT_DATA) &&
+           verifier.VerifyVector(data()) &&
+           verifier.EndTable();
+  }
+};
+
+struct BackupPackageBuilder {
+  typedef BackupPackage Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_is_start(bool is_start) {
+    fbb_.AddElement<uint8_t>(BackupPackage::VT_IS_START, static_cast<uint8_t>(is_start), 0);
+  }
+  void add_is_end(bool is_end) {
+    fbb_.AddElement<uint8_t>(BackupPackage::VT_IS_END, static_cast<uint8_t>(is_end), 0);
+  }
+  void add_sequence(uint16_t sequence) {
+    fbb_.AddElement<uint16_t>(BackupPackage::VT_SEQUENCE, sequence, 0);
+  }
+  void add_data(flatbuffers::Offset<flatbuffers::Vector<int8_t>> data) {
+    fbb_.AddOffset(BackupPackage::VT_DATA, data);
+  }
+  explicit BackupPackageBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  BackupPackageBuilder &operator=(const BackupPackageBuilder &);
+  flatbuffers::Offset<BackupPackage> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<BackupPackage>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<BackupPackage> CreateBackupPackage(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    bool is_start = false,
+    bool is_end = false,
+    uint16_t sequence = 0,
+    flatbuffers::Offset<flatbuffers::Vector<int8_t>> data = 0) {
+  BackupPackageBuilder builder_(_fbb);
+  builder_.add_data(data);
+  builder_.add_sequence(sequence);
+  builder_.add_is_end(is_end);
+  builder_.add_is_start(is_start);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<BackupPackage> CreateBackupPackageDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    bool is_start = false,
+    bool is_end = false,
+    uint16_t sequence = 0,
+    const std::vector<int8_t> *data = nullptr) {
+  auto data__ = data ? _fbb.CreateVector<int8_t>(*data) : 0;
+  return SplayApi::CreateBackupPackage(
+      _fbb,
+      is_start,
+      is_end,
+      sequence,
+      data__);
 }
 
 }  // namespace SplayApi

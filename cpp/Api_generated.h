@@ -39,11 +39,12 @@ enum Body {
   Body_GetAllCuesRes = 12,
   Body_GetFirmwareUpdateStatus = 13,
   Body_SystemInfo = 14,
+  Body_BackupPackage = 15,
   Body_MIN = Body_NONE,
-  Body_MAX = Body_SystemInfo
+  Body_MAX = Body_BackupPackage
 };
 
-inline const Body (&EnumValuesBody())[15] {
+inline const Body (&EnumValuesBody())[16] {
   static const Body values[] = {
     Body_NONE,
     Body_StatusRes,
@@ -59,13 +60,14 @@ inline const Body (&EnumValuesBody())[15] {
     Body_GetAllCuesReq,
     Body_GetAllCuesRes,
     Body_GetFirmwareUpdateStatus,
-    Body_SystemInfo
+    Body_SystemInfo,
+    Body_BackupPackage
   };
   return values;
 }
 
 inline const char * const *EnumNamesBody() {
-  static const char * const names[16] = {
+  static const char * const names[17] = {
     "NONE",
     "StatusRes",
     "PlayPlaylistReq",
@@ -81,13 +83,14 @@ inline const char * const *EnumNamesBody() {
     "GetAllCuesRes",
     "GetFirmwareUpdateStatus",
     "SystemInfo",
+    "BackupPackage",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameBody(Body e) {
-  if (flatbuffers::IsOutRange(e, Body_NONE, Body_SystemInfo)) return "";
+  if (flatbuffers::IsOutRange(e, Body_NONE, Body_BackupPackage)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesBody()[index];
 }
@@ -150,6 +153,10 @@ template<> struct BodyTraits<SplayApi::GetFirmwareUpdateStatus> {
 
 template<> struct BodyTraits<SplayApi::SystemInfo> {
   static const Body enum_value = Body_SystemInfo;
+};
+
+template<> struct BodyTraits<SplayApi::BackupPackage> {
+  static const Body enum_value = Body_BackupPackage;
 };
 
 bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body type);
@@ -330,6 +337,9 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const SplayApi::SystemInfo *body_as_SystemInfo() const {
     return body_type() == SplayApi::Body_SystemInfo ? static_cast<const SplayApi::SystemInfo *>(body()) : nullptr;
   }
+  const SplayApi::BackupPackage *body_as_BackupPackage() const {
+    return body_type() == SplayApi::Body_BackupPackage ? static_cast<const SplayApi::BackupPackage *>(body()) : nullptr;
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_HEADER) &&
@@ -395,6 +405,10 @@ template<> inline const SplayApi::GetFirmwareUpdateStatus *Message::body_as<Spla
 
 template<> inline const SplayApi::SystemInfo *Message::body_as<SplayApi::SystemInfo>() const {
   return body_as_SystemInfo();
+}
+
+template<> inline const SplayApi::BackupPackage *Message::body_as<SplayApi::BackupPackage>() const {
+  return body_as_BackupPackage();
 }
 
 struct MessageBuilder {
@@ -493,6 +507,10 @@ inline bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body ty
     }
     case Body_SystemInfo: {
       auto ptr = reinterpret_cast<const SplayApi::SystemInfo *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case Body_BackupPackage: {
+      auto ptr = reinterpret_cast<const SplayApi::BackupPackage *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

@@ -66,3 +66,11 @@ table SystemInfo
   time: string;
 }
 
+table BackupPackage
+{
+  is_start: bool;
+  is_end: bool;
+  sequence: uint16;
+  data: [byte];
+}
+
