@@ -82,6 +82,9 @@ enum COMMAND : uint8 {
   GET_SSH_TUNNEL_CONFIG = 91, // Get current ssh tunnel settings
   SET_SSH_TUNNEL_CONFIG = 92, // Set ssh tunnel settings
 
+  GET_BACKUP = 93, // Check if backup file exists, link to it and its date
+  MAKE_BACKUP = 94, // Generate backup for selected storage
+
   LOGIN = 95,
   CHANGE_PASSWORD = 96,
 

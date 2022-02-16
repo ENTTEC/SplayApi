@@ -39,12 +39,13 @@ enum Body {
   Body_GetAllCuesRes = 12,
   Body_GetFirmwareUpdateStatus = 13,
   Body_SystemInfo = 14,
-  Body_BackupPackage = 15,
+  Body_RestorePackage = 15,
+  Body_BackupInfo = 16,
   Body_MIN = Body_NONE,
-  Body_MAX = Body_BackupPackage
+  Body_MAX = Body_BackupInfo
 };
 
-inline const Body (&EnumValuesBody())[16] {
+inline const Body (&EnumValuesBody())[17] {
   static const Body values[] = {
     Body_NONE,
     Body_StatusRes,
@@ -61,13 +62,14 @@ inline const Body (&EnumValuesBody())[16] {
     Body_GetAllCuesRes,
     Body_GetFirmwareUpdateStatus,
     Body_SystemInfo,
-    Body_BackupPackage
+    Body_RestorePackage,
+    Body_BackupInfo
   };
   return values;
 }
 
 inline const char * const *EnumNamesBody() {
-  static const char * const names[17] = {
+  static const char * const names[18] = {
     "NONE",
     "StatusRes",
     "PlayPlaylistReq",
@@ -83,14 +85,15 @@ inline const char * const *EnumNamesBody() {
     "GetAllCuesRes",
     "GetFirmwareUpdateStatus",
     "SystemInfo",
-    "BackupPackage",
+    "RestorePackage",
+    "BackupInfo",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameBody(Body e) {
-  if (flatbuffers::IsOutRange(e, Body_NONE, Body_BackupPackage)) return "";
+  if (flatbuffers::IsOutRange(e, Body_NONE, Body_BackupInfo)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesBody()[index];
 }
@@ -155,8 +158,12 @@ template<> struct BodyTraits<SplayApi::SystemInfo> {
   static const Body enum_value = Body_SystemInfo;
 };
 
-template<> struct BodyTraits<SplayApi::BackupPackage> {
-  static const Body enum_value = Body_BackupPackage;
+template<> struct BodyTraits<SplayApi::RestorePackage> {
+  static const Body enum_value = Body_RestorePackage;
+};
+
+template<> struct BodyTraits<SplayApi::BackupInfo> {
+  static const Body enum_value = Body_BackupInfo;
 };
 
 bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body type);
@@ -337,8 +344,11 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const SplayApi::SystemInfo *body_as_SystemInfo() const {
     return body_type() == SplayApi::Body_SystemInfo ? static_cast<const SplayApi::SystemInfo *>(body()) : nullptr;
   }
-  const SplayApi::BackupPackage *body_as_BackupPackage() const {
-    return body_type() == SplayApi::Body_BackupPackage ? static_cast<const SplayApi::BackupPackage *>(body()) : nullptr;
+  const SplayApi::RestorePackage *body_as_RestorePackage() const {
+    return body_type() == SplayApi::Body_RestorePackage ? static_cast<const SplayApi::RestorePackage *>(body()) : nullptr;
+  }
+  const SplayApi::BackupInfo *body_as_BackupInfo() const {
+    return body_type() == SplayApi::Body_BackupInfo ? static_cast<const SplayApi::BackupInfo *>(body()) : nullptr;
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -407,8 +417,12 @@ template<> inline const SplayApi::SystemInfo *Message::body_as<SplayApi::SystemI
   return body_as_SystemInfo();
 }
 
-template<> inline const SplayApi::BackupPackage *Message::body_as<SplayApi::BackupPackage>() const {
-  return body_as_BackupPackage();
+template<> inline const SplayApi::RestorePackage *Message::body_as<SplayApi::RestorePackage>() const {
+  return body_as_RestorePackage();
+}
+
+template<> inline const SplayApi::BackupInfo *Message::body_as<SplayApi::BackupInfo>() const {
+  return body_as_BackupInfo();
 }
 
 struct MessageBuilder {
@@ -509,8 +523,12 @@ inline bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body ty
       auto ptr = reinterpret_cast<const SplayApi::SystemInfo *>(obj);
       return verifier.VerifyTable(ptr);
     }
-    case Body_BackupPackage: {
-      auto ptr = reinterpret_cast<const SplayApi::BackupPackage *>(obj);
+    case Body_RestorePackage: {
+      auto ptr = reinterpret_cast<const SplayApi::RestorePackage *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case Body_BackupInfo: {
+      auto ptr = reinterpret_cast<const SplayApi::BackupInfo *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

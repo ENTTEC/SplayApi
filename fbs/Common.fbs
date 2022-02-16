@@ -66,11 +66,18 @@ table SystemInfo
   time: string;
 }
 
-table BackupPackage
+table RestorePackage
 {
   is_start: bool;
   is_end: bool;
   sequence: uint16;
+  destination: string;
   data: [byte];
 }
 
+table BackupInfo
+{
+  in_progress: bool;
+  link: string;
+  time: string;
+}
