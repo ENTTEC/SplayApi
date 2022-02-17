@@ -79,6 +79,5 @@ table BackupInfo
 {
   in_progress: bool;
   link: string;
-  time: string;
   error: string;
 }
