@@ -562,7 +562,8 @@ struct BackupInfo FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_IN_PROGRESS = 4,
     VT_LINK = 6,
-    VT_TIME = 8
+    VT_TIME = 8,
+    VT_ERROR = 10
   };
   bool in_progress() const {
     return GetField<uint8_t>(VT_IN_PROGRESS, 0) != 0;
@@ -573,6 +574,9 @@ struct BackupInfo FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const flatbuffers::String *time() const {
     return GetPointer<const flatbuffers::String *>(VT_TIME);
   }
+  const flatbuffers::String *error() const {
+    return GetPointer<const flatbuffers::String *>(VT_ERROR);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_IN_PROGRESS) &&
@@ -580,6 +584,8 @@ struct BackupInfo FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            verifier.VerifyString(link()) &&
            VerifyOffset(verifier, VT_TIME) &&
            verifier.VerifyString(time()) &&
+           VerifyOffset(verifier, VT_ERROR) &&
+           verifier.VerifyString(error()) &&
            verifier.EndTable();
   }
 };
@@ -597,6 +603,9 @@ struct BackupInfoBuilder {
   void add_time(flatbuffers::Offset<flatbuffers::String> time) {
     fbb_.AddOffset(BackupInfo::VT_TIME, time);
   }
+  void add_error(flatbuffers::Offset<flatbuffers::String> error) {
+    fbb_.AddOffset(BackupInfo::VT_ERROR, error);
+  }
   explicit BackupInfoBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -613,8 +622,10 @@ inline flatbuffers::Offset<BackupInfo> CreateBackupInfo(
     flatbuffers::FlatBufferBuilder &_fbb,
     bool in_progress = false,
     flatbuffers::Offset<flatbuffers::String> link = 0,
-    flatbuffers::Offset<flatbuffers::String> time = 0) {
+    flatbuffers::Offset<flatbuffers::String> time = 0,
+    flatbuffers::Offset<flatbuffers::String> error = 0) {
   BackupInfoBuilder builder_(_fbb);
+  builder_.add_error(error);
   builder_.add_time(time);
   builder_.add_link(link);
   builder_.add_in_progress(in_progress);
@@ -625,14 +636,17 @@ inline flatbuffers::Offset<BackupInfo> CreateBackupInfoDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     bool in_progress = false,
     const char *link = nullptr,
-    const char *time = nullptr) {
+    const char *time = nullptr,
+    const char *error = nullptr) {
   auto link__ = link ? _fbb.CreateString(link) : 0;
   auto time__ = time ? _fbb.CreateString(time) : 0;
+  auto error__ = error ? _fbb.CreateString(error) : 0;
   return SplayApi::CreateBackupInfo(
       _fbb,
       in_progress,
       link__,
-      time__);
+      time__,
+      error__);
 }
 
 }  // namespace SplayApi

@@ -693,10 +693,19 @@ SplayApi.BackupInfo.prototype.time = function(optionalEncoding) {
 };
 
 /**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+SplayApi.BackupInfo.prototype.error = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 10);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 SplayApi.BackupInfo.startBackupInfo = function(builder) {
-  builder.startObject(3);
+  builder.startObject(4);
 };
 
 /**
@@ -725,6 +734,14 @@ SplayApi.BackupInfo.addTime = function(builder, timeOffset) {
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} errorOffset
+ */
+SplayApi.BackupInfo.addError = function(builder, errorOffset) {
+  builder.addFieldOffset(3, errorOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
 SplayApi.BackupInfo.endBackupInfo = function(builder) {
@@ -737,13 +754,15 @@ SplayApi.BackupInfo.endBackupInfo = function(builder) {
  * @param {boolean} inProgress
  * @param {flatbuffers.Offset} linkOffset
  * @param {flatbuffers.Offset} timeOffset
+ * @param {flatbuffers.Offset} errorOffset
  * @returns {flatbuffers.Offset}
  */
-SplayApi.BackupInfo.createBackupInfo = function(builder, inProgress, linkOffset, timeOffset) {
+SplayApi.BackupInfo.createBackupInfo = function(builder, inProgress, linkOffset, timeOffset, errorOffset) {
   SplayApi.BackupInfo.startBackupInfo(builder);
   SplayApi.BackupInfo.addInProgress(builder, inProgress);
   SplayApi.BackupInfo.addLink(builder, linkOffset);
   SplayApi.BackupInfo.addTime(builder, timeOffset);
+  SplayApi.BackupInfo.addError(builder, errorOffset);
   return SplayApi.BackupInfo.endBackupInfo(builder);
 }
 
