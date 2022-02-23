@@ -687,8 +687,17 @@ SplayApi.BackupInfo.prototype.link = function(optionalEncoding) {
  * @param {flatbuffers.Encoding=} optionalEncoding
  * @returns {string|Uint8Array|null}
  */
-SplayApi.BackupInfo.prototype.error = function(optionalEncoding) {
+SplayApi.BackupInfo.prototype.message = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+SplayApi.BackupInfo.prototype.error = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
@@ -696,7 +705,7 @@ SplayApi.BackupInfo.prototype.error = function(optionalEncoding) {
  * @param {flatbuffers.Builder} builder
  */
 SplayApi.BackupInfo.startBackupInfo = function(builder) {
-  builder.startObject(3);
+  builder.startObject(4);
 };
 
 /**
@@ -717,10 +726,18 @@ SplayApi.BackupInfo.addLink = function(builder, linkOffset) {
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} messageOffset
+ */
+SplayApi.BackupInfo.addMessage = function(builder, messageOffset) {
+  builder.addFieldOffset(2, messageOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} errorOffset
  */
 SplayApi.BackupInfo.addError = function(builder, errorOffset) {
-  builder.addFieldOffset(2, errorOffset, 0);
+  builder.addFieldOffset(3, errorOffset, 0);
 };
 
 /**
@@ -736,13 +753,15 @@ SplayApi.BackupInfo.endBackupInfo = function(builder) {
  * @param {flatbuffers.Builder} builder
  * @param {boolean} inProgress
  * @param {flatbuffers.Offset} linkOffset
+ * @param {flatbuffers.Offset} messageOffset
  * @param {flatbuffers.Offset} errorOffset
  * @returns {flatbuffers.Offset}
  */
-SplayApi.BackupInfo.createBackupInfo = function(builder, inProgress, linkOffset, errorOffset) {
+SplayApi.BackupInfo.createBackupInfo = function(builder, inProgress, linkOffset, messageOffset, errorOffset) {
   SplayApi.BackupInfo.startBackupInfo(builder);
   SplayApi.BackupInfo.addInProgress(builder, inProgress);
   SplayApi.BackupInfo.addLink(builder, linkOffset);
+  SplayApi.BackupInfo.addMessage(builder, messageOffset);
   SplayApi.BackupInfo.addError(builder, errorOffset);
   return SplayApi.BackupInfo.endBackupInfo(builder);
 }

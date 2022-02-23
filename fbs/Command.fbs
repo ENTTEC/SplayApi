@@ -88,6 +88,7 @@ enum COMMAND : uint8 {
   GET_BACKUP = 100, // Check if backup file exists, link to it and its date
   MAKE_BACKUP = 101, // Generate backup for selected storage
   COPY_STORAGE = 102, // Copy from one storage to another available
+  APPLY_RESTORE = 103, // Internal usage, needs local path for restore archive
 
   SHUTDOWN = 222,
   REFRESH_SETTING = 254,
