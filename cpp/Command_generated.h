@@ -78,6 +78,7 @@ enum COMMAND {
   COMMAND_SET_SSH_TUNNEL_CONFIG = 92,
   COMMAND_LOGIN = 95,
   COMMAND_CHANGE_PASSWORD = 96,
+  COMMAND_SET_LICENSE = 97,
   COMMAND_GET_BACKUP = 100,
   COMMAND_MAKE_BACKUP = 101,
   COMMAND_COPY_STORAGE = 102,
@@ -88,7 +89,7 @@ enum COMMAND {
   COMMAND_MAX = COMMAND_REFRESH_SETTING
 };
 
-inline const COMMAND (&EnumValuesCOMMAND())[75] {
+inline const COMMAND (&EnumValuesCOMMAND())[76] {
   static const COMMAND values[] = {
     COMMAND_PLAY,
     COMMAND_PAUSE,
@@ -159,6 +160,7 @@ inline const COMMAND (&EnumValuesCOMMAND())[75] {
     COMMAND_SET_SSH_TUNNEL_CONFIG,
     COMMAND_LOGIN,
     COMMAND_CHANGE_PASSWORD,
+    COMMAND_SET_LICENSE,
     COMMAND_GET_BACKUP,
     COMMAND_MAKE_BACKUP,
     COMMAND_COPY_STORAGE,
@@ -268,7 +270,7 @@ inline const char * const *EnumNamesCOMMAND() {
     "",
     "LOGIN",
     "CHANGE_PASSWORD",
-    "",
+    "SET_LICENSE",
     "",
     "",
     "GET_BACKUP",

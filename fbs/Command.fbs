@@ -84,6 +84,7 @@ enum COMMAND : uint8 {
 
   LOGIN = 95,
   CHANGE_PASSWORD = 96,
+  SET_LICENSE = 97,
 
   GET_BACKUP = 100, // Check if backup file exists, link to it and its date
   MAKE_BACKUP = 101, // Generate backup for selected storage
