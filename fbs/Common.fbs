@@ -55,8 +55,30 @@ enum SETTING:uint8 {
 
 table GetFirmwareUpdateStatus
 {
-progress:
-    uint8;
-error:
-    string;
+  progress: uint8;
+  error: string;
+}
+
+table SystemInfo
+{
+  cpu_usage: float;
+  temperature: float;
+  time: string;
+}
+
+table RestorePackage
+{
+  is_start: bool;
+  is_end: bool;
+  sequence: uint16;
+  destination: string;
+  data: [byte];
+}
+
+table BackupInfo
+{
+  in_progress: bool;
+  link: string;
+  message: string;
+  error: string;
 }

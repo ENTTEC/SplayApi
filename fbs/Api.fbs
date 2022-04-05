@@ -28,6 +28,9 @@ union Body {
   GetAllCuesReq,
   GetAllCuesRes,
   GetFirmwareUpdateStatus,
+  SystemInfo,
+  RestorePackage,
+  BackupInfo,
 }
 
 table Message {

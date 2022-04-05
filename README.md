@@ -1025,8 +1025,9 @@ Response:
   "network": {
     "dhcp": false,
     "ip": "192.168.2.7",
-    "gateway": "192.168.0.10",
-    "mask": "255.255.255.0"
+    "gateway": "192.168.2.1",
+    "mask": "255.255.255.0",
+    "mac": "02:15:05:C1:50:55"
   }
 }
 ```
@@ -1089,8 +1090,8 @@ Response:
   "result": true,
   "storages": {
     "available": [
-      "sd",
-      "internal"
+      {"free":2795917312,"total":6297583616,"storage":"sd"},
+      {"free":5891842048,"total":9184661504,"storage":"internal"}
     ],
     "selected": "sd"
   }
@@ -1118,6 +1119,28 @@ Request:
 Response:
 ```json
 { "result": true }
+```
+
+#### GET_INFO - Get system info and software info (versions, serial, etc.)
+Request:
+```json
+{ "command": 88 }
+```
+Response:
+```json
+{
+  "result": true, 
+  "info": {
+      "dmx_version": "1.6",
+      "engine_version": "20220114.1",
+      "hardware_id": "1651661505c15055",
+      "os_build_date": "Fri 08 May 2020 09:35:05 AM UTC",
+      "serial": "021505c15058",
+      "soft_version": "1.7.0",
+      "uptime": "4:34",
+      "web_version": "20220115.1"
+     }
+}
 ```
 
 -------------------------------------------------

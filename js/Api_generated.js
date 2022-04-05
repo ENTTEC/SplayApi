@@ -23,7 +23,10 @@ SplayApi.Body = {
   GetCueRes: 10,
   GetAllCuesReq: 11,
   GetAllCuesRes: 12,
-  GetFirmwareUpdateStatus: 13
+  GetFirmwareUpdateStatus: 13,
+  SystemInfo: 14,
+  RestorePackage: 15,
+  BackupInfo: 16
 };
 
 /**
@@ -43,7 +46,10 @@ SplayApi.BodyName = {
   '10': 'GetCueRes',
   '11': 'GetAllCuesReq',
   '12': 'GetAllCuesRes',
-  '13': 'GetFirmwareUpdateStatus'
+  '13': 'GetFirmwareUpdateStatus',
+  '14': 'SystemInfo',
+  '15': 'RestorePackage',
+  '16': 'BackupInfo'
 };
 
 /**

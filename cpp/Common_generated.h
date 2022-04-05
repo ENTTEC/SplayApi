@@ -11,6 +11,15 @@ namespace SplayApi {
 struct GetFirmwareUpdateStatus;
 struct GetFirmwareUpdateStatusBuilder;
 
+struct SystemInfo;
+struct SystemInfoBuilder;
+
+struct RestorePackage;
+struct RestorePackageBuilder;
+
+struct BackupInfo;
+struct BackupInfoBuilder;
+
 enum UNIVERSE_TYPE {
   UNIVERSE_TYPE_DMX = 0,
   UNIVERSE_TYPE_ARTNET = 1,
@@ -367,6 +376,276 @@ inline flatbuffers::Offset<GetFirmwareUpdateStatus> CreateGetFirmwareUpdateStatu
   return SplayApi::CreateGetFirmwareUpdateStatus(
       _fbb,
       progress,
+      error__);
+}
+
+struct SystemInfo FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef SystemInfoBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CPU_USAGE = 4,
+    VT_TEMPERATURE = 6,
+    VT_TIME = 8
+  };
+  float cpu_usage() const {
+    return GetField<float>(VT_CPU_USAGE, 0.0f);
+  }
+  float temperature() const {
+    return GetField<float>(VT_TEMPERATURE, 0.0f);
+  }
+  const flatbuffers::String *time() const {
+    return GetPointer<const flatbuffers::String *>(VT_TIME);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<float>(verifier, VT_CPU_USAGE) &&
+           VerifyField<float>(verifier, VT_TEMPERATURE) &&
+           VerifyOffset(verifier, VT_TIME) &&
+           verifier.VerifyString(time()) &&
+           verifier.EndTable();
+  }
+};
+
+struct SystemInfoBuilder {
+  typedef SystemInfo Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_cpu_usage(float cpu_usage) {
+    fbb_.AddElement<float>(SystemInfo::VT_CPU_USAGE, cpu_usage, 0.0f);
+  }
+  void add_temperature(float temperature) {
+    fbb_.AddElement<float>(SystemInfo::VT_TEMPERATURE, temperature, 0.0f);
+  }
+  void add_time(flatbuffers::Offset<flatbuffers::String> time) {
+    fbb_.AddOffset(SystemInfo::VT_TIME, time);
+  }
+  explicit SystemInfoBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  SystemInfoBuilder &operator=(const SystemInfoBuilder &);
+  flatbuffers::Offset<SystemInfo> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<SystemInfo>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<SystemInfo> CreateSystemInfo(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    float cpu_usage = 0.0f,
+    float temperature = 0.0f,
+    flatbuffers::Offset<flatbuffers::String> time = 0) {
+  SystemInfoBuilder builder_(_fbb);
+  builder_.add_time(time);
+  builder_.add_temperature(temperature);
+  builder_.add_cpu_usage(cpu_usage);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<SystemInfo> CreateSystemInfoDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    float cpu_usage = 0.0f,
+    float temperature = 0.0f,
+    const char *time = nullptr) {
+  auto time__ = time ? _fbb.CreateString(time) : 0;
+  return SplayApi::CreateSystemInfo(
+      _fbb,
+      cpu_usage,
+      temperature,
+      time__);
+}
+
+struct RestorePackage FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef RestorePackageBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_IS_START = 4,
+    VT_IS_END = 6,
+    VT_SEQUENCE = 8,
+    VT_DESTINATION = 10,
+    VT_DATA = 12
+  };
+  bool is_start() const {
+    return GetField<uint8_t>(VT_IS_START, 0) != 0;
+  }
+  bool is_end() const {
+    return GetField<uint8_t>(VT_IS_END, 0) != 0;
+  }
+  uint16_t sequence() const {
+    return GetField<uint16_t>(VT_SEQUENCE, 0);
+  }
+  const flatbuffers::String *destination() const {
+    return GetPointer<const flatbuffers::String *>(VT_DESTINATION);
+  }
+  const flatbuffers::Vector<int8_t> *data() const {
+    return GetPointer<const flatbuffers::Vector<int8_t> *>(VT_DATA);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_IS_START) &&
+           VerifyField<uint8_t>(verifier, VT_IS_END) &&
+           VerifyField<uint16_t>(verifier, VT_SEQUENCE) &&
+           VerifyOffset(verifier, VT_DESTINATION) &&
+           verifier.VerifyString(destination()) &&
+           VerifyOffset(verifier, VT_DATA) &&
+           verifier.VerifyVector(data()) &&
+           verifier.EndTable();
+  }
+};
+
+struct RestorePackageBuilder {
+  typedef RestorePackage Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_is_start(bool is_start) {
+    fbb_.AddElement<uint8_t>(RestorePackage::VT_IS_START, static_cast<uint8_t>(is_start), 0);
+  }
+  void add_is_end(bool is_end) {
+    fbb_.AddElement<uint8_t>(RestorePackage::VT_IS_END, static_cast<uint8_t>(is_end), 0);
+  }
+  void add_sequence(uint16_t sequence) {
+    fbb_.AddElement<uint16_t>(RestorePackage::VT_SEQUENCE, sequence, 0);
+  }
+  void add_destination(flatbuffers::Offset<flatbuffers::String> destination) {
+    fbb_.AddOffset(RestorePackage::VT_DESTINATION, destination);
+  }
+  void add_data(flatbuffers::Offset<flatbuffers::Vector<int8_t>> data) {
+    fbb_.AddOffset(RestorePackage::VT_DATA, data);
+  }
+  explicit RestorePackageBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  RestorePackageBuilder &operator=(const RestorePackageBuilder &);
+  flatbuffers::Offset<RestorePackage> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<RestorePackage>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<RestorePackage> CreateRestorePackage(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    bool is_start = false,
+    bool is_end = false,
+    uint16_t sequence = 0,
+    flatbuffers::Offset<flatbuffers::String> destination = 0,
+    flatbuffers::Offset<flatbuffers::Vector<int8_t>> data = 0) {
+  RestorePackageBuilder builder_(_fbb);
+  builder_.add_data(data);
+  builder_.add_destination(destination);
+  builder_.add_sequence(sequence);
+  builder_.add_is_end(is_end);
+  builder_.add_is_start(is_start);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<RestorePackage> CreateRestorePackageDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    bool is_start = false,
+    bool is_end = false,
+    uint16_t sequence = 0,
+    const char *destination = nullptr,
+    const std::vector<int8_t> *data = nullptr) {
+  auto destination__ = destination ? _fbb.CreateString(destination) : 0;
+  auto data__ = data ? _fbb.CreateVector<int8_t>(*data) : 0;
+  return SplayApi::CreateRestorePackage(
+      _fbb,
+      is_start,
+      is_end,
+      sequence,
+      destination__,
+      data__);
+}
+
+struct BackupInfo FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef BackupInfoBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_IN_PROGRESS = 4,
+    VT_LINK = 6,
+    VT_MESSAGE = 8,
+    VT_ERROR = 10
+  };
+  bool in_progress() const {
+    return GetField<uint8_t>(VT_IN_PROGRESS, 0) != 0;
+  }
+  const flatbuffers::String *link() const {
+    return GetPointer<const flatbuffers::String *>(VT_LINK);
+  }
+  const flatbuffers::String *message() const {
+    return GetPointer<const flatbuffers::String *>(VT_MESSAGE);
+  }
+  const flatbuffers::String *error() const {
+    return GetPointer<const flatbuffers::String *>(VT_ERROR);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_IN_PROGRESS) &&
+           VerifyOffset(verifier, VT_LINK) &&
+           verifier.VerifyString(link()) &&
+           VerifyOffset(verifier, VT_MESSAGE) &&
+           verifier.VerifyString(message()) &&
+           VerifyOffset(verifier, VT_ERROR) &&
+           verifier.VerifyString(error()) &&
+           verifier.EndTable();
+  }
+};
+
+struct BackupInfoBuilder {
+  typedef BackupInfo Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_in_progress(bool in_progress) {
+    fbb_.AddElement<uint8_t>(BackupInfo::VT_IN_PROGRESS, static_cast<uint8_t>(in_progress), 0);
+  }
+  void add_link(flatbuffers::Offset<flatbuffers::String> link) {
+    fbb_.AddOffset(BackupInfo::VT_LINK, link);
+  }
+  void add_message(flatbuffers::Offset<flatbuffers::String> message) {
+    fbb_.AddOffset(BackupInfo::VT_MESSAGE, message);
+  }
+  void add_error(flatbuffers::Offset<flatbuffers::String> error) {
+    fbb_.AddOffset(BackupInfo::VT_ERROR, error);
+  }
+  explicit BackupInfoBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  BackupInfoBuilder &operator=(const BackupInfoBuilder &);
+  flatbuffers::Offset<BackupInfo> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<BackupInfo>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<BackupInfo> CreateBackupInfo(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    bool in_progress = false,
+    flatbuffers::Offset<flatbuffers::String> link = 0,
+    flatbuffers::Offset<flatbuffers::String> message = 0,
+    flatbuffers::Offset<flatbuffers::String> error = 0) {
+  BackupInfoBuilder builder_(_fbb);
+  builder_.add_error(error);
+  builder_.add_message(message);
+  builder_.add_link(link);
+  builder_.add_in_progress(in_progress);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<BackupInfo> CreateBackupInfoDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    bool in_progress = false,
+    const char *link = nullptr,
+    const char *message = nullptr,
+    const char *error = nullptr) {
+  auto link__ = link ? _fbb.CreateString(link) : 0;
+  auto message__ = message ? _fbb.CreateString(message) : 0;
+  auto error__ = error ? _fbb.CreateString(error) : 0;
+  return SplayApi::CreateBackupInfo(
+      _fbb,
+      in_progress,
+      link__,
+      message__,
       error__);
 }
 
