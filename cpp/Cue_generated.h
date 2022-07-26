@@ -6,8 +6,8 @@
 
 #include "flatbuffers/flatbuffers.h"
 
-#include "Command_generated.h"
 #include "Common_generated.h"
+#include "Command_generated.h"
 #include "Control_generated.h"
 
 namespace SplayApi {
@@ -42,7 +42,7 @@ struct GetAllCuesReqBuilder;
 struct GetAllCuesRes;
 struct GetAllCuesResBuilder;
 
-enum CUE_TYPE {
+enum CUE_TYPE : uint8_t {
   CUE_TYPE_STATIC = 0,
   CUE_TYPE_DYNAMIC = 1,
   CUE_TYPE_EFFECT = 2,
@@ -75,7 +75,7 @@ inline const char *EnumNameCUE_TYPE(CUE_TYPE e) {
   return EnumNamesCUE_TYPE()[index];
 }
 
-enum Frame {
+enum Frame : uint8_t {
   Frame_NONE = 0,
   Frame_StaticFrame = 1,
   Frame_DynamicFrame = 2,
@@ -189,7 +189,6 @@ struct CueConfigBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  CueConfigBuilder &operator=(const CueConfigBuilder &);
   flatbuffers::Offset<CueConfig> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<CueConfig>(end);
@@ -240,7 +239,6 @@ struct StaticFrameArrayBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  StaticFrameArrayBuilder &operator=(const StaticFrameArrayBuilder &);
   flatbuffers::Offset<StaticFrameArray> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<StaticFrameArray>(end);
@@ -293,7 +291,6 @@ struct StaticFrameBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  StaticFrameBuilder &operator=(const StaticFrameBuilder &);
   flatbuffers::Offset<StaticFrame> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<StaticFrame>(end);
@@ -334,7 +331,6 @@ struct DynamicFrameBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  DynamicFrameBuilder &operator=(const DynamicFrameBuilder &);
   flatbuffers::Offset<DynamicFrame> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<DynamicFrame>(end);
@@ -407,7 +403,6 @@ struct EffectRainbowFrameBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  EffectRainbowFrameBuilder &operator=(const EffectRainbowFrameBuilder &);
   flatbuffers::Offset<EffectRainbowFrame> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<EffectRainbowFrame>(end);
@@ -547,7 +542,6 @@ struct CueTableBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  CueTableBuilder &operator=(const CueTableBuilder &);
   flatbuffers::Offset<CueTable> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<CueTable>(end);
@@ -630,7 +624,6 @@ struct GetCueReqBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  GetCueReqBuilder &operator=(const GetCueReqBuilder &);
   flatbuffers::Offset<GetCueReq> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<GetCueReq>(end);
@@ -675,7 +668,6 @@ struct GetCueResBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  GetCueResBuilder &operator=(const GetCueResBuilder &);
   flatbuffers::Offset<GetCueRes> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<GetCueRes>(end);
@@ -717,7 +709,6 @@ struct GetAllCuesReqBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  GetAllCuesReqBuilder &operator=(const GetAllCuesReqBuilder &);
   flatbuffers::Offset<GetAllCuesReq> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<GetAllCuesReq>(end);
@@ -761,7 +752,6 @@ struct GetAllCuesResBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  GetAllCuesResBuilder &operator=(const GetAllCuesResBuilder &);
   flatbuffers::Offset<GetAllCuesRes> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<GetAllCuesRes>(end);

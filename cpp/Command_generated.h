@@ -8,7 +8,7 @@
 
 namespace SplayApi {
 
-enum COMMAND {
+enum COMMAND : uint8_t {
   COMMAND_PLAY = 0,
   COMMAND_PAUSE = 1,
   COMMAND_STOP = 2,
@@ -83,13 +83,14 @@ enum COMMAND {
   COMMAND_MAKE_BACKUP = 101,
   COMMAND_COPY_STORAGE = 102,
   COMMAND_APPLY_RESTORE = 103,
+  COMMAND_DISCOVER_DEVICES = 110,
   COMMAND_SHUTDOWN = 222,
   COMMAND_REFRESH_SETTING = 254,
   COMMAND_MIN = COMMAND_PLAY,
   COMMAND_MAX = COMMAND_REFRESH_SETTING
 };
 
-inline const COMMAND (&EnumValuesCOMMAND())[76] {
+inline const COMMAND (&EnumValuesCOMMAND())[77] {
   static const COMMAND values[] = {
     COMMAND_PLAY,
     COMMAND_PAUSE,
@@ -165,6 +166,7 @@ inline const COMMAND (&EnumValuesCOMMAND())[76] {
     COMMAND_MAKE_BACKUP,
     COMMAND_COPY_STORAGE,
     COMMAND_APPLY_RESTORE,
+    COMMAND_DISCOVER_DEVICES,
     COMMAND_SHUTDOWN,
     COMMAND_REFRESH_SETTING
   };
@@ -283,7 +285,7 @@ inline const char * const *EnumNamesCOMMAND() {
     "",
     "",
     "",
-    "",
+    "DISCOVER_DEVICES",
     "",
     "",
     "",

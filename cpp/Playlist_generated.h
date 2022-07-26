@@ -6,10 +6,10 @@
 
 #include "flatbuffers/flatbuffers.h"
 
-#include "Command_generated.h"
-#include "Common_generated.h"
-#include "Control_generated.h"
 #include "Cue_generated.h"
+#include "Common_generated.h"
+#include "Command_generated.h"
+#include "Control_generated.h"
 
 namespace SplayApi {
 
@@ -40,7 +40,7 @@ struct GetAllPlaylistsReqBuilder;
 struct GetAllPlaylistsRes;
 struct GetAllPlaylistsResBuilder;
 
-enum PLAYLIST_STATUS {
+enum PLAYLIST_STATUS : uint8_t {
   PLAYLIST_STATUS_IDLE = 0,
   PLAYLIST_STATUS_PLAYING = 1,
   PLAYLIST_STATUS_PAUSED = 2,
@@ -251,7 +251,6 @@ struct PlaylistBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  PlaylistBuilder &operator=(const PlaylistBuilder &);
   flatbuffers::Offset<Playlist> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<Playlist>(end);
@@ -380,7 +379,6 @@ struct PlayPlaylistReqBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  PlayPlaylistReqBuilder &operator=(const PlayPlaylistReqBuilder &);
   flatbuffers::Offset<PlayPlaylistReq> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<PlayPlaylistReq>(end);
@@ -432,7 +430,6 @@ struct PausePlaylistReqBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  PausePlaylistReqBuilder &operator=(const PausePlaylistReqBuilder &);
   flatbuffers::Offset<PausePlaylistReq> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<PausePlaylistReq>(end);
@@ -484,7 +481,6 @@ struct StopPlaylistReqBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  StopPlaylistReqBuilder &operator=(const StopPlaylistReqBuilder &);
   flatbuffers::Offset<StopPlaylistReq> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<StopPlaylistReq>(end);
@@ -536,7 +532,6 @@ struct GetPlaylistReqBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  GetPlaylistReqBuilder &operator=(const GetPlaylistReqBuilder &);
   flatbuffers::Offset<GetPlaylistReq> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<GetPlaylistReq>(end);
@@ -581,7 +576,6 @@ struct GetPlaylistResBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  GetPlaylistResBuilder &operator=(const GetPlaylistResBuilder &);
   flatbuffers::Offset<GetPlaylistRes> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<GetPlaylistRes>(end);
@@ -632,7 +626,6 @@ struct UpdatePlaylistReqBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  UpdatePlaylistReqBuilder &operator=(const UpdatePlaylistReqBuilder &);
   flatbuffers::Offset<UpdatePlaylistReq> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<UpdatePlaylistReq>(end);
@@ -676,7 +669,6 @@ struct GetAllPlaylistsReqBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  GetAllPlaylistsReqBuilder &operator=(const GetAllPlaylistsReqBuilder &);
   flatbuffers::Offset<GetAllPlaylistsReq> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<GetAllPlaylistsReq>(end);
@@ -720,7 +712,6 @@ struct GetAllPlaylistsResBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  GetAllPlaylistsResBuilder &operator=(const GetAllPlaylistsResBuilder &);
   flatbuffers::Offset<GetAllPlaylistsRes> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<GetAllPlaylistsRes>(end);
