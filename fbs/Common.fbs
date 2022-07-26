@@ -82,3 +82,15 @@ table BackupInfo
   message: string;
   error: string;
 }
+
+table DeviceInfo {
+    ip :string;
+    host_name :string;
+    mac :string;
+    service_name :string;
+}
+
+table DevicesInfo
+{
+  devices: [DeviceInfo];
+}
