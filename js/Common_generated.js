@@ -132,7 +132,7 @@ SplayApi.SETTING = {
   SYSTEM_NAME: 1,
   PLAYBACK_CONFIG: 2,
   PASSWORD: 3,
-  HELP_HINTS: 4,
+  SYNC_SENDER: 4,
   SERIALNO: 5,
   ENABLE_PASSWORD: 6,
   SMTP: 7,
@@ -165,7 +165,7 @@ SplayApi.SETTINGName = {
   '1': 'SYSTEM_NAME',
   '2': 'PLAYBACK_CONFIG',
   '3': 'PASSWORD',
-  '4': 'HELP_HINTS',
+  '4': 'SYNC_SENDER',
   '5': 'SERIALNO',
   '6': 'ENABLE_PASSWORD',
   '7': 'SMTP',
@@ -764,6 +764,271 @@ SplayApi.BackupInfo.createBackupInfo = function(builder, inProgress, linkOffset,
   SplayApi.BackupInfo.addMessage(builder, messageOffset);
   SplayApi.BackupInfo.addError(builder, errorOffset);
   return SplayApi.BackupInfo.endBackupInfo(builder);
+}
+
+/**
+ * @constructor
+ */
+SplayApi.DeviceInfo = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {SplayApi.DeviceInfo}
+ */
+SplayApi.DeviceInfo.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.DeviceInfo=} obj
+ * @returns {SplayApi.DeviceInfo}
+ */
+SplayApi.DeviceInfo.getRootAsDeviceInfo = function(bb, obj) {
+  return (obj || new SplayApi.DeviceInfo).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.DeviceInfo=} obj
+ * @returns {SplayApi.DeviceInfo}
+ */
+SplayApi.DeviceInfo.getSizePrefixedRootAsDeviceInfo = function(bb, obj) {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new SplayApi.DeviceInfo).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+SplayApi.DeviceInfo.prototype.ip = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+SplayApi.DeviceInfo.prototype.hostName = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+SplayApi.DeviceInfo.prototype.mac = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+SplayApi.DeviceInfo.prototype.serviceName = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 10);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+SplayApi.DeviceInfo.startDeviceInfo = function(builder) {
+  builder.startObject(4);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} ipOffset
+ */
+SplayApi.DeviceInfo.addIp = function(builder, ipOffset) {
+  builder.addFieldOffset(0, ipOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} hostNameOffset
+ */
+SplayApi.DeviceInfo.addHostName = function(builder, hostNameOffset) {
+  builder.addFieldOffset(1, hostNameOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} macOffset
+ */
+SplayApi.DeviceInfo.addMac = function(builder, macOffset) {
+  builder.addFieldOffset(2, macOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} serviceNameOffset
+ */
+SplayApi.DeviceInfo.addServiceName = function(builder, serviceNameOffset) {
+  builder.addFieldOffset(3, serviceNameOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.DeviceInfo.endDeviceInfo = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} ipOffset
+ * @param {flatbuffers.Offset} hostNameOffset
+ * @param {flatbuffers.Offset} macOffset
+ * @param {flatbuffers.Offset} serviceNameOffset
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.DeviceInfo.createDeviceInfo = function(builder, ipOffset, hostNameOffset, macOffset, serviceNameOffset) {
+  SplayApi.DeviceInfo.startDeviceInfo(builder);
+  SplayApi.DeviceInfo.addIp(builder, ipOffset);
+  SplayApi.DeviceInfo.addHostName(builder, hostNameOffset);
+  SplayApi.DeviceInfo.addMac(builder, macOffset);
+  SplayApi.DeviceInfo.addServiceName(builder, serviceNameOffset);
+  return SplayApi.DeviceInfo.endDeviceInfo(builder);
+}
+
+/**
+ * @constructor
+ */
+SplayApi.DevicesInfo = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {SplayApi.DevicesInfo}
+ */
+SplayApi.DevicesInfo.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.DevicesInfo=} obj
+ * @returns {SplayApi.DevicesInfo}
+ */
+SplayApi.DevicesInfo.getRootAsDevicesInfo = function(bb, obj) {
+  return (obj || new SplayApi.DevicesInfo).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.DevicesInfo=} obj
+ * @returns {SplayApi.DevicesInfo}
+ */
+SplayApi.DevicesInfo.getSizePrefixedRootAsDevicesInfo = function(bb, obj) {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new SplayApi.DevicesInfo).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {number} index
+ * @param {SplayApi.DeviceInfo=} obj
+ * @returns {SplayApi.DeviceInfo}
+ */
+SplayApi.DevicesInfo.prototype.devices = function(index, obj) {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? (obj || new SplayApi.DeviceInfo).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
+};
+
+/**
+ * @returns {number}
+ */
+SplayApi.DevicesInfo.prototype.devicesLength = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+SplayApi.DevicesInfo.startDevicesInfo = function(builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} devicesOffset
+ */
+SplayApi.DevicesInfo.addDevices = function(builder, devicesOffset) {
+  builder.addFieldOffset(0, devicesOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {Array.<flatbuffers.Offset>} data
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.DevicesInfo.createDevicesVector = function(builder, data) {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} numElems
+ */
+SplayApi.DevicesInfo.startDevicesVector = function(builder, numElems) {
+  builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.DevicesInfo.endDevicesInfo = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} devicesOffset
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.DevicesInfo.createDevicesInfo = function(builder, devicesOffset) {
+  SplayApi.DevicesInfo.startDevicesInfo(builder);
+  SplayApi.DevicesInfo.addDevices(builder, devicesOffset);
+  return SplayApi.DevicesInfo.endDevicesInfo(builder);
 }
 
 // Exports for ECMAScript6 Modules

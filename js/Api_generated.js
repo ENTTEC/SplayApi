@@ -26,7 +26,8 @@ SplayApi.Body = {
   GetFirmwareUpdateStatus: 13,
   SystemInfo: 14,
   RestorePackage: 15,
-  BackupInfo: 16
+  BackupInfo: 16,
+  DevicesInfo: 17
 };
 
 /**
@@ -49,7 +50,8 @@ SplayApi.BodyName = {
   '13': 'GetFirmwareUpdateStatus',
   '14': 'SystemInfo',
   '15': 'RestorePackage',
-  '16': 'BackupInfo'
+  '16': 'BackupInfo',
+  '17': 'DevicesInfo'
 };
 
 /**

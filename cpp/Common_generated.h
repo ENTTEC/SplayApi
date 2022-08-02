@@ -20,6 +20,12 @@ struct RestorePackageBuilder;
 struct BackupInfo;
 struct BackupInfoBuilder;
 
+struct DeviceInfo;
+struct DeviceInfoBuilder;
+
+struct DevicesInfo;
+struct DevicesInfoBuilder;
+
 enum UNIVERSE_TYPE {
   UNIVERSE_TYPE_DMX = 0,
   UNIVERSE_TYPE_ARTNET = 1,
@@ -215,7 +221,7 @@ enum SETTING {
   SETTING_SYSTEM_NAME = 1,
   SETTING_PLAYBACK_CONFIG = 2,
   SETTING_PASSWORD = 3,
-  SETTING_HELP_HINTS = 4,
+  SETTING_SYNC_SENDER = 4,
   SETTING_SERIALNO = 5,
   SETTING_ENABLE_PASSWORD = 6,
   SETTING_SMTP = 7,
@@ -248,7 +254,7 @@ inline const SETTING (&EnumValuesSETTING())[27] {
     SETTING_SYSTEM_NAME,
     SETTING_PLAYBACK_CONFIG,
     SETTING_PASSWORD,
-    SETTING_HELP_HINTS,
+    SETTING_SYNC_SENDER,
     SETTING_SERIALNO,
     SETTING_ENABLE_PASSWORD,
     SETTING_SMTP,
@@ -281,7 +287,7 @@ inline const char * const *EnumNamesSETTING() {
     "SYSTEM_NAME",
     "PLAYBACK_CONFIG",
     "PASSWORD",
-    "HELP_HINTS",
+    "SYNC_SENDER",
     "SERIALNO",
     "ENABLE_PASSWORD",
     "SMTP",
@@ -647,6 +653,153 @@ inline flatbuffers::Offset<BackupInfo> CreateBackupInfoDirect(
       link__,
       message__,
       error__);
+}
+
+struct DeviceInfo FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef DeviceInfoBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_IP = 4,
+    VT_HOST_NAME = 6,
+    VT_MAC = 8,
+    VT_SERVICE_NAME = 10
+  };
+  const flatbuffers::String *ip() const {
+    return GetPointer<const flatbuffers::String *>(VT_IP);
+  }
+  const flatbuffers::String *host_name() const {
+    return GetPointer<const flatbuffers::String *>(VT_HOST_NAME);
+  }
+  const flatbuffers::String *mac() const {
+    return GetPointer<const flatbuffers::String *>(VT_MAC);
+  }
+  const flatbuffers::String *service_name() const {
+    return GetPointer<const flatbuffers::String *>(VT_SERVICE_NAME);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_IP) &&
+           verifier.VerifyString(ip()) &&
+           VerifyOffset(verifier, VT_HOST_NAME) &&
+           verifier.VerifyString(host_name()) &&
+           VerifyOffset(verifier, VT_MAC) &&
+           verifier.VerifyString(mac()) &&
+           VerifyOffset(verifier, VT_SERVICE_NAME) &&
+           verifier.VerifyString(service_name()) &&
+           verifier.EndTable();
+  }
+};
+
+struct DeviceInfoBuilder {
+  typedef DeviceInfo Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_ip(flatbuffers::Offset<flatbuffers::String> ip) {
+    fbb_.AddOffset(DeviceInfo::VT_IP, ip);
+  }
+  void add_host_name(flatbuffers::Offset<flatbuffers::String> host_name) {
+    fbb_.AddOffset(DeviceInfo::VT_HOST_NAME, host_name);
+  }
+  void add_mac(flatbuffers::Offset<flatbuffers::String> mac) {
+    fbb_.AddOffset(DeviceInfo::VT_MAC, mac);
+  }
+  void add_service_name(flatbuffers::Offset<flatbuffers::String> service_name) {
+    fbb_.AddOffset(DeviceInfo::VT_SERVICE_NAME, service_name);
+  }
+  explicit DeviceInfoBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  DeviceInfoBuilder &operator=(const DeviceInfoBuilder &);
+  flatbuffers::Offset<DeviceInfo> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<DeviceInfo>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<DeviceInfo> CreateDeviceInfo(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::String> ip = 0,
+    flatbuffers::Offset<flatbuffers::String> host_name = 0,
+    flatbuffers::Offset<flatbuffers::String> mac = 0,
+    flatbuffers::Offset<flatbuffers::String> service_name = 0) {
+  DeviceInfoBuilder builder_(_fbb);
+  builder_.add_service_name(service_name);
+  builder_.add_mac(mac);
+  builder_.add_host_name(host_name);
+  builder_.add_ip(ip);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<DeviceInfo> CreateDeviceInfoDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const char *ip = nullptr,
+    const char *host_name = nullptr,
+    const char *mac = nullptr,
+    const char *service_name = nullptr) {
+  auto ip__ = ip ? _fbb.CreateString(ip) : 0;
+  auto host_name__ = host_name ? _fbb.CreateString(host_name) : 0;
+  auto mac__ = mac ? _fbb.CreateString(mac) : 0;
+  auto service_name__ = service_name ? _fbb.CreateString(service_name) : 0;
+  return SplayApi::CreateDeviceInfo(
+      _fbb,
+      ip__,
+      host_name__,
+      mac__,
+      service_name__);
+}
+
+struct DevicesInfo FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef DevicesInfoBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_DEVICES = 4
+  };
+  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::DeviceInfo>> *devices() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::DeviceInfo>> *>(VT_DEVICES);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_DEVICES) &&
+           verifier.VerifyVector(devices()) &&
+           verifier.VerifyVectorOfTables(devices()) &&
+           verifier.EndTable();
+  }
+};
+
+struct DevicesInfoBuilder {
+  typedef DevicesInfo Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_devices(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::DeviceInfo>>> devices) {
+    fbb_.AddOffset(DevicesInfo::VT_DEVICES, devices);
+  }
+  explicit DevicesInfoBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  DevicesInfoBuilder &operator=(const DevicesInfoBuilder &);
+  flatbuffers::Offset<DevicesInfo> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<DevicesInfo>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<DevicesInfo> CreateDevicesInfo(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::DeviceInfo>>> devices = 0) {
+  DevicesInfoBuilder builder_(_fbb);
+  builder_.add_devices(devices);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<DevicesInfo> CreateDevicesInfoDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<flatbuffers::Offset<SplayApi::DeviceInfo>> *devices = nullptr) {
+  auto devices__ = devices ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::DeviceInfo>>(*devices) : 0;
+  return SplayApi::CreateDevicesInfo(
+      _fbb,
+      devices__);
 }
 
 }  // namespace SplayApi

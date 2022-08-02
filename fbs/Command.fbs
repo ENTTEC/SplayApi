@@ -91,6 +91,8 @@ enum COMMAND : uint8 {
   COPY_STORAGE = 102, // Copy from one storage to another available
   APPLY_RESTORE = 103, // Internal usage, needs local path for restore archive
 
+  DISCOVER_DEVICES = 110, // Discover devices on the network
+
   SHUTDOWN = 222,
   REFRESH_SETTING = 254,
 }
