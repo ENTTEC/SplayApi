@@ -26,7 +26,7 @@ struct DeviceInfoBuilder;
 struct DevicesInfo;
 struct DevicesInfoBuilder;
 
-enum UNIVERSE_TYPE : uint8_t {
+enum UNIVERSE_TYPE {
   UNIVERSE_TYPE_DMX = 0,
   UNIVERSE_TYPE_ARTNET = 1,
   UNIVERSE_TYPE_SACN = 2,
@@ -62,7 +62,7 @@ inline const char *EnumNameUNIVERSE_TYPE(UNIVERSE_TYPE e) {
   return EnumNamesUNIVERSE_TYPE()[index];
 }
 
-enum WEBSOCKET_OUTPUT : int32_t {
+enum WEBSOCKET_OUTPUT {
   WEBSOCKET_OUTPUT_NOTHING = -2,
   WEBSOCKET_OUTPUT_ALL = -1,
   WEBSOCKET_OUTPUT_MIN = WEBSOCKET_OUTPUT_NOTHING,
@@ -93,7 +93,7 @@ inline const char *EnumNameWEBSOCKET_OUTPUT(WEBSOCKET_OUTPUT e) {
 }
 
 /// Don't change order
-enum PIXEL_ORDER : uint8_t {
+enum PIXEL_ORDER {
   PIXEL_ORDER_RGB = 0,
   PIXEL_ORDER_RBG = 1,
   PIXEL_ORDER_GRB = 2,
@@ -216,12 +216,12 @@ inline const char *EnumNamePIXEL_ORDER(PIXEL_ORDER e) {
   return EnumNamesPIXEL_ORDER()[index];
 }
 
-enum SETTING : uint8_t {
+enum SETTING {
   SETTING_IS_SPARE = 0,
   SETTING_SYSTEM_NAME = 1,
   SETTING_PLAYBACK_CONFIG = 2,
   SETTING_PASSWORD = 3,
-  SETTING_HELP_HINTS = 4,
+  SETTING_SYNC_SENDER = 4,
   SETTING_SERIALNO = 5,
   SETTING_ENABLE_PASSWORD = 6,
   SETTING_SMTP = 7,
@@ -254,7 +254,7 @@ inline const SETTING (&EnumValuesSETTING())[27] {
     SETTING_SYSTEM_NAME,
     SETTING_PLAYBACK_CONFIG,
     SETTING_PASSWORD,
-    SETTING_HELP_HINTS,
+    SETTING_SYNC_SENDER,
     SETTING_SERIALNO,
     SETTING_ENABLE_PASSWORD,
     SETTING_SMTP,
@@ -287,7 +287,7 @@ inline const char * const *EnumNamesSETTING() {
     "SYSTEM_NAME",
     "PLAYBACK_CONFIG",
     "PASSWORD",
-    "HELP_HINTS",
+    "SYNC_SENDER",
     "SERIALNO",
     "ENABLE_PASSWORD",
     "SMTP",
@@ -356,6 +356,7 @@ struct GetFirmwareUpdateStatusBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
+  GetFirmwareUpdateStatusBuilder &operator=(const GetFirmwareUpdateStatusBuilder &);
   flatbuffers::Offset<GetFirmwareUpdateStatus> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<GetFirmwareUpdateStatus>(end);
@@ -427,6 +428,7 @@ struct SystemInfoBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
+  SystemInfoBuilder &operator=(const SystemInfoBuilder &);
   flatbuffers::Offset<SystemInfo> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<SystemInfo>(end);
@@ -519,6 +521,7 @@ struct RestorePackageBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
+  RestorePackageBuilder &operator=(const RestorePackageBuilder &);
   flatbuffers::Offset<RestorePackage> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<RestorePackage>(end);
@@ -613,6 +616,7 @@ struct BackupInfoBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
+  BackupInfoBuilder &operator=(const BackupInfoBuilder &);
   flatbuffers::Offset<BackupInfo> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<BackupInfo>(end);
@@ -705,6 +709,7 @@ struct DeviceInfoBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
+  DeviceInfoBuilder &operator=(const DeviceInfoBuilder &);
   flatbuffers::Offset<DeviceInfo> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<DeviceInfo>(end);
@@ -772,6 +777,7 @@ struct DevicesInfoBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
+  DevicesInfoBuilder &operator=(const DevicesInfoBuilder &);
   flatbuffers::Offset<DevicesInfo> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<DevicesInfo>(end);

@@ -8,7 +8,7 @@
 
 namespace SplayApi {
 
-enum COMMAND : uint8_t {
+enum COMMAND {
   COMMAND_PLAY = 0,
   COMMAND_PAUSE = 1,
   COMMAND_STOP = 2,

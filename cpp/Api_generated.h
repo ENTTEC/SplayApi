@@ -6,11 +6,11 @@
 
 #include "flatbuffers/flatbuffers.h"
 
+#include "Command_generated.h"
+#include "Common_generated.h"
+#include "Control_generated.h"
 #include "Cue_generated.h"
 #include "Playlist_generated.h"
-#include "Common_generated.h"
-#include "Command_generated.h"
-#include "Control_generated.h"
 
 namespace SplayApi {
 
@@ -23,7 +23,7 @@ struct HeaderBuilder;
 struct Message;
 struct MessageBuilder;
 
-enum Body : uint8_t {
+enum Body {
   Body_NONE = 0,
   Body_StatusRes = 1,
   Body_PlayPlaylistReq = 2,
@@ -211,6 +211,7 @@ struct StatusResBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
+  StatusResBuilder &operator=(const StatusResBuilder &);
   flatbuffers::Offset<StatusRes> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<StatusRes>(end);
@@ -266,6 +267,7 @@ struct HeaderBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
+  HeaderBuilder &operator=(const HeaderBuilder &);
   flatbuffers::Offset<Header> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<Header>(end);
@@ -454,6 +456,7 @@ struct MessageBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
+  MessageBuilder &operator=(const MessageBuilder &);
   flatbuffers::Offset<Message> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<Message>(end);

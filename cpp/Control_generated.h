@@ -14,7 +14,7 @@ struct TriggerTableBuilder;
 struct EventTable;
 struct EventTableBuilder;
 
-enum CONTROL_TYPE : uint8_t {
+enum CONTROL_TYPE {
   CONTROL_TYPE_TRIGGER = 0,
   CONTROL_TYPE_EVENT = 1,
   CONTROL_TYPE_MIN = CONTROL_TYPE_TRIGGER,
@@ -44,7 +44,7 @@ inline const char *EnumNameCONTROL_TYPE(CONTROL_TYPE e) {
   return EnumNamesCONTROL_TYPE()[index];
 }
 
-enum TRIGGER_TYPE : uint8_t {
+enum TRIGGER_TYPE {
   TRIGGER_TYPE_NONE = 0,
   TRIGGER_TYPE_OSC = 1,
   TRIGGER_TYPE_RS232 = 2,
@@ -95,7 +95,7 @@ inline const char *EnumNameTRIGGER_TYPE(TRIGGER_TYPE e) {
   return EnumNamesTRIGGER_TYPE()[index];
 }
 
-enum EVENT_TYPE : uint8_t {
+enum EVENT_TYPE {
   EVENT_TYPE_NONE = 0,
   EVENT_TYPE_RS232 = 1,
   EVENT_TYPE_IO = 2,
@@ -211,6 +211,7 @@ struct TriggerTableBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
+  TriggerTableBuilder &operator=(const TriggerTableBuilder &);
   flatbuffers::Offset<TriggerTable> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<TriggerTable>(end);
@@ -324,6 +325,7 @@ struct EventTableBuilder {
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
+  EventTableBuilder &operator=(const EventTableBuilder &);
   flatbuffers::Offset<EventTable> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<EventTable>(end);
