@@ -5,21 +5,26 @@ This HTTP API allows for control over the ENTTEC S-Play (SKU: 70092), playback e
 
 ENTTEC recommend that the S-Plays IP is set to be static before communicating using this API.
 
-To ensure this API functions as intended, ensure you are running a software version of at least **v1.7**.
+To ensure this API functions as intended, ensure you are running a software version of at least **v2.1**.
 
 ## HTTP POST Commands for S-Play's playback.
 Enum COMMAND below presents the list of available playback commands.
-They can be sent using HTTP POST requests to the device IP on the`55555` port and path`/api`.
+They can be sent using HTTP POST requests to the device IP on path `/api`.
 
-e.g. URL: ` http://192.168.1.13:55555/api`
+e.g. URL: ` http://192.168.1.13/api`
 
 Request can be tested using:
 - **curl**
 
 ``
-curl --header "Content-Type: application/json" -d "{\"command\":8}" http://192.168.1.13:55555/api --output -
+curl --header "Content-Type: application/json" -d "{\"command\":88}" http://192.168.0.10/api --output -
 ``
-- [Insomnia](https://insomnia.rest/) with provided config (Insomnia_SplayAPI_1.6.json) with several examples of requests
+- **wget**
+
+``
+wget -q -O- --post-data='{"command":88}' --header='Content-Type:application/json' http://192.168.0.10/api
+``
+- [Insomnia](https://insomnia.rest/) with provided config (Insomnia_SplayAPI_1.7.json) with several examples of requests
 
 ## Development
 After clone run the command inside repo's dir to automatically execute `flatc` compilation (v1.12.0) to cpp & js for all *.fbs files:
@@ -96,7 +101,7 @@ enum COMMAND {
   DELETE_SCHEDULE = 62, // Delete Schedule. it will be removed from database and storage.
   ENABLE_SCHEDULE = 63, // Change the Schedule state enable ACTIVE = 1 / PAUSED = 2
 
-  GET_INTERFACE = 70, // Get Iterface page by id or URL
+  GET_INTERFACE = 70, // Get Interface page by id or URL
   GET_ALL_INTERFACES = 71, // Get all created Interfaces
   UPDATE_INTERFACE = 72, // Update/Create Interface page
   DELETE_INTERFACE = 73, // Delete Interface by id
@@ -109,7 +114,25 @@ enum COMMAND {
   GET_STORAGES = 85, // Get available storages (internal, sd, etc.)
   SET_STORAGE = 86, // Set current storage from available
   FACTORY_RESET = 87, // Execute factory reset logic
+  GET_INFO = 88, // System and software info (versions, serial, etc.)
 
+  GET_SSH_TUNNEL_STATUS = 90, // Check if ssh tunnel is enabled and active
+  GET_SSH_TUNNEL_CONFIG = 91, // Get current ssh tunnel settings
+  SET_SSH_TUNNEL_CONFIG = 92, // Set ssh tunnel settings
+
+  LOGIN = 95, // Provide auth token based on login & pass
+  CHANGE_PASSWORD = 96, // Change login or password
+  SET_LICENSE = 97, // License S-Play
+
+  GET_BACKUP = 100, // Check if backup file exists, link to it and its date
+  MAKE_BACKUP = 101, // Generate backup for selected storage
+  COPY_STORAGE = 102, // Copy from one storage to another available
+  APPLY_RESTORE = 103, // Internal usage, needs local path for restore archive
+
+  DISCOVER_DEVICES = 110, // Discover devices on the network
+
+  SHUTDOWN = 222, // Gracefully shutdown S-Play
+  
   REFRESH_SETTING = 254,
 }
 ```
@@ -1607,6 +1630,16 @@ Request:
 { "command": 46 }
 ```
 Response - result `true` if trigger wasn't triggered and S-Play still listening for it, `false` if trigger happened or no trigger is awaited
+```json
+{ "result": true }
+```
+
+#### SHUTDOWN: Gracefully shutdown S-Play
+Request:
+```json
+{ "command": 222 }
+```
+Response:
 ```json
 { "result": true }
 ```

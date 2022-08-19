@@ -63,7 +63,7 @@ enum COMMAND : uint8 {
   DELETE_SCHEDULE = 62, // Delete Schedule. it will be removed from database and storage.
   ENABLE_SCHEDULE = 63, // Change the Schedule state enable ACTIVE = 1 / PAUSED = 2
 
-  GET_INTERFACE = 70, // Get Iterface page by id or URL
+  GET_INTERFACE = 70, // Get Interface page by id or URL
   GET_ALL_INTERFACES = 71, // Get all created Interfaces
   UPDATE_INTERFACE = 72, // Update/Create Interface page
   DELETE_INTERFACE = 73, // Delete Interface by id
@@ -82,9 +82,9 @@ enum COMMAND : uint8 {
   GET_SSH_TUNNEL_CONFIG = 91, // Get current ssh tunnel settings
   SET_SSH_TUNNEL_CONFIG = 92, // Set ssh tunnel settings
 
-  LOGIN = 95,
-  CHANGE_PASSWORD = 96,
-  SET_LICENSE = 97,
+  LOGIN = 95, // Provide auth token based on login & pass
+  CHANGE_PASSWORD = 96, // Change login or password
+  SET_LICENSE = 97, // License S-Play
 
   GET_BACKUP = 100, // Check if backup file exists, link to it and its date
   MAKE_BACKUP = 101, // Generate backup for selected storage
@@ -93,6 +93,6 @@ enum COMMAND : uint8 {
 
   DISCOVER_DEVICES = 110, // Discover devices on the network
 
-  SHUTDOWN = 222,
+  SHUTDOWN = 222, // Gracefully shutdown S-Play
   REFRESH_SETTING = 254,
 }
