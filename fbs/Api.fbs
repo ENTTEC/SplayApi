@@ -31,7 +31,7 @@ union Body {
   SystemInfo,
   RestorePackage,
   BackupInfo,
-  DevicesInfo,
+  DiscoveryInfo,
 }
 
 table Message {

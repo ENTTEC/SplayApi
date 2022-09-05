@@ -41,9 +41,9 @@ enum Body {
   Body_SystemInfo = 14,
   Body_RestorePackage = 15,
   Body_BackupInfo = 16,
-  Body_DevicesInfo = 17,
+  Body_DiscoveryInfo = 17,
   Body_MIN = Body_NONE,
-  Body_MAX = Body_DevicesInfo
+  Body_MAX = Body_DiscoveryInfo
 };
 
 inline const Body (&EnumValuesBody())[18] {
@@ -65,7 +65,7 @@ inline const Body (&EnumValuesBody())[18] {
     Body_SystemInfo,
     Body_RestorePackage,
     Body_BackupInfo,
-    Body_DevicesInfo
+    Body_DiscoveryInfo
   };
   return values;
 }
@@ -89,14 +89,14 @@ inline const char * const *EnumNamesBody() {
     "SystemInfo",
     "RestorePackage",
     "BackupInfo",
-    "DevicesInfo",
+    "DiscoveryInfo",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameBody(Body e) {
-  if (flatbuffers::IsOutRange(e, Body_NONE, Body_DevicesInfo)) return "";
+  if (flatbuffers::IsOutRange(e, Body_NONE, Body_DiscoveryInfo)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesBody()[index];
 }
@@ -169,8 +169,8 @@ template<> struct BodyTraits<SplayApi::BackupInfo> {
   static const Body enum_value = Body_BackupInfo;
 };
 
-template<> struct BodyTraits<SplayApi::DevicesInfo> {
-  static const Body enum_value = Body_DevicesInfo;
+template<> struct BodyTraits<SplayApi::DiscoveryInfo> {
+  static const Body enum_value = Body_DiscoveryInfo;
 };
 
 bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body type);
@@ -357,8 +357,8 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const SplayApi::BackupInfo *body_as_BackupInfo() const {
     return body_type() == SplayApi::Body_BackupInfo ? static_cast<const SplayApi::BackupInfo *>(body()) : nullptr;
   }
-  const SplayApi::DevicesInfo *body_as_DevicesInfo() const {
-    return body_type() == SplayApi::Body_DevicesInfo ? static_cast<const SplayApi::DevicesInfo *>(body()) : nullptr;
+  const SplayApi::DiscoveryInfo *body_as_DiscoveryInfo() const {
+    return body_type() == SplayApi::Body_DiscoveryInfo ? static_cast<const SplayApi::DiscoveryInfo *>(body()) : nullptr;
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -435,8 +435,8 @@ template<> inline const SplayApi::BackupInfo *Message::body_as<SplayApi::BackupI
   return body_as_BackupInfo();
 }
 
-template<> inline const SplayApi::DevicesInfo *Message::body_as<SplayApi::DevicesInfo>() const {
-  return body_as_DevicesInfo();
+template<> inline const SplayApi::DiscoveryInfo *Message::body_as<SplayApi::DiscoveryInfo>() const {
+  return body_as_DiscoveryInfo();
 }
 
 struct MessageBuilder {
@@ -545,8 +545,8 @@ inline bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body ty
       auto ptr = reinterpret_cast<const SplayApi::BackupInfo *>(obj);
       return verifier.VerifyTable(ptr);
     }
-    case Body_DevicesInfo: {
-      auto ptr = reinterpret_cast<const SplayApi::DevicesInfo *>(obj);
+    case Body_DiscoveryInfo: {
+      auto ptr = reinterpret_cast<const SplayApi::DiscoveryInfo *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

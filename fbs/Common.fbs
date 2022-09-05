@@ -83,14 +83,14 @@ table BackupInfo
   error: string;
 }
 
-table DeviceInfo {
-    ip :string;
-    host_name :string;
-    mac :string;
+table SplayDevice {
+    ip: string;
+    mac: string;
+    hostname: string;
     service_name :string;
 }
 
-table DevicesInfo
+table DiscoveryInfo
 {
-  devices: [DeviceInfo];
+  splay_devices: [SplayDevice];
 }
