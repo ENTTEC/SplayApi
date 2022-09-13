@@ -67,6 +67,7 @@ enum COMMAND {
 
   SET_PLAYLIST_TIME_POSITION = 22, // Set playback position of a playlist
   SET_WEBSOCKET_INPUT = 23, // Sets universe to monitor in Cue recording, use Universe number or WEBSOCKET_OUTPUT:NOTHING/ALL
+  SET_PLAYLIST_ID = 24, // Update playlist id to the new id
 
   PLAY_CUE = 25, // Play cue with given id
   PAUSE_CUE = 26, // Pause cue with given id
@@ -526,6 +527,17 @@ Response:
 { "result": true }
 ```
 
+#### SET_PLAYLIST_ID: Update playlist_id with the new_id
+Request:
+```json
+  {
+      "command": 24,"playlist_id": 25,"new_id": 42
+  }
+```
+Response:
+```json
+{ "result": true }
+```
 
 -------------------------------------------------
 
