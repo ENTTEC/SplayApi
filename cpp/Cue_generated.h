@@ -12,20 +12,17 @@
 
 namespace SplayApi {
 
+struct RecordStop;
+struct RecordStopBuilder;
+
 struct CueConfig;
 struct CueConfigBuilder;
 
+struct DmxFrame;
+struct DmxFrameBuilder;
+
 struct StaticFrameArray;
 struct StaticFrameArrayBuilder;
-
-struct StaticFrame;
-struct StaticFrameBuilder;
-
-struct DynamicFrame;
-struct DynamicFrameBuilder;
-
-struct EffectRainbowFrame;
-struct EffectRainbowFrameBuilder;
 
 struct CueTable;
 struct CueTableBuilder;
@@ -75,60 +72,47 @@ inline const char *EnumNameCUE_TYPE(CUE_TYPE e) {
   return EnumNamesCUE_TYPE()[index];
 }
 
-enum Frame {
-  Frame_NONE = 0,
-  Frame_StaticFrame = 1,
-  Frame_DynamicFrame = 2,
-  Frame_EffectRainbowFrame = 3,
-  Frame_MIN = Frame_NONE,
-  Frame_MAX = Frame_EffectRainbowFrame
-};
-
-inline const Frame (&EnumValuesFrame())[4] {
-  static const Frame values[] = {
-    Frame_NONE,
-    Frame_StaticFrame,
-    Frame_DynamicFrame,
-    Frame_EffectRainbowFrame
+struct RecordStop FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef RecordStopBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_TIME = 4
   };
-  return values;
+  uint32_t time() const {
+    return GetField<uint32_t>(VT_TIME, 0);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_TIME) &&
+           verifier.EndTable();
+  }
+};
+
+struct RecordStopBuilder {
+  typedef RecordStop Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_time(uint32_t time) {
+    fbb_.AddElement<uint32_t>(RecordStop::VT_TIME, time, 0);
+  }
+  explicit RecordStopBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  RecordStopBuilder &operator=(const RecordStopBuilder &);
+  flatbuffers::Offset<RecordStop> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<RecordStop>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<RecordStop> CreateRecordStop(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint32_t time = 0) {
+  RecordStopBuilder builder_(_fbb);
+  builder_.add_time(time);
+  return builder_.Finish();
 }
-
-inline const char * const *EnumNamesFrame() {
-  static const char * const names[5] = {
-    "NONE",
-    "StaticFrame",
-    "DynamicFrame",
-    "EffectRainbowFrame",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNameFrame(Frame e) {
-  if (flatbuffers::IsOutRange(e, Frame_NONE, Frame_EffectRainbowFrame)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesFrame()[index];
-}
-
-template<typename T> struct FrameTraits {
-  static const Frame enum_value = Frame_NONE;
-};
-
-template<> struct FrameTraits<SplayApi::StaticFrame> {
-  static const Frame enum_value = Frame_StaticFrame;
-};
-
-template<> struct FrameTraits<SplayApi::DynamicFrame> {
-  static const Frame enum_value = Frame_DynamicFrame;
-};
-
-template<> struct FrameTraits<SplayApi::EffectRainbowFrame> {
-  static const Frame enum_value = Frame_EffectRainbowFrame;
-};
-
-bool VerifyFrame(flatbuffers::Verifier &verifier, const void *obj, Frame type);
-bool VerifyFrameVector(flatbuffers::Verifier &verifier, const flatbuffers::Vector<flatbuffers::Offset<void>> *values, const flatbuffers::Vector<uint8_t> *types);
 
 struct CueConfig FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef CueConfigBuilder Builder;
@@ -213,18 +197,94 @@ inline flatbuffers::Offset<CueConfig> CreateCueConfig(
   return builder_.Finish();
 }
 
-struct StaticFrameArray FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  typedef StaticFrameArrayBuilder Builder;
+struct DmxFrame FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef DmxFrameBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_FRAME = 4
+    VT_OUTPUT = 4,
+    VT_TIME = 6,
+    VT_CHANNELS = 8
   };
-  const flatbuffers::Vector<uint8_t> *frame() const {
-    return GetPointer<const flatbuffers::Vector<uint8_t> *>(VT_FRAME);
+  uint16_t output() const {
+    return GetField<uint16_t>(VT_OUTPUT, 0);
+  }
+  uint32_t time() const {
+    return GetField<uint32_t>(VT_TIME, 0);
+  }
+  const flatbuffers::Vector<uint8_t> *channels() const {
+    return GetPointer<const flatbuffers::Vector<uint8_t> *>(VT_CHANNELS);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_FRAME) &&
-           verifier.VerifyVector(frame()) &&
+           VerifyField<uint16_t>(verifier, VT_OUTPUT) &&
+           VerifyField<uint32_t>(verifier, VT_TIME) &&
+           VerifyOffset(verifier, VT_CHANNELS) &&
+           verifier.VerifyVector(channels()) &&
+           verifier.EndTable();
+  }
+};
+
+struct DmxFrameBuilder {
+  typedef DmxFrame Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_output(uint16_t output) {
+    fbb_.AddElement<uint16_t>(DmxFrame::VT_OUTPUT, output, 0);
+  }
+  void add_time(uint32_t time) {
+    fbb_.AddElement<uint32_t>(DmxFrame::VT_TIME, time, 0);
+  }
+  void add_channels(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> channels) {
+    fbb_.AddOffset(DmxFrame::VT_CHANNELS, channels);
+  }
+  explicit DmxFrameBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  DmxFrameBuilder &operator=(const DmxFrameBuilder &);
+  flatbuffers::Offset<DmxFrame> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<DmxFrame>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<DmxFrame> CreateDmxFrame(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint16_t output = 0,
+    uint32_t time = 0,
+    flatbuffers::Offset<flatbuffers::Vector<uint8_t>> channels = 0) {
+  DmxFrameBuilder builder_(_fbb);
+  builder_.add_channels(channels);
+  builder_.add_time(time);
+  builder_.add_output(output);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<DmxFrame> CreateDmxFrameDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint16_t output = 0,
+    uint32_t time = 0,
+    const std::vector<uint8_t> *channels = nullptr) {
+  auto channels__ = channels ? _fbb.CreateVector<uint8_t>(*channels) : 0;
+  return SplayApi::CreateDmxFrame(
+      _fbb,
+      output,
+      time,
+      channels__);
+}
+
+struct StaticFrameArray FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef StaticFrameArrayBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CHANNELS = 4
+  };
+  const flatbuffers::Vector<uint8_t> *channels() const {
+    return GetPointer<const flatbuffers::Vector<uint8_t> *>(VT_CHANNELS);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_CHANNELS) &&
+           verifier.VerifyVector(channels()) &&
            verifier.EndTable();
   }
 };
@@ -233,8 +293,8 @@ struct StaticFrameArrayBuilder {
   typedef StaticFrameArray Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_frame(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> frame) {
-    fbb_.AddOffset(StaticFrameArray::VT_FRAME, frame);
+  void add_channels(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> channels) {
+    fbb_.AddOffset(StaticFrameArray::VT_CHANNELS, channels);
   }
   explicit StaticFrameArrayBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -250,202 +310,19 @@ struct StaticFrameArrayBuilder {
 
 inline flatbuffers::Offset<StaticFrameArray> CreateStaticFrameArray(
     flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<flatbuffers::Vector<uint8_t>> frame = 0) {
+    flatbuffers::Offset<flatbuffers::Vector<uint8_t>> channels = 0) {
   StaticFrameArrayBuilder builder_(_fbb);
-  builder_.add_frame(frame);
+  builder_.add_channels(channels);
   return builder_.Finish();
 }
 
 inline flatbuffers::Offset<StaticFrameArray> CreateStaticFrameArrayDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<uint8_t> *frame = nullptr) {
-  auto frame__ = frame ? _fbb.CreateVector<uint8_t>(*frame) : 0;
+    const std::vector<uint8_t> *channels = nullptr) {
+  auto channels__ = channels ? _fbb.CreateVector<uint8_t>(*channels) : 0;
   return SplayApi::CreateStaticFrameArray(
       _fbb,
-      frame__);
-}
-
-struct StaticFrame FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  typedef StaticFrameBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_FRAMES = 4
-  };
-  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::StaticFrameArray>> *frames() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::StaticFrameArray>> *>(VT_FRAMES);
-  }
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_FRAMES) &&
-           verifier.VerifyVector(frames()) &&
-           verifier.VerifyVectorOfTables(frames()) &&
-           verifier.EndTable();
-  }
-};
-
-struct StaticFrameBuilder {
-  typedef StaticFrame Table;
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  void add_frames(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::StaticFrameArray>>> frames) {
-    fbb_.AddOffset(StaticFrame::VT_FRAMES, frames);
-  }
-  explicit StaticFrameBuilder(flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  StaticFrameBuilder &operator=(const StaticFrameBuilder &);
-  flatbuffers::Offset<StaticFrame> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<StaticFrame>(end);
-    return o;
-  }
-};
-
-inline flatbuffers::Offset<StaticFrame> CreateStaticFrame(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::StaticFrameArray>>> frames = 0) {
-  StaticFrameBuilder builder_(_fbb);
-  builder_.add_frames(frames);
-  return builder_.Finish();
-}
-
-inline flatbuffers::Offset<StaticFrame> CreateStaticFrameDirect(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<flatbuffers::Offset<SplayApi::StaticFrameArray>> *frames = nullptr) {
-  auto frames__ = frames ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::StaticFrameArray>>(*frames) : 0;
-  return SplayApi::CreateStaticFrame(
-      _fbb,
-      frames__);
-}
-
-struct DynamicFrame FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  typedef DynamicFrameBuilder Builder;
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           verifier.EndTable();
-  }
-};
-
-struct DynamicFrameBuilder {
-  typedef DynamicFrame Table;
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  explicit DynamicFrameBuilder(flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  DynamicFrameBuilder &operator=(const DynamicFrameBuilder &);
-  flatbuffers::Offset<DynamicFrame> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<DynamicFrame>(end);
-    return o;
-  }
-};
-
-inline flatbuffers::Offset<DynamicFrame> CreateDynamicFrame(
-    flatbuffers::FlatBufferBuilder &_fbb) {
-  DynamicFrameBuilder builder_(_fbb);
-  return builder_.Finish();
-}
-
-struct EffectRainbowFrame FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  typedef EffectRainbowFrameBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_PIXEL_ORDER = 4,
-    VT_LEDS_OFFSET = 6,
-    VT_NUMBER_OF_LEDS = 8,
-    VT_BEATS_PER_MIN = 10,
-    VT_UNIVERSES = 12
-  };
-  SplayApi::PIXEL_ORDER pixel_order() const {
-    return static_cast<SplayApi::PIXEL_ORDER>(GetField<uint8_t>(VT_PIXEL_ORDER, 0));
-  }
-  uint16_t leds_offset() const {
-    return GetField<uint16_t>(VT_LEDS_OFFSET, 0);
-  }
-  uint16_t number_of_leds() const {
-    return GetField<uint16_t>(VT_NUMBER_OF_LEDS, 0);
-  }
-  uint16_t beats_per_min() const {
-    return GetField<uint16_t>(VT_BEATS_PER_MIN, 0);
-  }
-  const flatbuffers::Vector<uint16_t> *universes() const {
-    return GetPointer<const flatbuffers::Vector<uint16_t> *>(VT_UNIVERSES);
-  }
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<uint8_t>(verifier, VT_PIXEL_ORDER) &&
-           VerifyField<uint16_t>(verifier, VT_LEDS_OFFSET) &&
-           VerifyField<uint16_t>(verifier, VT_NUMBER_OF_LEDS) &&
-           VerifyField<uint16_t>(verifier, VT_BEATS_PER_MIN) &&
-           VerifyOffset(verifier, VT_UNIVERSES) &&
-           verifier.VerifyVector(universes()) &&
-           verifier.EndTable();
-  }
-};
-
-struct EffectRainbowFrameBuilder {
-  typedef EffectRainbowFrame Table;
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  void add_pixel_order(SplayApi::PIXEL_ORDER pixel_order) {
-    fbb_.AddElement<uint8_t>(EffectRainbowFrame::VT_PIXEL_ORDER, static_cast<uint8_t>(pixel_order), 0);
-  }
-  void add_leds_offset(uint16_t leds_offset) {
-    fbb_.AddElement<uint16_t>(EffectRainbowFrame::VT_LEDS_OFFSET, leds_offset, 0);
-  }
-  void add_number_of_leds(uint16_t number_of_leds) {
-    fbb_.AddElement<uint16_t>(EffectRainbowFrame::VT_NUMBER_OF_LEDS, number_of_leds, 0);
-  }
-  void add_beats_per_min(uint16_t beats_per_min) {
-    fbb_.AddElement<uint16_t>(EffectRainbowFrame::VT_BEATS_PER_MIN, beats_per_min, 0);
-  }
-  void add_universes(flatbuffers::Offset<flatbuffers::Vector<uint16_t>> universes) {
-    fbb_.AddOffset(EffectRainbowFrame::VT_UNIVERSES, universes);
-  }
-  explicit EffectRainbowFrameBuilder(flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  EffectRainbowFrameBuilder &operator=(const EffectRainbowFrameBuilder &);
-  flatbuffers::Offset<EffectRainbowFrame> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<EffectRainbowFrame>(end);
-    return o;
-  }
-};
-
-inline flatbuffers::Offset<EffectRainbowFrame> CreateEffectRainbowFrame(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    SplayApi::PIXEL_ORDER pixel_order = SplayApi::PIXEL_ORDER_RGB,
-    uint16_t leds_offset = 0,
-    uint16_t number_of_leds = 0,
-    uint16_t beats_per_min = 0,
-    flatbuffers::Offset<flatbuffers::Vector<uint16_t>> universes = 0) {
-  EffectRainbowFrameBuilder builder_(_fbb);
-  builder_.add_universes(universes);
-  builder_.add_beats_per_min(beats_per_min);
-  builder_.add_number_of_leds(number_of_leds);
-  builder_.add_leds_offset(leds_offset);
-  builder_.add_pixel_order(pixel_order);
-  return builder_.Finish();
-}
-
-inline flatbuffers::Offset<EffectRainbowFrame> CreateEffectRainbowFrameDirect(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    SplayApi::PIXEL_ORDER pixel_order = SplayApi::PIXEL_ORDER_RGB,
-    uint16_t leds_offset = 0,
-    uint16_t number_of_leds = 0,
-    uint16_t beats_per_min = 0,
-    const std::vector<uint16_t> *universes = nullptr) {
-  auto universes__ = universes ? _fbb.CreateVector<uint16_t>(*universes) : 0;
-  return SplayApi::CreateEffectRainbowFrame(
-      _fbb,
-      pixel_order,
-      leds_offset,
-      number_of_leds,
-      beats_per_min,
-      universes__);
+      channels__);
 }
 
 struct CueTable FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -455,12 +332,11 @@ struct CueTable FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_TYPE = 6,
     VT_NAME = 8,
     VT_DURATION = 10,
-    VT_FRAME_TYPE = 12,
-    VT_FRAME = 14,
-    VT_CONFIG = 16
+    VT_FRAMES = 12,
+    VT_CONFIG = 14
   };
-  int32_t id() const {
-    return GetField<int32_t>(VT_ID, 0);
+  uint16_t id() const {
+    return GetField<uint16_t>(VT_ID, 0);
   }
   SplayApi::CUE_TYPE type() const {
     return static_cast<SplayApi::CUE_TYPE>(GetField<uint8_t>(VT_TYPE, 0));
@@ -471,59 +347,34 @@ struct CueTable FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   uint32_t duration() const {
     return GetField<uint32_t>(VT_DURATION, 0);
   }
-  SplayApi::Frame frame_type() const {
-    return static_cast<SplayApi::Frame>(GetField<uint8_t>(VT_FRAME_TYPE, 0));
-  }
-  const void *frame() const {
-    return GetPointer<const void *>(VT_FRAME);
-  }
-  template<typename T> const T *frame_as() const;
-  const SplayApi::StaticFrame *frame_as_StaticFrame() const {
-    return frame_type() == SplayApi::Frame_StaticFrame ? static_cast<const SplayApi::StaticFrame *>(frame()) : nullptr;
-  }
-  const SplayApi::DynamicFrame *frame_as_DynamicFrame() const {
-    return frame_type() == SplayApi::Frame_DynamicFrame ? static_cast<const SplayApi::DynamicFrame *>(frame()) : nullptr;
-  }
-  const SplayApi::EffectRainbowFrame *frame_as_EffectRainbowFrame() const {
-    return frame_type() == SplayApi::Frame_EffectRainbowFrame ? static_cast<const SplayApi::EffectRainbowFrame *>(frame()) : nullptr;
+  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::StaticFrameArray>> *frames() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::StaticFrameArray>> *>(VT_FRAMES);
   }
   const SplayApi::CueConfig *config() const {
     return GetPointer<const SplayApi::CueConfig *>(VT_CONFIG);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<int32_t>(verifier, VT_ID) &&
+           VerifyField<uint16_t>(verifier, VT_ID) &&
            VerifyField<uint8_t>(verifier, VT_TYPE) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(name()) &&
            VerifyField<uint32_t>(verifier, VT_DURATION) &&
-           VerifyField<uint8_t>(verifier, VT_FRAME_TYPE) &&
-           VerifyOffset(verifier, VT_FRAME) &&
-           VerifyFrame(verifier, frame(), frame_type()) &&
+           VerifyOffset(verifier, VT_FRAMES) &&
+           verifier.VerifyVector(frames()) &&
+           verifier.VerifyVectorOfTables(frames()) &&
            VerifyOffset(verifier, VT_CONFIG) &&
            verifier.VerifyTable(config()) &&
            verifier.EndTable();
   }
 };
 
-template<> inline const SplayApi::StaticFrame *CueTable::frame_as<SplayApi::StaticFrame>() const {
-  return frame_as_StaticFrame();
-}
-
-template<> inline const SplayApi::DynamicFrame *CueTable::frame_as<SplayApi::DynamicFrame>() const {
-  return frame_as_DynamicFrame();
-}
-
-template<> inline const SplayApi::EffectRainbowFrame *CueTable::frame_as<SplayApi::EffectRainbowFrame>() const {
-  return frame_as_EffectRainbowFrame();
-}
-
 struct CueTableBuilder {
   typedef CueTable Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_id(int32_t id) {
-    fbb_.AddElement<int32_t>(CueTable::VT_ID, id, 0);
+  void add_id(uint16_t id) {
+    fbb_.AddElement<uint16_t>(CueTable::VT_ID, id, 0);
   }
   void add_type(SplayApi::CUE_TYPE type) {
     fbb_.AddElement<uint8_t>(CueTable::VT_TYPE, static_cast<uint8_t>(type), 0);
@@ -534,11 +385,8 @@ struct CueTableBuilder {
   void add_duration(uint32_t duration) {
     fbb_.AddElement<uint32_t>(CueTable::VT_DURATION, duration, 0);
   }
-  void add_frame_type(SplayApi::Frame frame_type) {
-    fbb_.AddElement<uint8_t>(CueTable::VT_FRAME_TYPE, static_cast<uint8_t>(frame_type), 0);
-  }
-  void add_frame(flatbuffers::Offset<void> frame) {
-    fbb_.AddOffset(CueTable::VT_FRAME, frame);
+  void add_frames(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::StaticFrameArray>>> frames) {
+    fbb_.AddOffset(CueTable::VT_FRAMES, frames);
   }
   void add_config(flatbuffers::Offset<SplayApi::CueConfig> config) {
     fbb_.AddOffset(CueTable::VT_CONFIG, config);
@@ -557,42 +405,39 @@ struct CueTableBuilder {
 
 inline flatbuffers::Offset<CueTable> CreateCueTable(
     flatbuffers::FlatBufferBuilder &_fbb,
-    int32_t id = 0,
+    uint16_t id = 0,
     SplayApi::CUE_TYPE type = SplayApi::CUE_TYPE_STATIC,
     flatbuffers::Offset<flatbuffers::String> name = 0,
     uint32_t duration = 0,
-    SplayApi::Frame frame_type = SplayApi::Frame_NONE,
-    flatbuffers::Offset<void> frame = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::StaticFrameArray>>> frames = 0,
     flatbuffers::Offset<SplayApi::CueConfig> config = 0) {
   CueTableBuilder builder_(_fbb);
   builder_.add_config(config);
-  builder_.add_frame(frame);
+  builder_.add_frames(frames);
   builder_.add_duration(duration);
   builder_.add_name(name);
   builder_.add_id(id);
-  builder_.add_frame_type(frame_type);
   builder_.add_type(type);
   return builder_.Finish();
 }
 
 inline flatbuffers::Offset<CueTable> CreateCueTableDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
-    int32_t id = 0,
+    uint16_t id = 0,
     SplayApi::CUE_TYPE type = SplayApi::CUE_TYPE_STATIC,
     const char *name = nullptr,
     uint32_t duration = 0,
-    SplayApi::Frame frame_type = SplayApi::Frame_NONE,
-    flatbuffers::Offset<void> frame = 0,
+    const std::vector<flatbuffers::Offset<SplayApi::StaticFrameArray>> *frames = nullptr,
     flatbuffers::Offset<SplayApi::CueConfig> config = 0) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
+  auto frames__ = frames ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::StaticFrameArray>>(*frames) : 0;
   return SplayApi::CreateCueTable(
       _fbb,
       id,
       type,
       name__,
       duration,
-      frame_type,
-      frame,
+      frames__,
       config);
 }
 
@@ -784,39 +629,6 @@ inline flatbuffers::Offset<GetAllCuesRes> CreateGetAllCuesResDirect(
   return SplayApi::CreateGetAllCuesRes(
       _fbb,
       cues__);
-}
-
-inline bool VerifyFrame(flatbuffers::Verifier &verifier, const void *obj, Frame type) {
-  switch (type) {
-    case Frame_NONE: {
-      return true;
-    }
-    case Frame_StaticFrame: {
-      auto ptr = reinterpret_cast<const SplayApi::StaticFrame *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case Frame_DynamicFrame: {
-      auto ptr = reinterpret_cast<const SplayApi::DynamicFrame *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case Frame_EffectRainbowFrame: {
-      auto ptr = reinterpret_cast<const SplayApi::EffectRainbowFrame *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    default: return true;
-  }
-}
-
-inline bool VerifyFrameVector(flatbuffers::Verifier &verifier, const flatbuffers::Vector<flatbuffers::Offset<void>> *values, const flatbuffers::Vector<uint8_t> *types) {
-  if (!values || !types) return !values && !types;
-  if (values->size() != types->size()) return false;
-  for (flatbuffers::uoffset_t i = 0; i < values->size(); ++i) {
-    if (!VerifyFrame(
-        verifier,  values->Get(i), types->GetEnum<Frame>(i))) {
-      return false;
-    }
-  }
-  return true;
 }
 
 }  // namespace SplayApi

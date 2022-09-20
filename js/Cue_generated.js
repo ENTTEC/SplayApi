@@ -25,24 +25,92 @@ SplayApi.CUE_TYPEName = {
 };
 
 /**
- * @enum {number}
+ * @constructor
  */
-SplayApi.Frame = {
-  NONE: 0,
-  StaticFrame: 1,
-  DynamicFrame: 2,
-  EffectRainbowFrame: 3
+SplayApi.RecordStop = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
 };
 
 /**
- * @enum {string}
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {SplayApi.RecordStop}
  */
-SplayApi.FrameName = {
-  '0': 'NONE',
-  '1': 'StaticFrame',
-  '2': 'DynamicFrame',
-  '3': 'EffectRainbowFrame'
+SplayApi.RecordStop.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
 };
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.RecordStop=} obj
+ * @returns {SplayApi.RecordStop}
+ */
+SplayApi.RecordStop.getRootAsRecordStop = function(bb, obj) {
+  return (obj || new SplayApi.RecordStop).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.RecordStop=} obj
+ * @returns {SplayApi.RecordStop}
+ */
+SplayApi.RecordStop.getSizePrefixedRootAsRecordStop = function(bb, obj) {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new SplayApi.RecordStop).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {number}
+ */
+SplayApi.RecordStop.prototype.time = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+SplayApi.RecordStop.startRecordStop = function(builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} time
+ */
+SplayApi.RecordStop.addTime = function(builder, time) {
+  builder.addFieldInt32(0, time, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.RecordStop.endRecordStop = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} time
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.RecordStop.createRecordStop = function(builder, time) {
+  SplayApi.RecordStop.startRecordStop(builder);
+  SplayApi.RecordStop.addTime(builder, time);
+  return SplayApi.RecordStop.endRecordStop(builder);
+}
 
 /**
  * @constructor
@@ -208,6 +276,168 @@ SplayApi.CueConfig.createCueConfig = function(builder, chStart, chStop, source, 
 /**
  * @constructor
  */
+SplayApi.DmxFrame = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {SplayApi.DmxFrame}
+ */
+SplayApi.DmxFrame.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.DmxFrame=} obj
+ * @returns {SplayApi.DmxFrame}
+ */
+SplayApi.DmxFrame.getRootAsDmxFrame = function(bb, obj) {
+  return (obj || new SplayApi.DmxFrame).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.DmxFrame=} obj
+ * @returns {SplayApi.DmxFrame}
+ */
+SplayApi.DmxFrame.getSizePrefixedRootAsDmxFrame = function(bb, obj) {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new SplayApi.DmxFrame).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {number}
+ */
+SplayApi.DmxFrame.prototype.output = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {number}
+ */
+SplayApi.DmxFrame.prototype.time = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param {number} index
+ * @returns {number}
+ */
+SplayApi.DmxFrame.prototype.channels = function(index) {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.readUint8(this.bb.__vector(this.bb_pos + offset) + index) : 0;
+};
+
+/**
+ * @returns {number}
+ */
+SplayApi.DmxFrame.prototype.channelsLength = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {Uint8Array}
+ */
+SplayApi.DmxFrame.prototype.channelsArray = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? new Uint8Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+SplayApi.DmxFrame.startDmxFrame = function(builder) {
+  builder.startObject(3);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} output
+ */
+SplayApi.DmxFrame.addOutput = function(builder, output) {
+  builder.addFieldInt16(0, output, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} time
+ */
+SplayApi.DmxFrame.addTime = function(builder, time) {
+  builder.addFieldInt32(1, time, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} channelsOffset
+ */
+SplayApi.DmxFrame.addChannels = function(builder, channelsOffset) {
+  builder.addFieldOffset(2, channelsOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {Array.<number>} data
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.DmxFrame.createChannelsVector = function(builder, data) {
+  builder.startVector(1, data.length, 1);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} numElems
+ */
+SplayApi.DmxFrame.startChannelsVector = function(builder, numElems) {
+  builder.startVector(1, numElems, 1);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.DmxFrame.endDmxFrame = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} output
+ * @param {number} time
+ * @param {flatbuffers.Offset} channelsOffset
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.DmxFrame.createDmxFrame = function(builder, output, time, channelsOffset) {
+  SplayApi.DmxFrame.startDmxFrame(builder);
+  SplayApi.DmxFrame.addOutput(builder, output);
+  SplayApi.DmxFrame.addTime(builder, time);
+  SplayApi.DmxFrame.addChannels(builder, channelsOffset);
+  return SplayApi.DmxFrame.endDmxFrame(builder);
+}
+
+/**
+ * @constructor
+ */
 SplayApi.StaticFrameArray = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
@@ -254,7 +484,7 @@ SplayApi.StaticFrameArray.getSizePrefixedRootAsStaticFrameArray = function(bb, o
  * @param {number} index
  * @returns {number}
  */
-SplayApi.StaticFrameArray.prototype.frame = function(index) {
+SplayApi.StaticFrameArray.prototype.channels = function(index) {
   var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.readUint8(this.bb.__vector(this.bb_pos + offset) + index) : 0;
 };
@@ -262,7 +492,7 @@ SplayApi.StaticFrameArray.prototype.frame = function(index) {
 /**
  * @returns {number}
  */
-SplayApi.StaticFrameArray.prototype.frameLength = function() {
+SplayApi.StaticFrameArray.prototype.channelsLength = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -270,7 +500,7 @@ SplayApi.StaticFrameArray.prototype.frameLength = function() {
 /**
  * @returns {Uint8Array}
  */
-SplayApi.StaticFrameArray.prototype.frameArray = function() {
+SplayApi.StaticFrameArray.prototype.channelsArray = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? new Uint8Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
 };
@@ -284,10 +514,10 @@ SplayApi.StaticFrameArray.startStaticFrameArray = function(builder) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} frameOffset
+ * @param {flatbuffers.Offset} channelsOffset
  */
-SplayApi.StaticFrameArray.addFrame = function(builder, frameOffset) {
-  builder.addFieldOffset(0, frameOffset, 0);
+SplayApi.StaticFrameArray.addChannels = function(builder, channelsOffset) {
+  builder.addFieldOffset(0, channelsOffset, 0);
 };
 
 /**
@@ -295,7 +525,7 @@ SplayApi.StaticFrameArray.addFrame = function(builder, frameOffset) {
  * @param {Array.<number>} data
  * @returns {flatbuffers.Offset}
  */
-SplayApi.StaticFrameArray.createFrameVector = function(builder, data) {
+SplayApi.StaticFrameArray.createChannelsVector = function(builder, data) {
   builder.startVector(1, data.length, 1);
   for (var i = data.length - 1; i >= 0; i--) {
     builder.addInt8(data[i]);
@@ -307,7 +537,7 @@ SplayApi.StaticFrameArray.createFrameVector = function(builder, data) {
  * @param {flatbuffers.Builder} builder
  * @param {number} numElems
  */
-SplayApi.StaticFrameArray.startFrameVector = function(builder, numElems) {
+SplayApi.StaticFrameArray.startChannelsVector = function(builder, numElems) {
   builder.startVector(1, numElems, 1);
 };
 
@@ -322,400 +552,13 @@ SplayApi.StaticFrameArray.endStaticFrameArray = function(builder) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} frameOffset
+ * @param {flatbuffers.Offset} channelsOffset
  * @returns {flatbuffers.Offset}
  */
-SplayApi.StaticFrameArray.createStaticFrameArray = function(builder, frameOffset) {
+SplayApi.StaticFrameArray.createStaticFrameArray = function(builder, channelsOffset) {
   SplayApi.StaticFrameArray.startStaticFrameArray(builder);
-  SplayApi.StaticFrameArray.addFrame(builder, frameOffset);
+  SplayApi.StaticFrameArray.addChannels(builder, channelsOffset);
   return SplayApi.StaticFrameArray.endStaticFrameArray(builder);
-}
-
-/**
- * @constructor
- */
-SplayApi.StaticFrame = function() {
-  /**
-   * @type {flatbuffers.ByteBuffer}
-   */
-  this.bb = null;
-
-  /**
-   * @type {number}
-   */
-  this.bb_pos = 0;
-};
-
-/**
- * @param {number} i
- * @param {flatbuffers.ByteBuffer} bb
- * @returns {SplayApi.StaticFrame}
- */
-SplayApi.StaticFrame.prototype.__init = function(i, bb) {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param {flatbuffers.ByteBuffer} bb
- * @param {SplayApi.StaticFrame=} obj
- * @returns {SplayApi.StaticFrame}
- */
-SplayApi.StaticFrame.getRootAsStaticFrame = function(bb, obj) {
-  return (obj || new SplayApi.StaticFrame).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param {flatbuffers.ByteBuffer} bb
- * @param {SplayApi.StaticFrame=} obj
- * @returns {SplayApi.StaticFrame}
- */
-SplayApi.StaticFrame.getSizePrefixedRootAsStaticFrame = function(bb, obj) {
-  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
-  return (obj || new SplayApi.StaticFrame).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param {number} index
- * @param {SplayApi.StaticFrameArray=} obj
- * @returns {SplayApi.StaticFrameArray}
- */
-SplayApi.StaticFrame.prototype.frames = function(index, obj) {
-  var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? (obj || new SplayApi.StaticFrameArray).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
-};
-
-/**
- * @returns {number}
- */
-SplayApi.StaticFrame.prototype.framesLength = function() {
-  var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- */
-SplayApi.StaticFrame.startStaticFrame = function(builder) {
-  builder.startObject(1);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} framesOffset
- */
-SplayApi.StaticFrame.addFrames = function(builder, framesOffset) {
-  builder.addFieldOffset(0, framesOffset, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {Array.<flatbuffers.Offset>} data
- * @returns {flatbuffers.Offset}
- */
-SplayApi.StaticFrame.createFramesVector = function(builder, data) {
-  builder.startVector(4, data.length, 4);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {number} numElems
- */
-SplayApi.StaticFrame.startFramesVector = function(builder, numElems) {
-  builder.startVector(4, numElems, 4);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @returns {flatbuffers.Offset}
- */
-SplayApi.StaticFrame.endStaticFrame = function(builder) {
-  var offset = builder.endObject();
-  return offset;
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} framesOffset
- * @returns {flatbuffers.Offset}
- */
-SplayApi.StaticFrame.createStaticFrame = function(builder, framesOffset) {
-  SplayApi.StaticFrame.startStaticFrame(builder);
-  SplayApi.StaticFrame.addFrames(builder, framesOffset);
-  return SplayApi.StaticFrame.endStaticFrame(builder);
-}
-
-/**
- * @constructor
- */
-SplayApi.DynamicFrame = function() {
-  /**
-   * @type {flatbuffers.ByteBuffer}
-   */
-  this.bb = null;
-
-  /**
-   * @type {number}
-   */
-  this.bb_pos = 0;
-};
-
-/**
- * @param {number} i
- * @param {flatbuffers.ByteBuffer} bb
- * @returns {SplayApi.DynamicFrame}
- */
-SplayApi.DynamicFrame.prototype.__init = function(i, bb) {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param {flatbuffers.ByteBuffer} bb
- * @param {SplayApi.DynamicFrame=} obj
- * @returns {SplayApi.DynamicFrame}
- */
-SplayApi.DynamicFrame.getRootAsDynamicFrame = function(bb, obj) {
-  return (obj || new SplayApi.DynamicFrame).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param {flatbuffers.ByteBuffer} bb
- * @param {SplayApi.DynamicFrame=} obj
- * @returns {SplayApi.DynamicFrame}
- */
-SplayApi.DynamicFrame.getSizePrefixedRootAsDynamicFrame = function(bb, obj) {
-  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
-  return (obj || new SplayApi.DynamicFrame).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- */
-SplayApi.DynamicFrame.startDynamicFrame = function(builder) {
-  builder.startObject(0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @returns {flatbuffers.Offset}
- */
-SplayApi.DynamicFrame.endDynamicFrame = function(builder) {
-  var offset = builder.endObject();
-  return offset;
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @returns {flatbuffers.Offset}
- */
-SplayApi.DynamicFrame.createDynamicFrame = function(builder) {
-  SplayApi.DynamicFrame.startDynamicFrame(builder);
-  return SplayApi.DynamicFrame.endDynamicFrame(builder);
-}
-
-/**
- * @constructor
- */
-SplayApi.EffectRainbowFrame = function() {
-  /**
-   * @type {flatbuffers.ByteBuffer}
-   */
-  this.bb = null;
-
-  /**
-   * @type {number}
-   */
-  this.bb_pos = 0;
-};
-
-/**
- * @param {number} i
- * @param {flatbuffers.ByteBuffer} bb
- * @returns {SplayApi.EffectRainbowFrame}
- */
-SplayApi.EffectRainbowFrame.prototype.__init = function(i, bb) {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param {flatbuffers.ByteBuffer} bb
- * @param {SplayApi.EffectRainbowFrame=} obj
- * @returns {SplayApi.EffectRainbowFrame}
- */
-SplayApi.EffectRainbowFrame.getRootAsEffectRainbowFrame = function(bb, obj) {
-  return (obj || new SplayApi.EffectRainbowFrame).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param {flatbuffers.ByteBuffer} bb
- * @param {SplayApi.EffectRainbowFrame=} obj
- * @returns {SplayApi.EffectRainbowFrame}
- */
-SplayApi.EffectRainbowFrame.getSizePrefixedRootAsEffectRainbowFrame = function(bb, obj) {
-  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
-  return (obj || new SplayApi.EffectRainbowFrame).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @returns {SplayApi.PIXEL_ORDER}
- */
-SplayApi.EffectRainbowFrame.prototype.pixelOrder = function() {
-  var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? /** @type {SplayApi.PIXEL_ORDER} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.PIXEL_ORDER.RGB;
-};
-
-/**
- * @returns {number}
- */
-SplayApi.EffectRainbowFrame.prototype.ledsOffset = function() {
-  var offset = this.bb.__offset(this.bb_pos, 6);
-  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
-};
-
-/**
- * @returns {number}
- */
-SplayApi.EffectRainbowFrame.prototype.numberOfLeds = function() {
-  var offset = this.bb.__offset(this.bb_pos, 8);
-  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
-};
-
-/**
- * @returns {number}
- */
-SplayApi.EffectRainbowFrame.prototype.beatsPerMin = function() {
-  var offset = this.bb.__offset(this.bb_pos, 10);
-  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
-};
-
-/**
- * @param {number} index
- * @returns {number}
- */
-SplayApi.EffectRainbowFrame.prototype.universes = function(index) {
-  var offset = this.bb.__offset(this.bb_pos, 12);
-  return offset ? this.bb.readUint16(this.bb.__vector(this.bb_pos + offset) + index * 2) : 0;
-};
-
-/**
- * @returns {number}
- */
-SplayApi.EffectRainbowFrame.prototype.universesLength = function() {
-  var offset = this.bb.__offset(this.bb_pos, 12);
-  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @returns {Uint16Array}
- */
-SplayApi.EffectRainbowFrame.prototype.universesArray = function() {
-  var offset = this.bb.__offset(this.bb_pos, 12);
-  return offset ? new Uint16Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- */
-SplayApi.EffectRainbowFrame.startEffectRainbowFrame = function(builder) {
-  builder.startObject(5);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {SplayApi.PIXEL_ORDER} pixelOrder
- */
-SplayApi.EffectRainbowFrame.addPixelOrder = function(builder, pixelOrder) {
-  builder.addFieldInt8(0, pixelOrder, SplayApi.PIXEL_ORDER.RGB);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {number} ledsOffset
- */
-SplayApi.EffectRainbowFrame.addLedsOffset = function(builder, ledsOffset) {
-  builder.addFieldInt16(1, ledsOffset, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {number} numberOfLeds
- */
-SplayApi.EffectRainbowFrame.addNumberOfLeds = function(builder, numberOfLeds) {
-  builder.addFieldInt16(2, numberOfLeds, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {number} beatsPerMin
- */
-SplayApi.EffectRainbowFrame.addBeatsPerMin = function(builder, beatsPerMin) {
-  builder.addFieldInt16(3, beatsPerMin, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} universesOffset
- */
-SplayApi.EffectRainbowFrame.addUniverses = function(builder, universesOffset) {
-  builder.addFieldOffset(4, universesOffset, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {Array.<number>} data
- * @returns {flatbuffers.Offset}
- */
-SplayApi.EffectRainbowFrame.createUniversesVector = function(builder, data) {
-  builder.startVector(2, data.length, 2);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addInt16(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {number} numElems
- */
-SplayApi.EffectRainbowFrame.startUniversesVector = function(builder, numElems) {
-  builder.startVector(2, numElems, 2);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @returns {flatbuffers.Offset}
- */
-SplayApi.EffectRainbowFrame.endEffectRainbowFrame = function(builder) {
-  var offset = builder.endObject();
-  return offset;
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {NS10718616522061772901.SplayApi.PIXEL_ORDER} pixelOrder
- * @param {number} ledsOffset
- * @param {number} numberOfLeds
- * @param {number} beatsPerMin
- * @param {flatbuffers.Offset} universesOffset
- * @returns {flatbuffers.Offset}
- */
-SplayApi.EffectRainbowFrame.createEffectRainbowFrame = function(builder, pixelOrder, ledsOffset, numberOfLeds, beatsPerMin, universesOffset) {
-  SplayApi.EffectRainbowFrame.startEffectRainbowFrame(builder);
-  SplayApi.EffectRainbowFrame.addPixelOrder(builder, pixelOrder);
-  SplayApi.EffectRainbowFrame.addLedsOffset(builder, ledsOffset);
-  SplayApi.EffectRainbowFrame.addNumberOfLeds(builder, numberOfLeds);
-  SplayApi.EffectRainbowFrame.addBeatsPerMin(builder, beatsPerMin);
-  SplayApi.EffectRainbowFrame.addUniverses(builder, universesOffset);
-  return SplayApi.EffectRainbowFrame.endEffectRainbowFrame(builder);
 }
 
 /**
@@ -768,7 +611,7 @@ SplayApi.CueTable.getSizePrefixedRootAsCueTable = function(bb, obj) {
  */
 SplayApi.CueTable.prototype.id = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? this.bb.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
 
 /**
@@ -797,20 +640,21 @@ SplayApi.CueTable.prototype.duration = function() {
 };
 
 /**
- * @returns {SplayApi.Frame}
+ * @param {number} index
+ * @param {SplayApi.StaticFrameArray=} obj
+ * @returns {SplayApi.StaticFrameArray}
  */
-SplayApi.CueTable.prototype.frameType = function() {
+SplayApi.CueTable.prototype.frames = function(index, obj) {
   var offset = this.bb.__offset(this.bb_pos, 12);
-  return offset ? /** @type {SplayApi.Frame} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.Frame.NONE;
+  return offset ? (obj || new SplayApi.StaticFrameArray).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
 /**
- * @param {flatbuffers.Table} obj
- * @returns {?flatbuffers.Table}
+ * @returns {number}
  */
-SplayApi.CueTable.prototype.frame = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 14);
-  return offset ? this.bb.__union(obj, this.bb_pos + offset) : null;
+SplayApi.CueTable.prototype.framesLength = function() {
+  var offset = this.bb.__offset(this.bb_pos, 12);
+  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
 /**
@@ -818,7 +662,7 @@ SplayApi.CueTable.prototype.frame = function(obj) {
  * @returns {SplayApi.CueConfig|null}
  */
 SplayApi.CueTable.prototype.config = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 16);
+  var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? (obj || new SplayApi.CueConfig).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
 };
 
@@ -826,7 +670,7 @@ SplayApi.CueTable.prototype.config = function(obj) {
  * @param {flatbuffers.Builder} builder
  */
 SplayApi.CueTable.startCueTable = function(builder) {
-  builder.startObject(7);
+  builder.startObject(6);
 };
 
 /**
@@ -834,7 +678,7 @@ SplayApi.CueTable.startCueTable = function(builder) {
  * @param {number} id
  */
 SplayApi.CueTable.addId = function(builder, id) {
-  builder.addFieldInt32(0, id, 0);
+  builder.addFieldInt16(0, id, 0);
 };
 
 /**
@@ -863,18 +707,31 @@ SplayApi.CueTable.addDuration = function(builder, duration) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {SplayApi.Frame} frameType
+ * @param {flatbuffers.Offset} framesOffset
  */
-SplayApi.CueTable.addFrameType = function(builder, frameType) {
-  builder.addFieldInt8(4, frameType, SplayApi.Frame.NONE);
+SplayApi.CueTable.addFrames = function(builder, framesOffset) {
+  builder.addFieldOffset(4, framesOffset, 0);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} frameOffset
+ * @param {Array.<flatbuffers.Offset>} data
+ * @returns {flatbuffers.Offset}
  */
-SplayApi.CueTable.addFrame = function(builder, frameOffset) {
-  builder.addFieldOffset(5, frameOffset, 0);
+SplayApi.CueTable.createFramesVector = function(builder, data) {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} numElems
+ */
+SplayApi.CueTable.startFramesVector = function(builder, numElems) {
+  builder.startVector(4, numElems, 4);
 };
 
 /**
@@ -882,7 +739,7 @@ SplayApi.CueTable.addFrame = function(builder, frameOffset) {
  * @param {flatbuffers.Offset} configOffset
  */
 SplayApi.CueTable.addConfig = function(builder, configOffset) {
-  builder.addFieldOffset(6, configOffset, 0);
+  builder.addFieldOffset(5, configOffset, 0);
 };
 
 /**
@@ -900,19 +757,17 @@ SplayApi.CueTable.endCueTable = function(builder) {
  * @param {SplayApi.CUE_TYPE} type
  * @param {flatbuffers.Offset} nameOffset
  * @param {number} duration
- * @param {SplayApi.Frame} frameType
- * @param {flatbuffers.Offset} frameOffset
+ * @param {flatbuffers.Offset} framesOffset
  * @param {flatbuffers.Offset} configOffset
  * @returns {flatbuffers.Offset}
  */
-SplayApi.CueTable.createCueTable = function(builder, id, type, nameOffset, duration, frameType, frameOffset, configOffset) {
+SplayApi.CueTable.createCueTable = function(builder, id, type, nameOffset, duration, framesOffset, configOffset) {
   SplayApi.CueTable.startCueTable(builder);
   SplayApi.CueTable.addId(builder, id);
   SplayApi.CueTable.addType(builder, type);
   SplayApi.CueTable.addName(builder, nameOffset);
   SplayApi.CueTable.addDuration(builder, duration);
-  SplayApi.CueTable.addFrameType(builder, frameType);
-  SplayApi.CueTable.addFrame(builder, frameOffset);
+  SplayApi.CueTable.addFrames(builder, framesOffset);
   SplayApi.CueTable.addConfig(builder, configOffset);
   return SplayApi.CueTable.endCueTable(builder);
 }

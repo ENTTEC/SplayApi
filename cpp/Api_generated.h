@@ -42,11 +42,13 @@ enum Body {
   Body_RestorePackage = 15,
   Body_BackupInfo = 16,
   Body_DiscoveryInfo = 17,
+  Body_DmxFrame = 18,
+  Body_RecordStop = 19,
   Body_MIN = Body_NONE,
-  Body_MAX = Body_DiscoveryInfo
+  Body_MAX = Body_RecordStop
 };
 
-inline const Body (&EnumValuesBody())[18] {
+inline const Body (&EnumValuesBody())[20] {
   static const Body values[] = {
     Body_NONE,
     Body_StatusRes,
@@ -65,13 +67,15 @@ inline const Body (&EnumValuesBody())[18] {
     Body_SystemInfo,
     Body_RestorePackage,
     Body_BackupInfo,
-    Body_DiscoveryInfo
+    Body_DiscoveryInfo,
+    Body_DmxFrame,
+    Body_RecordStop
   };
   return values;
 }
 
 inline const char * const *EnumNamesBody() {
-  static const char * const names[19] = {
+  static const char * const names[21] = {
     "NONE",
     "StatusRes",
     "PlayPlaylistReq",
@@ -90,13 +94,15 @@ inline const char * const *EnumNamesBody() {
     "RestorePackage",
     "BackupInfo",
     "DiscoveryInfo",
+    "DmxFrame",
+    "RecordStop",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameBody(Body e) {
-  if (flatbuffers::IsOutRange(e, Body_NONE, Body_DiscoveryInfo)) return "";
+  if (flatbuffers::IsOutRange(e, Body_NONE, Body_RecordStop)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesBody()[index];
 }
@@ -171,6 +177,14 @@ template<> struct BodyTraits<SplayApi::BackupInfo> {
 
 template<> struct BodyTraits<SplayApi::DiscoveryInfo> {
   static const Body enum_value = Body_DiscoveryInfo;
+};
+
+template<> struct BodyTraits<SplayApi::DmxFrame> {
+  static const Body enum_value = Body_DmxFrame;
+};
+
+template<> struct BodyTraits<SplayApi::RecordStop> {
+  static const Body enum_value = Body_RecordStop;
 };
 
 bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body type);
@@ -360,6 +374,12 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const SplayApi::DiscoveryInfo *body_as_DiscoveryInfo() const {
     return body_type() == SplayApi::Body_DiscoveryInfo ? static_cast<const SplayApi::DiscoveryInfo *>(body()) : nullptr;
   }
+  const SplayApi::DmxFrame *body_as_DmxFrame() const {
+    return body_type() == SplayApi::Body_DmxFrame ? static_cast<const SplayApi::DmxFrame *>(body()) : nullptr;
+  }
+  const SplayApi::RecordStop *body_as_RecordStop() const {
+    return body_type() == SplayApi::Body_RecordStop ? static_cast<const SplayApi::RecordStop *>(body()) : nullptr;
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_HEADER) &&
@@ -437,6 +457,14 @@ template<> inline const SplayApi::BackupInfo *Message::body_as<SplayApi::BackupI
 
 template<> inline const SplayApi::DiscoveryInfo *Message::body_as<SplayApi::DiscoveryInfo>() const {
   return body_as_DiscoveryInfo();
+}
+
+template<> inline const SplayApi::DmxFrame *Message::body_as<SplayApi::DmxFrame>() const {
+  return body_as_DmxFrame();
+}
+
+template<> inline const SplayApi::RecordStop *Message::body_as<SplayApi::RecordStop>() const {
+  return body_as_RecordStop();
 }
 
 struct MessageBuilder {
@@ -547,6 +575,14 @@ inline bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body ty
     }
     case Body_DiscoveryInfo: {
       auto ptr = reinterpret_cast<const SplayApi::DiscoveryInfo *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case Body_DmxFrame: {
+      auto ptr = reinterpret_cast<const SplayApi::DmxFrame *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case Body_RecordStop: {
+      auto ptr = reinterpret_cast<const SplayApi::RecordStop *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

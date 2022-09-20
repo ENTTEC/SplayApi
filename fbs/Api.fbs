@@ -32,6 +32,8 @@ union Body {
   RestorePackage,
   BackupInfo,
   DiscoveryInfo,
+  DmxFrame,
+  RecordStop
 }
 
 table Message {

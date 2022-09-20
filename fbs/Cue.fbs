@@ -10,7 +10,11 @@ enum CUE_TYPE:uint8 {
   EFFECT,
 }
 
-table CueConfig{
+table RecordStop {
+  time:uint32;
+}
+
+table CueConfig {
   ch_start:uint16 = 0;
   ch_stop:uint16 = 511;
   source:UNIVERSE_TYPE;
@@ -18,37 +22,22 @@ table CueConfig{
   trigger:TriggerTable;
 }
 
+table DmxFrame {
+  output:uint16;
+  time:uint32;
+  channels:[uint8]; // array of 512 uint8 arrays
+}
+
 table StaticFrameArray{
-  frame:[uint8];
-}
-
-table StaticFrame {
-  frames:[StaticFrameArray]; // array of 512 uint8 arrays
-}
-
-table DynamicFrame {
-}
-
-table EffectRainbowFrame {
-  pixel_order:PIXEL_ORDER;
-  leds_offset:uint16;
-  number_of_leds:uint16;
-  beats_per_min:uint16;
-  universes:[uint16];
-}
-
-union Frame{
-  StaticFrame,
-  DynamicFrame,
-  EffectRainbowFrame
+  channels:[uint8];
 }
 
 table CueTable {
-  id:int;
+  id:uint16;
   type:CUE_TYPE;
   name:string;
   duration:uint32;
-  frame:Frame;
+  frames:[StaticFrameArray];
   config:CueConfig;
 }
 
