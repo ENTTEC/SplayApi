@@ -21,9 +21,6 @@ struct CueConfigBuilder;
 struct DmxFrame;
 struct DmxFrameBuilder;
 
-struct StaticFrameArray;
-struct StaticFrameArrayBuilder;
-
 struct CueTable;
 struct CueTableBuilder;
 
@@ -306,58 +303,6 @@ inline flatbuffers::Offset<DmxFrame> CreateDmxFrameDirect(
       channels__);
 }
 
-struct StaticFrameArray FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  typedef StaticFrameArrayBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_CHANNELS = 4
-  };
-  const flatbuffers::Vector<uint8_t> *channels() const {
-    return GetPointer<const flatbuffers::Vector<uint8_t> *>(VT_CHANNELS);
-  }
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_CHANNELS) &&
-           verifier.VerifyVector(channels()) &&
-           verifier.EndTable();
-  }
-};
-
-struct StaticFrameArrayBuilder {
-  typedef StaticFrameArray Table;
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  void add_channels(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> channels) {
-    fbb_.AddOffset(StaticFrameArray::VT_CHANNELS, channels);
-  }
-  explicit StaticFrameArrayBuilder(flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  StaticFrameArrayBuilder &operator=(const StaticFrameArrayBuilder &);
-  flatbuffers::Offset<StaticFrameArray> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<StaticFrameArray>(end);
-    return o;
-  }
-};
-
-inline flatbuffers::Offset<StaticFrameArray> CreateStaticFrameArray(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<flatbuffers::Vector<uint8_t>> channels = 0) {
-  StaticFrameArrayBuilder builder_(_fbb);
-  builder_.add_channels(channels);
-  return builder_.Finish();
-}
-
-inline flatbuffers::Offset<StaticFrameArray> CreateStaticFrameArrayDirect(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<uint8_t> *channels = nullptr) {
-  auto channels__ = channels ? _fbb.CreateVector<uint8_t>(*channels) : 0;
-  return SplayApi::CreateStaticFrameArray(
-      _fbb,
-      channels__);
-}
-
 struct CueTable FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef CueTableBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -384,8 +329,8 @@ struct CueTable FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   uint32_t duration() const {
     return GetField<uint32_t>(VT_DURATION, 0);
   }
-  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::StaticFrameArray>> *frames() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::StaticFrameArray>> *>(VT_FRAMES);
+  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::DmxFrame>> *frames() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::DmxFrame>> *>(VT_FRAMES);
   }
   const SplayApi::CueConfig *config() const {
     return GetPointer<const SplayApi::CueConfig *>(VT_CONFIG);
@@ -426,7 +371,7 @@ struct CueTableBuilder {
   void add_duration(uint32_t duration) {
     fbb_.AddElement<uint32_t>(CueTable::VT_DURATION, duration, 0);
   }
-  void add_frames(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::StaticFrameArray>>> frames) {
+  void add_frames(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::DmxFrame>>> frames) {
     fbb_.AddOffset(CueTable::VT_FRAMES, frames);
   }
   void add_config(flatbuffers::Offset<SplayApi::CueConfig> config) {
@@ -451,7 +396,7 @@ inline flatbuffers::Offset<CueTable> CreateCueTable(
     SplayApi::CUE_STATUS status = SplayApi::CUE_STATUS_STOPPED,
     flatbuffers::Offset<flatbuffers::String> name = 0,
     uint32_t duration = 0,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::StaticFrameArray>>> frames = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::DmxFrame>>> frames = 0,
     flatbuffers::Offset<SplayApi::CueConfig> config = 0) {
   CueTableBuilder builder_(_fbb);
   builder_.add_config(config);
@@ -471,10 +416,10 @@ inline flatbuffers::Offset<CueTable> CreateCueTableDirect(
     SplayApi::CUE_STATUS status = SplayApi::CUE_STATUS_STOPPED,
     const char *name = nullptr,
     uint32_t duration = 0,
-    const std::vector<flatbuffers::Offset<SplayApi::StaticFrameArray>> *frames = nullptr,
+    const std::vector<flatbuffers::Offset<SplayApi::DmxFrame>> *frames = nullptr,
     flatbuffers::Offset<SplayApi::CueConfig> config = 0) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
-  auto frames__ = frames ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::StaticFrameArray>>(*frames) : 0;
+  auto frames__ = frames ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::DmxFrame>>(*frames) : 0;
   return SplayApi::CreateCueTable(
       _fbb,
       id,

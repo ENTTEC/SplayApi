@@ -454,132 +454,6 @@ SplayApi.DmxFrame.createDmxFrame = function(builder, output, time, channelsOffse
 /**
  * @constructor
  */
-SplayApi.StaticFrameArray = function() {
-  /**
-   * @type {flatbuffers.ByteBuffer}
-   */
-  this.bb = null;
-
-  /**
-   * @type {number}
-   */
-  this.bb_pos = 0;
-};
-
-/**
- * @param {number} i
- * @param {flatbuffers.ByteBuffer} bb
- * @returns {SplayApi.StaticFrameArray}
- */
-SplayApi.StaticFrameArray.prototype.__init = function(i, bb) {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param {flatbuffers.ByteBuffer} bb
- * @param {SplayApi.StaticFrameArray=} obj
- * @returns {SplayApi.StaticFrameArray}
- */
-SplayApi.StaticFrameArray.getRootAsStaticFrameArray = function(bb, obj) {
-  return (obj || new SplayApi.StaticFrameArray).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param {flatbuffers.ByteBuffer} bb
- * @param {SplayApi.StaticFrameArray=} obj
- * @returns {SplayApi.StaticFrameArray}
- */
-SplayApi.StaticFrameArray.getSizePrefixedRootAsStaticFrameArray = function(bb, obj) {
-  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
-  return (obj || new SplayApi.StaticFrameArray).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param {number} index
- * @returns {number}
- */
-SplayApi.StaticFrameArray.prototype.channels = function(index) {
-  var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? this.bb.readUint8(this.bb.__vector(this.bb_pos + offset) + index) : 0;
-};
-
-/**
- * @returns {number}
- */
-SplayApi.StaticFrameArray.prototype.channelsLength = function() {
-  var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @returns {Uint8Array}
- */
-SplayApi.StaticFrameArray.prototype.channelsArray = function() {
-  var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? new Uint8Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- */
-SplayApi.StaticFrameArray.startStaticFrameArray = function(builder) {
-  builder.startObject(1);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} channelsOffset
- */
-SplayApi.StaticFrameArray.addChannels = function(builder, channelsOffset) {
-  builder.addFieldOffset(0, channelsOffset, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {Array.<number>} data
- * @returns {flatbuffers.Offset}
- */
-SplayApi.StaticFrameArray.createChannelsVector = function(builder, data) {
-  builder.startVector(1, data.length, 1);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addInt8(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {number} numElems
- */
-SplayApi.StaticFrameArray.startChannelsVector = function(builder, numElems) {
-  builder.startVector(1, numElems, 1);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @returns {flatbuffers.Offset}
- */
-SplayApi.StaticFrameArray.endStaticFrameArray = function(builder) {
-  var offset = builder.endObject();
-  return offset;
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} channelsOffset
- * @returns {flatbuffers.Offset}
- */
-SplayApi.StaticFrameArray.createStaticFrameArray = function(builder, channelsOffset) {
-  SplayApi.StaticFrameArray.startStaticFrameArray(builder);
-  SplayApi.StaticFrameArray.addChannels(builder, channelsOffset);
-  return SplayApi.StaticFrameArray.endStaticFrameArray(builder);
-}
-
-/**
- * @constructor
- */
 SplayApi.CueTable = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
@@ -665,12 +539,12 @@ SplayApi.CueTable.prototype.duration = function() {
 
 /**
  * @param {number} index
- * @param {SplayApi.StaticFrameArray=} obj
- * @returns {SplayApi.StaticFrameArray}
+ * @param {SplayApi.DmxFrame=} obj
+ * @returns {SplayApi.DmxFrame}
  */
 SplayApi.CueTable.prototype.frames = function(index, obj) {
   var offset = this.bb.__offset(this.bb_pos, 14);
-  return offset ? (obj || new SplayApi.StaticFrameArray).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
+  return offset ? (obj || new SplayApi.DmxFrame).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
 /**

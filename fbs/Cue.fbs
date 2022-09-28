@@ -33,17 +33,13 @@ table DmxFrame {
   channels:[uint8]; // array of 512 uint8 arrays
 }
 
-table StaticFrameArray{
-  channels:[uint8];
-}
-
 table CueTable {
   id:uint16;
   type:CUE_TYPE;
   status:CUE_STATUS;
   name:string;
   duration:uint32;
-  frames:[StaticFrameArray];
+  frames:[DmxFrame];
   config:CueConfig;
 }
 
