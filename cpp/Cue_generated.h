@@ -39,6 +39,9 @@ struct GetAllCuesReqBuilder;
 struct GetAllCuesRes;
 struct GetAllCuesResBuilder;
 
+struct PlayingCuesList;
+struct PlayingCuesListBuilder;
+
 enum CUE_TYPE {
   CUE_TYPE_STATIC = 0,
   CUE_TYPE_DYNAMIC = 1,
@@ -70,6 +73,36 @@ inline const char *EnumNameCUE_TYPE(CUE_TYPE e) {
   if (flatbuffers::IsOutRange(e, CUE_TYPE_STATIC, CUE_TYPE_EFFECT)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesCUE_TYPE()[index];
+}
+
+enum CUE_STATUS {
+  CUE_STATUS_STOPPED = 0,
+  CUE_STATUS_PLAYING = 1,
+  CUE_STATUS_MIN = CUE_STATUS_STOPPED,
+  CUE_STATUS_MAX = CUE_STATUS_PLAYING
+};
+
+inline const CUE_STATUS (&EnumValuesCUE_STATUS())[2] {
+  static const CUE_STATUS values[] = {
+    CUE_STATUS_STOPPED,
+    CUE_STATUS_PLAYING
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesCUE_STATUS() {
+  static const char * const names[3] = {
+    "STOPPED",
+    "PLAYING",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameCUE_STATUS(CUE_STATUS e) {
+  if (flatbuffers::IsOutRange(e, CUE_STATUS_STOPPED, CUE_STATUS_PLAYING)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesCUE_STATUS()[index];
 }
 
 struct RecordStop FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -330,16 +363,20 @@ struct CueTable FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_TYPE = 6,
-    VT_NAME = 8,
-    VT_DURATION = 10,
-    VT_FRAMES = 12,
-    VT_CONFIG = 14
+    VT_STATUS = 8,
+    VT_NAME = 10,
+    VT_DURATION = 12,
+    VT_FRAMES = 14,
+    VT_CONFIG = 16
   };
   uint16_t id() const {
     return GetField<uint16_t>(VT_ID, 0);
   }
   SplayApi::CUE_TYPE type() const {
     return static_cast<SplayApi::CUE_TYPE>(GetField<uint8_t>(VT_TYPE, 0));
+  }
+  SplayApi::CUE_STATUS status() const {
+    return static_cast<SplayApi::CUE_STATUS>(GetField<uint8_t>(VT_STATUS, 0));
   }
   const flatbuffers::String *name() const {
     return GetPointer<const flatbuffers::String *>(VT_NAME);
@@ -357,6 +394,7 @@ struct CueTable FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyField<uint16_t>(verifier, VT_ID) &&
            VerifyField<uint8_t>(verifier, VT_TYPE) &&
+           VerifyField<uint8_t>(verifier, VT_STATUS) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(name()) &&
            VerifyField<uint32_t>(verifier, VT_DURATION) &&
@@ -378,6 +416,9 @@ struct CueTableBuilder {
   }
   void add_type(SplayApi::CUE_TYPE type) {
     fbb_.AddElement<uint8_t>(CueTable::VT_TYPE, static_cast<uint8_t>(type), 0);
+  }
+  void add_status(SplayApi::CUE_STATUS status) {
+    fbb_.AddElement<uint8_t>(CueTable::VT_STATUS, static_cast<uint8_t>(status), 0);
   }
   void add_name(flatbuffers::Offset<flatbuffers::String> name) {
     fbb_.AddOffset(CueTable::VT_NAME, name);
@@ -407,6 +448,7 @@ inline flatbuffers::Offset<CueTable> CreateCueTable(
     flatbuffers::FlatBufferBuilder &_fbb,
     uint16_t id = 0,
     SplayApi::CUE_TYPE type = SplayApi::CUE_TYPE_STATIC,
+    SplayApi::CUE_STATUS status = SplayApi::CUE_STATUS_STOPPED,
     flatbuffers::Offset<flatbuffers::String> name = 0,
     uint32_t duration = 0,
     flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::StaticFrameArray>>> frames = 0,
@@ -417,6 +459,7 @@ inline flatbuffers::Offset<CueTable> CreateCueTable(
   builder_.add_duration(duration);
   builder_.add_name(name);
   builder_.add_id(id);
+  builder_.add_status(status);
   builder_.add_type(type);
   return builder_.Finish();
 }
@@ -425,6 +468,7 @@ inline flatbuffers::Offset<CueTable> CreateCueTableDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     uint16_t id = 0,
     SplayApi::CUE_TYPE type = SplayApi::CUE_TYPE_STATIC,
+    SplayApi::CUE_STATUS status = SplayApi::CUE_STATUS_STOPPED,
     const char *name = nullptr,
     uint32_t duration = 0,
     const std::vector<flatbuffers::Offset<SplayApi::StaticFrameArray>> *frames = nullptr,
@@ -435,6 +479,7 @@ inline flatbuffers::Offset<CueTable> CreateCueTableDirect(
       _fbb,
       id,
       type,
+      status,
       name__,
       duration,
       frames__,
@@ -627,6 +672,59 @@ inline flatbuffers::Offset<GetAllCuesRes> CreateGetAllCuesResDirect(
     const std::vector<flatbuffers::Offset<SplayApi::CueTable>> *cues = nullptr) {
   auto cues__ = cues ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::CueTable>>(*cues) : 0;
   return SplayApi::CreateGetAllCuesRes(
+      _fbb,
+      cues__);
+}
+
+struct PlayingCuesList FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef PlayingCuesListBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CUES = 4
+  };
+  const flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>> *cues() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>> *>(VT_CUES);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_CUES) &&
+           verifier.VerifyVector(cues()) &&
+           verifier.VerifyVectorOfTables(cues()) &&
+           verifier.EndTable();
+  }
+};
+
+struct PlayingCuesListBuilder {
+  typedef PlayingCuesList Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_cues(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>>> cues) {
+    fbb_.AddOffset(PlayingCuesList::VT_CUES, cues);
+  }
+  explicit PlayingCuesListBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  PlayingCuesListBuilder &operator=(const PlayingCuesListBuilder &);
+  flatbuffers::Offset<PlayingCuesList> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<PlayingCuesList>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<PlayingCuesList> CreatePlayingCuesList(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<SplayApi::CueTable>>> cues = 0) {
+  PlayingCuesListBuilder builder_(_fbb);
+  builder_.add_cues(cues);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<PlayingCuesList> CreatePlayingCuesListDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<flatbuffers::Offset<SplayApi::CueTable>> *cues = nullptr) {
+  auto cues__ = cues ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::CueTable>>(*cues) : 0;
+  return SplayApi::CreatePlayingCuesList(
       _fbb,
       cues__);
 }

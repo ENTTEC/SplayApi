@@ -44,11 +44,12 @@ enum Body {
   Body_DiscoveryInfo = 17,
   Body_DmxFrame = 18,
   Body_RecordStop = 19,
+  Body_PlayingCuesList = 20,
   Body_MIN = Body_NONE,
-  Body_MAX = Body_RecordStop
+  Body_MAX = Body_PlayingCuesList
 };
 
-inline const Body (&EnumValuesBody())[20] {
+inline const Body (&EnumValuesBody())[21] {
   static const Body values[] = {
     Body_NONE,
     Body_StatusRes,
@@ -69,13 +70,14 @@ inline const Body (&EnumValuesBody())[20] {
     Body_BackupInfo,
     Body_DiscoveryInfo,
     Body_DmxFrame,
-    Body_RecordStop
+    Body_RecordStop,
+    Body_PlayingCuesList
   };
   return values;
 }
 
 inline const char * const *EnumNamesBody() {
-  static const char * const names[21] = {
+  static const char * const names[22] = {
     "NONE",
     "StatusRes",
     "PlayPlaylistReq",
@@ -96,13 +98,14 @@ inline const char * const *EnumNamesBody() {
     "DiscoveryInfo",
     "DmxFrame",
     "RecordStop",
+    "PlayingCuesList",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameBody(Body e) {
-  if (flatbuffers::IsOutRange(e, Body_NONE, Body_RecordStop)) return "";
+  if (flatbuffers::IsOutRange(e, Body_NONE, Body_PlayingCuesList)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesBody()[index];
 }
@@ -185,6 +188,10 @@ template<> struct BodyTraits<SplayApi::DmxFrame> {
 
 template<> struct BodyTraits<SplayApi::RecordStop> {
   static const Body enum_value = Body_RecordStop;
+};
+
+template<> struct BodyTraits<SplayApi::PlayingCuesList> {
+  static const Body enum_value = Body_PlayingCuesList;
 };
 
 bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body type);
@@ -380,6 +387,9 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const SplayApi::RecordStop *body_as_RecordStop() const {
     return body_type() == SplayApi::Body_RecordStop ? static_cast<const SplayApi::RecordStop *>(body()) : nullptr;
   }
+  const SplayApi::PlayingCuesList *body_as_PlayingCuesList() const {
+    return body_type() == SplayApi::Body_PlayingCuesList ? static_cast<const SplayApi::PlayingCuesList *>(body()) : nullptr;
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_HEADER) &&
@@ -465,6 +475,10 @@ template<> inline const SplayApi::DmxFrame *Message::body_as<SplayApi::DmxFrame>
 
 template<> inline const SplayApi::RecordStop *Message::body_as<SplayApi::RecordStop>() const {
   return body_as_RecordStop();
+}
+
+template<> inline const SplayApi::PlayingCuesList *Message::body_as<SplayApi::PlayingCuesList>() const {
+  return body_as_PlayingCuesList();
 }
 
 struct MessageBuilder {
@@ -583,6 +597,10 @@ inline bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body ty
     }
     case Body_RecordStop: {
       auto ptr = reinterpret_cast<const SplayApi::RecordStop *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case Body_PlayingCuesList: {
+      auto ptr = reinterpret_cast<const SplayApi::PlayingCuesList *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

@@ -10,6 +10,11 @@ enum CUE_TYPE:uint8 {
   EFFECT,
 }
 
+enum CUE_STATUS:uint8 {
+  STOPPED,
+  PLAYING,
+}
+
 table RecordStop {
   time:uint32;
 }
@@ -35,6 +40,7 @@ table StaticFrameArray{
 table CueTable {
   id:uint16;
   type:CUE_TYPE;
+  status:CUE_STATUS;
   name:string;
   duration:uint32;
   frames:[StaticFrameArray];
@@ -55,5 +61,9 @@ table GetAllCuesReq {
 }
 
 table GetAllCuesRes {
+  cues:[CueTable];
+}
+
+table PlayingCuesList {
   cues:[CueTable];
 }

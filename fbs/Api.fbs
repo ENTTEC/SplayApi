@@ -32,7 +32,8 @@ union Body {
   BackupInfo,
   DiscoveryInfo,
   DmxFrame,
-  RecordStop
+  RecordStop,
+  PlayingCuesList,
 }
 
 table Message {
