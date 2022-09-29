@@ -499,7 +499,7 @@ SplayApi.CueTable.getSizePrefixedRootAsCueTable = function(bb, obj) {
 /**
  * @returns {number}
  */
-SplayApi.CueTable.prototype.id = function() {
+SplayApi.CueTable.prototype.cueId = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
@@ -573,10 +573,10 @@ SplayApi.CueTable.startCueTable = function(builder) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {number} id
+ * @param {number} cueId
  */
-SplayApi.CueTable.addId = function(builder, id) {
-  builder.addFieldInt16(0, id, 0);
+SplayApi.CueTable.addCueId = function(builder, cueId) {
+  builder.addFieldInt16(0, cueId, 0);
 };
 
 /**
@@ -659,7 +659,7 @@ SplayApi.CueTable.endCueTable = function(builder) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {number} id
+ * @param {number} cueId
  * @param {SplayApi.CUE_TYPE} type
  * @param {SplayApi.CUE_STATUS} status
  * @param {flatbuffers.Offset} nameOffset
@@ -668,9 +668,9 @@ SplayApi.CueTable.endCueTable = function(builder) {
  * @param {flatbuffers.Offset} configOffset
  * @returns {flatbuffers.Offset}
  */
-SplayApi.CueTable.createCueTable = function(builder, id, type, status, nameOffset, duration, framesOffset, configOffset) {
+SplayApi.CueTable.createCueTable = function(builder, cueId, type, status, nameOffset, duration, framesOffset, configOffset) {
   SplayApi.CueTable.startCueTable(builder);
-  SplayApi.CueTable.addId(builder, id);
+  SplayApi.CueTable.addCueId(builder, cueId);
   SplayApi.CueTable.addType(builder, type);
   SplayApi.CueTable.addStatus(builder, status);
   SplayApi.CueTable.addName(builder, nameOffset);

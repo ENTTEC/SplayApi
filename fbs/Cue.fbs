@@ -34,7 +34,7 @@ table DmxFrame {
 }
 
 table CueTable {
-  id:uint16;
+  cue_id:uint16;
   type:CUE_TYPE;
   status:CUE_STATUS;
   name:string;

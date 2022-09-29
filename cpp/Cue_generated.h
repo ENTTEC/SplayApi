@@ -306,7 +306,7 @@ inline flatbuffers::Offset<DmxFrame> CreateDmxFrameDirect(
 struct CueTable FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef CueTableBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_ID = 4,
+    VT_CUE_ID = 4,
     VT_TYPE = 6,
     VT_STATUS = 8,
     VT_NAME = 10,
@@ -314,8 +314,8 @@ struct CueTable FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_FRAMES = 14,
     VT_CONFIG = 16
   };
-  uint16_t id() const {
-    return GetField<uint16_t>(VT_ID, 0);
+  uint16_t cue_id() const {
+    return GetField<uint16_t>(VT_CUE_ID, 0);
   }
   SplayApi::CUE_TYPE type() const {
     return static_cast<SplayApi::CUE_TYPE>(GetField<uint8_t>(VT_TYPE, 0));
@@ -337,7 +337,7 @@ struct CueTable FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<uint16_t>(verifier, VT_ID) &&
+           VerifyField<uint16_t>(verifier, VT_CUE_ID) &&
            VerifyField<uint8_t>(verifier, VT_TYPE) &&
            VerifyField<uint8_t>(verifier, VT_STATUS) &&
            VerifyOffset(verifier, VT_NAME) &&
@@ -356,8 +356,8 @@ struct CueTableBuilder {
   typedef CueTable Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_id(uint16_t id) {
-    fbb_.AddElement<uint16_t>(CueTable::VT_ID, id, 0);
+  void add_cue_id(uint16_t cue_id) {
+    fbb_.AddElement<uint16_t>(CueTable::VT_CUE_ID, cue_id, 0);
   }
   void add_type(SplayApi::CUE_TYPE type) {
     fbb_.AddElement<uint8_t>(CueTable::VT_TYPE, static_cast<uint8_t>(type), 0);
@@ -391,7 +391,7 @@ struct CueTableBuilder {
 
 inline flatbuffers::Offset<CueTable> CreateCueTable(
     flatbuffers::FlatBufferBuilder &_fbb,
-    uint16_t id = 0,
+    uint16_t cue_id = 0,
     SplayApi::CUE_TYPE type = SplayApi::CUE_TYPE_STATIC,
     SplayApi::CUE_STATUS status = SplayApi::CUE_STATUS_STOPPED,
     flatbuffers::Offset<flatbuffers::String> name = 0,
@@ -403,7 +403,7 @@ inline flatbuffers::Offset<CueTable> CreateCueTable(
   builder_.add_frames(frames);
   builder_.add_duration(duration);
   builder_.add_name(name);
-  builder_.add_id(id);
+  builder_.add_cue_id(cue_id);
   builder_.add_status(status);
   builder_.add_type(type);
   return builder_.Finish();
@@ -411,7 +411,7 @@ inline flatbuffers::Offset<CueTable> CreateCueTable(
 
 inline flatbuffers::Offset<CueTable> CreateCueTableDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
-    uint16_t id = 0,
+    uint16_t cue_id = 0,
     SplayApi::CUE_TYPE type = SplayApi::CUE_TYPE_STATIC,
     SplayApi::CUE_STATUS status = SplayApi::CUE_STATUS_STOPPED,
     const char *name = nullptr,
@@ -422,7 +422,7 @@ inline flatbuffers::Offset<CueTable> CreateCueTableDirect(
   auto frames__ = frames ? _fbb.CreateVector<flatbuffers::Offset<SplayApi::DmxFrame>>(*frames) : 0;
   return SplayApi::CreateCueTable(
       _fbb,
-      id,
+      cue_id,
       type,
       status,
       name__,
