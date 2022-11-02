@@ -92,7 +92,7 @@ enum COMMAND {
   COMMAND_MAX = COMMAND_REFRESH_SETTING
 };
 
-inline const COMMAND (&EnumValuesCOMMAND())[78] {
+inline const COMMAND (&EnumValuesCOMMAND())[79] {
   static const COMMAND values[] = {
     COMMAND_PLAY,
     COMMAND_PAUSE,
