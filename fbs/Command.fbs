@@ -38,6 +38,7 @@ enum COMMAND : uint8 {
   GET_ALL_CUES = 29, // Get list of all cues
   EXIT_CUE_EDIT = 30, // Frontend notifies on Cue editing finished
   DUPLICATE_CUE = 31, // Duplicate cue by given id
+  SET_CUE_ID = 32, // Update id of existing cue
 
   UPDATE_STORAGE_PATH = 34, // Update storage path using internal DB check for BASE_PATH setting
 
