@@ -717,7 +717,7 @@ For **Effect Cue** color filtering parameters can be passed to modify Cue output
     "cue_id": 1,
     "config": {
       "effect_type": "gradient",
-      "filter": { "r": 255, "g": 179, "b": 28, "w": 150, "l": 100 }
+      "filter": { "r": 255, "g": 179, "b": 28, "w": 150 }
     }
   }
 }
