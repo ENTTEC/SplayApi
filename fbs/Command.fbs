@@ -95,6 +95,7 @@ enum COMMAND : uint8 {
   APPLY_RESTORE = 103, // Internal usage, needs local path for restore archive
 
   DISCOVER_DEVICES = 110, // Discover devices on the network
+  PLAYLIST_RESYNC = 111, // Restart playlist from 0
 
   SHUTDOWN = 222, // Gracefully shutdown S-Play
   REFRESH_SETTING = 254,
