@@ -5,7 +5,7 @@ This HTTP API allows for control over the ENTTEC S-Play (SKU: 70092), playback e
 
 ENTTEC recommend that the S-Plays IP is set to be static before communicating using this API.
 
-To ensure this API functions as intended, ensure you are running a software version of at least **v2.1**.
+To ensure this API functions as intended, ensure you are running a software version of at least **v2.2**.
 
 ## HTTP POST Commands for S-Play's playback.
 Enum COMMAND below presents the list of available playback commands.
