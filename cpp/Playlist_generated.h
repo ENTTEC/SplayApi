@@ -87,31 +87,27 @@ struct Playlist FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_PLAYLIST_ID = 4,
     VT_ORDER = 6,
-    VT_GROUP = 8,
-    VT_STATUS = 10,
-    VT_CURRENT_TIME = 12,
-    VT_DURATION = 14,
-    VT_INTENSITY = 16,
-    VT_NAME = 18,
-    VT_WAITING_TRIGGERS = 20,
-    VT_HIDE_FROM_HOME = 22,
-    VT_START_TRIGGER = 24,
-    VT_STOP_TRIGGER = 26,
-    VT_TRIGGERS = 28,
-    VT_EVENTS = 30,
-    VT_TRACK1 = 32,
-    VT_TRACK2 = 34,
-    VT_TRACK3 = 36,
-    VT_TRACK4 = 38
+    VT_STATUS = 8,
+    VT_CURRENT_TIME = 10,
+    VT_DURATION = 12,
+    VT_INTENSITY = 14,
+    VT_NAME = 16,
+    VT_WAITING_TRIGGERS = 18,
+    VT_HIDE_FROM_HOME = 20,
+    VT_START_TRIGGER = 22,
+    VT_STOP_TRIGGER = 24,
+    VT_TRIGGERS = 26,
+    VT_EVENTS = 28,
+    VT_TRACK1 = 30,
+    VT_TRACK2 = 32,
+    VT_TRACK3 = 34,
+    VT_TRACK4 = 36
   };
   uint16_t playlist_id() const {
     return GetField<uint16_t>(VT_PLAYLIST_ID, 0);
   }
   uint16_t order() const {
     return GetField<uint16_t>(VT_ORDER, 0);
-  }
-  uint16_t group() const {
-    return GetField<uint16_t>(VT_GROUP, 0);
   }
   SplayApi::PLAYLIST_STATUS status() const {
     return static_cast<SplayApi::PLAYLIST_STATUS>(GetField<uint8_t>(VT_STATUS, 0));
@@ -162,7 +158,6 @@ struct Playlist FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyField<uint16_t>(verifier, VT_PLAYLIST_ID) &&
            VerifyField<uint16_t>(verifier, VT_ORDER) &&
-           VerifyField<uint16_t>(verifier, VT_GROUP) &&
            VerifyField<uint8_t>(verifier, VT_STATUS) &&
            VerifyField<uint32_t>(verifier, VT_CURRENT_TIME) &&
            VerifyField<uint32_t>(verifier, VT_DURATION) &&
@@ -206,9 +201,6 @@ struct PlaylistBuilder {
   }
   void add_order(uint16_t order) {
     fbb_.AddElement<uint16_t>(Playlist::VT_ORDER, order, 0);
-  }
-  void add_group(uint16_t group) {
-    fbb_.AddElement<uint16_t>(Playlist::VT_GROUP, group, 0);
   }
   void add_status(SplayApi::PLAYLIST_STATUS status) {
     fbb_.AddElement<uint8_t>(Playlist::VT_STATUS, static_cast<uint8_t>(status), 0);
@@ -271,7 +263,6 @@ inline flatbuffers::Offset<Playlist> CreatePlaylist(
     flatbuffers::FlatBufferBuilder &_fbb,
     uint16_t playlist_id = 0,
     uint16_t order = 0,
-    uint16_t group = 0,
     SplayApi::PLAYLIST_STATUS status = SplayApi::PLAYLIST_STATUS_IDLE,
     uint32_t current_time = 0,
     uint32_t duration = 0,
@@ -299,7 +290,6 @@ inline flatbuffers::Offset<Playlist> CreatePlaylist(
   builder_.add_name(name);
   builder_.add_duration(duration);
   builder_.add_current_time(current_time);
-  builder_.add_group(group);
   builder_.add_order(order);
   builder_.add_playlist_id(playlist_id);
   builder_.add_hide_from_home(hide_from_home);
@@ -313,7 +303,6 @@ inline flatbuffers::Offset<Playlist> CreatePlaylistDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     uint16_t playlist_id = 0,
     uint16_t order = 0,
-    uint16_t group = 0,
     SplayApi::PLAYLIST_STATUS status = SplayApi::PLAYLIST_STATUS_IDLE,
     uint32_t current_time = 0,
     uint32_t duration = 0,
@@ -340,7 +329,6 @@ inline flatbuffers::Offset<Playlist> CreatePlaylistDirect(
       _fbb,
       playlist_id,
       order,
-      group,
       status,
       current_time,
       duration,
