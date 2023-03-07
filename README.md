@@ -5,7 +5,7 @@ This HTTP API allows for control over the ENTTEC S-Play (SKU: 70092), playback e
 
 ENTTEC recommend that the S-Plays IP is set to be static before communicating using this API.
 
-To ensure this API functions as intended, ensure you are running a software version of at least **v2.1**.
+To ensure this API functions as intended, ensure you are running a software version of at least **v2.2**.
 
 ## HTTP POST Commands for S-Play's playback.
 Enum COMMAND below presents the list of available playback commands.
@@ -67,6 +67,7 @@ enum COMMAND {
 
   SET_PLAYLIST_TIME_POSITION = 22, // Set playback position of a playlist
   SET_WEBSOCKET_INPUT = 23, // Sets universe to monitor in Cue recording, use Universe number or WEBSOCKET_OUTPUT:NOTHING/ALL
+  SET_PLAYLIST_ID = 24, // Update playlist id to the new id
 
   PLAY_CUE = 25, // Play cue with given id
   PAUSE_CUE = 26, // Pause cue with given id
@@ -75,6 +76,8 @@ enum COMMAND {
   GET_ALL_CUES = 29, // Get list of all cues
   EXIT_CUE_EDIT = 30, // Frontend notifies on Cue editing finished
   DUPLICATE_CUE = 31, // Duplicate cue by given id
+  SET_CUE_ID = 32, // Update id of existing cue
+  SET_DMX_CUE = 33, // Generate DMX universes states based on params, implements Static Cue "SET DMX" logic
 
   UPDATE_STORAGE_PATH = 34, // Update storage path using internal DB check for BASE_PATH setting
 
@@ -132,7 +135,6 @@ enum COMMAND {
   DISCOVER_DEVICES = 110, // Discover devices on the network
 
   SHUTDOWN = 222, // Gracefully shutdown S-Play
-  
   REFRESH_SETTING = 254,
 }
 ```
@@ -526,6 +528,17 @@ Response:
 { "result": true }
 ```
 
+#### SET_PLAYLIST_ID: Update playlist_id with the new_id
+Request:
+```json
+  {
+      "command": 24,"playlist_id": 25,"new_id": 42
+  }
+```
+Response:
+```json
+{ "result": true }
+```
 
 -------------------------------------------------
 
@@ -662,8 +675,9 @@ Response:
 { "result": true }
 ```
 
-Also customized cue can be passed e.g. to preview before save
-Here Static cue with universe 1 & 2 enabled and corresponding frames is passed 
+Also customized cue can be passed e.g. to preview before save.
+
+Here Static cue with universe 1 & 2 enabled and corresponding frames is passed:
 ```json
 {
   "command": 25,
@@ -691,6 +705,24 @@ Here Static cue with universe 1 & 2 enabled and corresponding frames is passed
 }
 ```
 Response:
+```json
+{ "result": true }
+```
+
+For **Effect Cue** color filtering parameters can be passed to modify Cue output in realtime:
+```json
+{
+  "command": 25,
+  "cue": {
+    "cue_id": 1,
+    "config": {
+      "effect_type": "gradient",
+      "filter": { "r": 255, "g": 179, "b": 28, "w": 150 }
+    }
+  }
+}
+```
+Response if Cue exists and is Effect:
 ```json
 { "result": true }
 ```
@@ -890,6 +922,34 @@ Response:
 { "result": true }
 ```
 
+#### SET_CUE_ID: Update id of existing cue
+Request to update Cue with id=1 to id=2:
+```json
+{ "command": 32, "cue_id": 1, "new_id": 2 }
+```
+Response if _new_id_ is unique and update is successful:
+```json
+{ "result": true }
+```
+ 
+#### SET_DMX_CUE: Generate DMX universes states based on params, implements Static Cue "SET DMX" logic
+Request to set Static Cue to orange RGB in all 32 universes:
+```json
+{
+  "command": 33,
+  "cue_id": 6,
+  "universes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
+  "ch_start": 0,
+  "ch_stop": 511,
+  "pixel_order": "RGB",
+  "color": { "r": 255, "g": 125, "b": 0, "w": 0 }
+}
+```
+Response:
+```json
+{ "result": true }
+```
+To store Cue's changes **SAVE_CUE** without _frames_ param needs to be sent.
 
 -------------------------------------------------
 

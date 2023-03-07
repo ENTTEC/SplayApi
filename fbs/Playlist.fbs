@@ -25,6 +25,7 @@ enum PLAYLIST_STATUS:uint8 {
 table Playlist {
   playlist_id:uint16;
   order:uint16;
+  group:uint16;
   status:PLAYLIST_STATUS;
   current_time:uint32;
   duration:uint32;

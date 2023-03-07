@@ -27,7 +27,10 @@ SplayApi.Body = {
   SystemInfo: 14,
   RestorePackage: 15,
   BackupInfo: 16,
-  DevicesInfo: 17
+  DiscoveryInfo: 17,
+  DmxFrame: 18,
+  RecordStop: 19,
+  PlayingCuesList: 20
 };
 
 /**
@@ -51,7 +54,10 @@ SplayApi.BodyName = {
   '14': 'SystemInfo',
   '15': 'RestorePackage',
   '16': 'BackupInfo',
-  '17': 'DevicesInfo'
+  '17': 'DiscoveryInfo',
+  '18': 'DmxFrame',
+  '19': 'RecordStop',
+  '20': 'PlayingCuesList'
 };
 
 /**

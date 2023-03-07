@@ -41,12 +41,15 @@ enum Body {
   Body_SystemInfo = 14,
   Body_RestorePackage = 15,
   Body_BackupInfo = 16,
-  Body_DevicesInfo = 17,
+  Body_DiscoveryInfo = 17,
+  Body_DmxFrame = 18,
+  Body_RecordStop = 19,
+  Body_PlayingCuesList = 20,
   Body_MIN = Body_NONE,
-  Body_MAX = Body_DevicesInfo
+  Body_MAX = Body_PlayingCuesList
 };
 
-inline const Body (&EnumValuesBody())[18] {
+inline const Body (&EnumValuesBody())[21] {
   static const Body values[] = {
     Body_NONE,
     Body_StatusRes,
@@ -65,13 +68,16 @@ inline const Body (&EnumValuesBody())[18] {
     Body_SystemInfo,
     Body_RestorePackage,
     Body_BackupInfo,
-    Body_DevicesInfo
+    Body_DiscoveryInfo,
+    Body_DmxFrame,
+    Body_RecordStop,
+    Body_PlayingCuesList
   };
   return values;
 }
 
 inline const char * const *EnumNamesBody() {
-  static const char * const names[19] = {
+  static const char * const names[22] = {
     "NONE",
     "StatusRes",
     "PlayPlaylistReq",
@@ -89,14 +95,17 @@ inline const char * const *EnumNamesBody() {
     "SystemInfo",
     "RestorePackage",
     "BackupInfo",
-    "DevicesInfo",
+    "DiscoveryInfo",
+    "DmxFrame",
+    "RecordStop",
+    "PlayingCuesList",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameBody(Body e) {
-  if (flatbuffers::IsOutRange(e, Body_NONE, Body_DevicesInfo)) return "";
+  if (flatbuffers::IsOutRange(e, Body_NONE, Body_PlayingCuesList)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesBody()[index];
 }
@@ -169,8 +178,20 @@ template<> struct BodyTraits<SplayApi::BackupInfo> {
   static const Body enum_value = Body_BackupInfo;
 };
 
-template<> struct BodyTraits<SplayApi::DevicesInfo> {
-  static const Body enum_value = Body_DevicesInfo;
+template<> struct BodyTraits<SplayApi::DiscoveryInfo> {
+  static const Body enum_value = Body_DiscoveryInfo;
+};
+
+template<> struct BodyTraits<SplayApi::DmxFrame> {
+  static const Body enum_value = Body_DmxFrame;
+};
+
+template<> struct BodyTraits<SplayApi::RecordStop> {
+  static const Body enum_value = Body_RecordStop;
+};
+
+template<> struct BodyTraits<SplayApi::PlayingCuesList> {
+  static const Body enum_value = Body_PlayingCuesList;
 };
 
 bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body type);
@@ -357,8 +378,17 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const SplayApi::BackupInfo *body_as_BackupInfo() const {
     return body_type() == SplayApi::Body_BackupInfo ? static_cast<const SplayApi::BackupInfo *>(body()) : nullptr;
   }
-  const SplayApi::DevicesInfo *body_as_DevicesInfo() const {
-    return body_type() == SplayApi::Body_DevicesInfo ? static_cast<const SplayApi::DevicesInfo *>(body()) : nullptr;
+  const SplayApi::DiscoveryInfo *body_as_DiscoveryInfo() const {
+    return body_type() == SplayApi::Body_DiscoveryInfo ? static_cast<const SplayApi::DiscoveryInfo *>(body()) : nullptr;
+  }
+  const SplayApi::DmxFrame *body_as_DmxFrame() const {
+    return body_type() == SplayApi::Body_DmxFrame ? static_cast<const SplayApi::DmxFrame *>(body()) : nullptr;
+  }
+  const SplayApi::RecordStop *body_as_RecordStop() const {
+    return body_type() == SplayApi::Body_RecordStop ? static_cast<const SplayApi::RecordStop *>(body()) : nullptr;
+  }
+  const SplayApi::PlayingCuesList *body_as_PlayingCuesList() const {
+    return body_type() == SplayApi::Body_PlayingCuesList ? static_cast<const SplayApi::PlayingCuesList *>(body()) : nullptr;
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -435,8 +465,20 @@ template<> inline const SplayApi::BackupInfo *Message::body_as<SplayApi::BackupI
   return body_as_BackupInfo();
 }
 
-template<> inline const SplayApi::DevicesInfo *Message::body_as<SplayApi::DevicesInfo>() const {
-  return body_as_DevicesInfo();
+template<> inline const SplayApi::DiscoveryInfo *Message::body_as<SplayApi::DiscoveryInfo>() const {
+  return body_as_DiscoveryInfo();
+}
+
+template<> inline const SplayApi::DmxFrame *Message::body_as<SplayApi::DmxFrame>() const {
+  return body_as_DmxFrame();
+}
+
+template<> inline const SplayApi::RecordStop *Message::body_as<SplayApi::RecordStop>() const {
+  return body_as_RecordStop();
+}
+
+template<> inline const SplayApi::PlayingCuesList *Message::body_as<SplayApi::PlayingCuesList>() const {
+  return body_as_PlayingCuesList();
 }
 
 struct MessageBuilder {
@@ -545,8 +587,20 @@ inline bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body ty
       auto ptr = reinterpret_cast<const SplayApi::BackupInfo *>(obj);
       return verifier.VerifyTable(ptr);
     }
-    case Body_DevicesInfo: {
-      auto ptr = reinterpret_cast<const SplayApi::DevicesInfo *>(obj);
+    case Body_DiscoveryInfo: {
+      auto ptr = reinterpret_cast<const SplayApi::DiscoveryInfo *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case Body_DmxFrame: {
+      auto ptr = reinterpret_cast<const SplayApi::DmxFrame *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case Body_RecordStop: {
+      auto ptr = reinterpret_cast<const SplayApi::RecordStop *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case Body_PlayingCuesList: {
+      auto ptr = reinterpret_cast<const SplayApi::PlayingCuesList *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;
