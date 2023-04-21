@@ -11,6 +11,9 @@ namespace SplayApi {
 struct GetFirmwareUpdateStatus;
 struct GetFirmwareUpdateStatusBuilder;
 
+struct GetRestoreUpdateStatus;
+struct GetRestoreUpdateStatusBuilder;
+
 struct SystemInfo;
 struct SystemInfoBuilder;
 
@@ -385,6 +388,70 @@ inline flatbuffers::Offset<GetFirmwareUpdateStatus> CreateGetFirmwareUpdateStatu
       error__);
 }
 
+struct GetRestoreUpdateStatus FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef GetRestoreUpdateStatusBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PROGRESS = 4,
+    VT_ERROR = 6
+  };
+  uint8_t progress() const {
+    return GetField<uint8_t>(VT_PROGRESS, 0);
+  }
+  const flatbuffers::String *error() const {
+    return GetPointer<const flatbuffers::String *>(VT_ERROR);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_PROGRESS) &&
+           VerifyOffset(verifier, VT_ERROR) &&
+           verifier.VerifyString(error()) &&
+           verifier.EndTable();
+  }
+};
+
+struct GetRestoreUpdateStatusBuilder {
+  typedef GetRestoreUpdateStatus Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_progress(uint8_t progress) {
+    fbb_.AddElement<uint8_t>(GetRestoreUpdateStatus::VT_PROGRESS, progress, 0);
+  }
+  void add_error(flatbuffers::Offset<flatbuffers::String> error) {
+    fbb_.AddOffset(GetRestoreUpdateStatus::VT_ERROR, error);
+  }
+  explicit GetRestoreUpdateStatusBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  GetRestoreUpdateStatusBuilder &operator=(const GetRestoreUpdateStatusBuilder &);
+  flatbuffers::Offset<GetRestoreUpdateStatus> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<GetRestoreUpdateStatus>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<GetRestoreUpdateStatus> CreateGetRestoreUpdateStatus(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint8_t progress = 0,
+    flatbuffers::Offset<flatbuffers::String> error = 0) {
+  GetRestoreUpdateStatusBuilder builder_(_fbb);
+  builder_.add_error(error);
+  builder_.add_progress(progress);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<GetRestoreUpdateStatus> CreateGetRestoreUpdateStatusDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint8_t progress = 0,
+    const char *error = nullptr) {
+  auto error__ = error ? _fbb.CreateString(error) : 0;
+  return SplayApi::CreateGetRestoreUpdateStatus(
+      _fbb,
+      progress,
+      error__);
+}
+
 struct SystemInfo FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef SystemInfoBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -464,20 +531,16 @@ inline flatbuffers::Offset<SystemInfo> CreateSystemInfoDirect(
 struct RestorePackage FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef RestorePackageBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_IS_START = 4,
-    VT_IS_END = 6,
-    VT_SEQUENCE = 8,
-    VT_DESTINATION = 10,
-    VT_DATA = 12
+    VT_CURRENT_SEQUENCE = 4,
+    VT_LAST_SEQUENCE = 6,
+    VT_DESTINATION = 8,
+    VT_DATA = 10
   };
-  bool is_start() const {
-    return GetField<uint8_t>(VT_IS_START, 0) != 0;
+  uint16_t current_sequence() const {
+    return GetField<uint16_t>(VT_CURRENT_SEQUENCE, 0);
   }
-  bool is_end() const {
-    return GetField<uint8_t>(VT_IS_END, 0) != 0;
-  }
-  uint16_t sequence() const {
-    return GetField<uint16_t>(VT_SEQUENCE, 0);
+  uint16_t last_sequence() const {
+    return GetField<uint16_t>(VT_LAST_SEQUENCE, 0);
   }
   const flatbuffers::String *destination() const {
     return GetPointer<const flatbuffers::String *>(VT_DESTINATION);
@@ -487,9 +550,8 @@ struct RestorePackage FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<uint8_t>(verifier, VT_IS_START) &&
-           VerifyField<uint8_t>(verifier, VT_IS_END) &&
-           VerifyField<uint16_t>(verifier, VT_SEQUENCE) &&
+           VerifyField<uint16_t>(verifier, VT_CURRENT_SEQUENCE) &&
+           VerifyField<uint16_t>(verifier, VT_LAST_SEQUENCE) &&
            VerifyOffset(verifier, VT_DESTINATION) &&
            verifier.VerifyString(destination()) &&
            VerifyOffset(verifier, VT_DATA) &&
@@ -502,14 +564,11 @@ struct RestorePackageBuilder {
   typedef RestorePackage Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_is_start(bool is_start) {
-    fbb_.AddElement<uint8_t>(RestorePackage::VT_IS_START, static_cast<uint8_t>(is_start), 0);
+  void add_current_sequence(uint16_t current_sequence) {
+    fbb_.AddElement<uint16_t>(RestorePackage::VT_CURRENT_SEQUENCE, current_sequence, 0);
   }
-  void add_is_end(bool is_end) {
-    fbb_.AddElement<uint8_t>(RestorePackage::VT_IS_END, static_cast<uint8_t>(is_end), 0);
-  }
-  void add_sequence(uint16_t sequence) {
-    fbb_.AddElement<uint16_t>(RestorePackage::VT_SEQUENCE, sequence, 0);
+  void add_last_sequence(uint16_t last_sequence) {
+    fbb_.AddElement<uint16_t>(RestorePackage::VT_LAST_SEQUENCE, last_sequence, 0);
   }
   void add_destination(flatbuffers::Offset<flatbuffers::String> destination) {
     fbb_.AddOffset(RestorePackage::VT_DESTINATION, destination);
@@ -531,34 +590,30 @@ struct RestorePackageBuilder {
 
 inline flatbuffers::Offset<RestorePackage> CreateRestorePackage(
     flatbuffers::FlatBufferBuilder &_fbb,
-    bool is_start = false,
-    bool is_end = false,
-    uint16_t sequence = 0,
+    uint16_t current_sequence = 0,
+    uint16_t last_sequence = 0,
     flatbuffers::Offset<flatbuffers::String> destination = 0,
     flatbuffers::Offset<flatbuffers::Vector<int8_t>> data = 0) {
   RestorePackageBuilder builder_(_fbb);
   builder_.add_data(data);
   builder_.add_destination(destination);
-  builder_.add_sequence(sequence);
-  builder_.add_is_end(is_end);
-  builder_.add_is_start(is_start);
+  builder_.add_last_sequence(last_sequence);
+  builder_.add_current_sequence(current_sequence);
   return builder_.Finish();
 }
 
 inline flatbuffers::Offset<RestorePackage> CreateRestorePackageDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
-    bool is_start = false,
-    bool is_end = false,
-    uint16_t sequence = 0,
+    uint16_t current_sequence = 0,
+    uint16_t last_sequence = 0,
     const char *destination = nullptr,
     const std::vector<int8_t> *data = nullptr) {
   auto destination__ = destination ? _fbb.CreateString(destination) : 0;
   auto data__ = data ? _fbb.CreateVector<int8_t>(*data) : 0;
   return SplayApi::CreateRestorePackage(
       _fbb,
-      is_start,
-      is_end,
-      sequence,
+      current_sequence,
+      last_sequence,
       destination__,
       data__);
 }

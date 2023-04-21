@@ -30,7 +30,8 @@ SplayApi.Body = {
   DiscoveryInfo: 17,
   DmxFrame: 18,
   RecordStop: 19,
-  PlayingCuesList: 20
+  PlayingCuesList: 20,
+  GetRestoreUpdateStatus: 21
 };
 
 /**
@@ -57,7 +58,8 @@ SplayApi.BodyName = {
   '17': 'DiscoveryInfo',
   '18': 'DmxFrame',
   '19': 'RecordStop',
-  '20': 'PlayingCuesList'
+  '20': 'PlayingCuesList',
+  '21': 'GetRestoreUpdateStatus'
 };
 
 /**

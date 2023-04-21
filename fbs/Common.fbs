@@ -59,6 +59,12 @@ table GetFirmwareUpdateStatus
   error: string;
 }
 
+table GetRestoreUpdateStatus
+{
+  progress: uint8;
+  error: string;
+}
+
 table SystemInfo
 {
   cpu_usage: float;
@@ -68,9 +74,8 @@ table SystemInfo
 
 table RestorePackage
 {
-  is_start: bool;
-  is_end: bool;
-  sequence: uint16;
+  current_sequence: uint16;
+  last_sequence: uint16;
   destination: string;
   data: [byte];
 }
