@@ -8,17 +8,17 @@
 
 namespace SplayApi {
 
-struct GetFirmwareUpdateStatus;
-struct GetFirmwareUpdateStatusBuilder;
-
-struct GetRestoreUpdateStatus;
-struct GetRestoreUpdateStatusBuilder;
+struct GetUploadStatus;
+struct GetUploadStatusBuilder;
 
 struct SystemInfo;
 struct SystemInfoBuilder;
 
 struct RestorePackage;
 struct RestorePackageBuilder;
+
+struct FirmwarePackage;
+struct FirmwarePackageBuilder;
 
 struct BackupInfo;
 struct BackupInfoBuilder;
@@ -324,14 +324,18 @@ inline const char *EnumNameSETTING(SETTING e) {
   return EnumNamesSETTING()[index];
 }
 
-struct GetFirmwareUpdateStatus FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  typedef GetFirmwareUpdateStatusBuilder Builder;
+struct GetUploadStatus FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef GetUploadStatusBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_PROGRESS = 4,
-    VT_ERROR = 6
+    VT_SEQUENCE = 6,
+    VT_ERROR = 8
   };
   uint8_t progress() const {
     return GetField<uint8_t>(VT_PROGRESS, 0);
+  }
+  uint16_t sequence() const {
+    return GetField<uint16_t>(VT_SEQUENCE, 0);
   }
   const flatbuffers::String *error() const {
     return GetPointer<const flatbuffers::String *>(VT_ERROR);
@@ -339,116 +343,60 @@ struct GetFirmwareUpdateStatus FLATBUFFERS_FINAL_CLASS : private flatbuffers::Ta
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_PROGRESS) &&
+           VerifyField<uint16_t>(verifier, VT_SEQUENCE) &&
            VerifyOffset(verifier, VT_ERROR) &&
            verifier.VerifyString(error()) &&
            verifier.EndTable();
   }
 };
 
-struct GetFirmwareUpdateStatusBuilder {
-  typedef GetFirmwareUpdateStatus Table;
+struct GetUploadStatusBuilder {
+  typedef GetUploadStatus Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
   void add_progress(uint8_t progress) {
-    fbb_.AddElement<uint8_t>(GetFirmwareUpdateStatus::VT_PROGRESS, progress, 0);
+    fbb_.AddElement<uint8_t>(GetUploadStatus::VT_PROGRESS, progress, 0);
+  }
+  void add_sequence(uint16_t sequence) {
+    fbb_.AddElement<uint16_t>(GetUploadStatus::VT_SEQUENCE, sequence, 0);
   }
   void add_error(flatbuffers::Offset<flatbuffers::String> error) {
-    fbb_.AddOffset(GetFirmwareUpdateStatus::VT_ERROR, error);
+    fbb_.AddOffset(GetUploadStatus::VT_ERROR, error);
   }
-  explicit GetFirmwareUpdateStatusBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+  explicit GetUploadStatusBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  GetFirmwareUpdateStatusBuilder &operator=(const GetFirmwareUpdateStatusBuilder &);
-  flatbuffers::Offset<GetFirmwareUpdateStatus> Finish() {
+  GetUploadStatusBuilder &operator=(const GetUploadStatusBuilder &);
+  flatbuffers::Offset<GetUploadStatus> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<GetFirmwareUpdateStatus>(end);
+    auto o = flatbuffers::Offset<GetUploadStatus>(end);
     return o;
   }
 };
 
-inline flatbuffers::Offset<GetFirmwareUpdateStatus> CreateGetFirmwareUpdateStatus(
+inline flatbuffers::Offset<GetUploadStatus> CreateGetUploadStatus(
     flatbuffers::FlatBufferBuilder &_fbb,
     uint8_t progress = 0,
+    uint16_t sequence = 0,
     flatbuffers::Offset<flatbuffers::String> error = 0) {
-  GetFirmwareUpdateStatusBuilder builder_(_fbb);
+  GetUploadStatusBuilder builder_(_fbb);
   builder_.add_error(error);
+  builder_.add_sequence(sequence);
   builder_.add_progress(progress);
   return builder_.Finish();
 }
 
-inline flatbuffers::Offset<GetFirmwareUpdateStatus> CreateGetFirmwareUpdateStatusDirect(
+inline flatbuffers::Offset<GetUploadStatus> CreateGetUploadStatusDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     uint8_t progress = 0,
+    uint16_t sequence = 0,
     const char *error = nullptr) {
   auto error__ = error ? _fbb.CreateString(error) : 0;
-  return SplayApi::CreateGetFirmwareUpdateStatus(
+  return SplayApi::CreateGetUploadStatus(
       _fbb,
       progress,
-      error__);
-}
-
-struct GetRestoreUpdateStatus FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  typedef GetRestoreUpdateStatusBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_PROGRESS = 4,
-    VT_ERROR = 6
-  };
-  uint8_t progress() const {
-    return GetField<uint8_t>(VT_PROGRESS, 0);
-  }
-  const flatbuffers::String *error() const {
-    return GetPointer<const flatbuffers::String *>(VT_ERROR);
-  }
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<uint8_t>(verifier, VT_PROGRESS) &&
-           VerifyOffset(verifier, VT_ERROR) &&
-           verifier.VerifyString(error()) &&
-           verifier.EndTable();
-  }
-};
-
-struct GetRestoreUpdateStatusBuilder {
-  typedef GetRestoreUpdateStatus Table;
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  void add_progress(uint8_t progress) {
-    fbb_.AddElement<uint8_t>(GetRestoreUpdateStatus::VT_PROGRESS, progress, 0);
-  }
-  void add_error(flatbuffers::Offset<flatbuffers::String> error) {
-    fbb_.AddOffset(GetRestoreUpdateStatus::VT_ERROR, error);
-  }
-  explicit GetRestoreUpdateStatusBuilder(flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  GetRestoreUpdateStatusBuilder &operator=(const GetRestoreUpdateStatusBuilder &);
-  flatbuffers::Offset<GetRestoreUpdateStatus> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<GetRestoreUpdateStatus>(end);
-    return o;
-  }
-};
-
-inline flatbuffers::Offset<GetRestoreUpdateStatus> CreateGetRestoreUpdateStatus(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    uint8_t progress = 0,
-    flatbuffers::Offset<flatbuffers::String> error = 0) {
-  GetRestoreUpdateStatusBuilder builder_(_fbb);
-  builder_.add_error(error);
-  builder_.add_progress(progress);
-  return builder_.Finish();
-}
-
-inline flatbuffers::Offset<GetRestoreUpdateStatus> CreateGetRestoreUpdateStatusDirect(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    uint8_t progress = 0,
-    const char *error = nullptr) {
-  auto error__ = error ? _fbb.CreateString(error) : 0;
-  return SplayApi::CreateGetRestoreUpdateStatus(
-      _fbb,
-      progress,
+      sequence,
       error__);
 }
 
@@ -615,6 +563,82 @@ inline flatbuffers::Offset<RestorePackage> CreateRestorePackageDirect(
       current_sequence,
       last_sequence,
       destination__,
+      data__);
+}
+
+struct FirmwarePackage FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef FirmwarePackageBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CURRENT_SEQUENCE = 4,
+    VT_LAST_SEQUENCE = 6,
+    VT_DATA = 8
+  };
+  uint16_t current_sequence() const {
+    return GetField<uint16_t>(VT_CURRENT_SEQUENCE, 0);
+  }
+  uint16_t last_sequence() const {
+    return GetField<uint16_t>(VT_LAST_SEQUENCE, 0);
+  }
+  const flatbuffers::Vector<int8_t> *data() const {
+    return GetPointer<const flatbuffers::Vector<int8_t> *>(VT_DATA);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint16_t>(verifier, VT_CURRENT_SEQUENCE) &&
+           VerifyField<uint16_t>(verifier, VT_LAST_SEQUENCE) &&
+           VerifyOffset(verifier, VT_DATA) &&
+           verifier.VerifyVector(data()) &&
+           verifier.EndTable();
+  }
+};
+
+struct FirmwarePackageBuilder {
+  typedef FirmwarePackage Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_current_sequence(uint16_t current_sequence) {
+    fbb_.AddElement<uint16_t>(FirmwarePackage::VT_CURRENT_SEQUENCE, current_sequence, 0);
+  }
+  void add_last_sequence(uint16_t last_sequence) {
+    fbb_.AddElement<uint16_t>(FirmwarePackage::VT_LAST_SEQUENCE, last_sequence, 0);
+  }
+  void add_data(flatbuffers::Offset<flatbuffers::Vector<int8_t>> data) {
+    fbb_.AddOffset(FirmwarePackage::VT_DATA, data);
+  }
+  explicit FirmwarePackageBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  FirmwarePackageBuilder &operator=(const FirmwarePackageBuilder &);
+  flatbuffers::Offset<FirmwarePackage> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<FirmwarePackage>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<FirmwarePackage> CreateFirmwarePackage(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint16_t current_sequence = 0,
+    uint16_t last_sequence = 0,
+    flatbuffers::Offset<flatbuffers::Vector<int8_t>> data = 0) {
+  FirmwarePackageBuilder builder_(_fbb);
+  builder_.add_data(data);
+  builder_.add_last_sequence(last_sequence);
+  builder_.add_current_sequence(current_sequence);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<FirmwarePackage> CreateFirmwarePackageDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint16_t current_sequence = 0,
+    uint16_t last_sequence = 0,
+    const std::vector<int8_t> *data = nullptr) {
+  auto data__ = data ? _fbb.CreateVector<int8_t>(*data) : 0;
+  return SplayApi::CreateFirmwarePackage(
+      _fbb,
+      current_sequence,
+      last_sequence,
       data__);
 }
 

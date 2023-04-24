@@ -37,7 +37,7 @@ enum Body {
   Body_GetCueRes = 10,
   Body_GetAllCuesReq = 11,
   Body_GetAllCuesRes = 12,
-  Body_GetFirmwareUpdateStatus = 13,
+  Body_GetUploadStatus = 13,
   Body_SystemInfo = 14,
   Body_RestorePackage = 15,
   Body_BackupInfo = 16,
@@ -45,12 +45,11 @@ enum Body {
   Body_DmxFrame = 18,
   Body_RecordStop = 19,
   Body_PlayingCuesList = 20,
-  Body_GetRestoreUpdateStatus = 21,
   Body_MIN = Body_NONE,
-  Body_MAX = Body_GetRestoreUpdateStatus
+  Body_MAX = Body_PlayingCuesList
 };
 
-inline const Body (&EnumValuesBody())[22] {
+inline const Body (&EnumValuesBody())[21] {
   static const Body values[] = {
     Body_NONE,
     Body_StatusRes,
@@ -65,21 +64,20 @@ inline const Body (&EnumValuesBody())[22] {
     Body_GetCueRes,
     Body_GetAllCuesReq,
     Body_GetAllCuesRes,
-    Body_GetFirmwareUpdateStatus,
+    Body_GetUploadStatus,
     Body_SystemInfo,
     Body_RestorePackage,
     Body_BackupInfo,
     Body_DiscoveryInfo,
     Body_DmxFrame,
     Body_RecordStop,
-    Body_PlayingCuesList,
-    Body_GetRestoreUpdateStatus
+    Body_PlayingCuesList
   };
   return values;
 }
 
 inline const char * const *EnumNamesBody() {
-  static const char * const names[23] = {
+  static const char * const names[22] = {
     "NONE",
     "StatusRes",
     "PlayPlaylistReq",
@@ -93,7 +91,7 @@ inline const char * const *EnumNamesBody() {
     "GetCueRes",
     "GetAllCuesReq",
     "GetAllCuesRes",
-    "GetFirmwareUpdateStatus",
+    "GetUploadStatus",
     "SystemInfo",
     "RestorePackage",
     "BackupInfo",
@@ -101,14 +99,13 @@ inline const char * const *EnumNamesBody() {
     "DmxFrame",
     "RecordStop",
     "PlayingCuesList",
-    "GetRestoreUpdateStatus",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameBody(Body e) {
-  if (flatbuffers::IsOutRange(e, Body_NONE, Body_GetRestoreUpdateStatus)) return "";
+  if (flatbuffers::IsOutRange(e, Body_NONE, Body_PlayingCuesList)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesBody()[index];
 }
@@ -165,8 +162,8 @@ template<> struct BodyTraits<SplayApi::GetAllCuesRes> {
   static const Body enum_value = Body_GetAllCuesRes;
 };
 
-template<> struct BodyTraits<SplayApi::GetFirmwareUpdateStatus> {
-  static const Body enum_value = Body_GetFirmwareUpdateStatus;
+template<> struct BodyTraits<SplayApi::GetUploadStatus> {
+  static const Body enum_value = Body_GetUploadStatus;
 };
 
 template<> struct BodyTraits<SplayApi::SystemInfo> {
@@ -195,10 +192,6 @@ template<> struct BodyTraits<SplayApi::RecordStop> {
 
 template<> struct BodyTraits<SplayApi::PlayingCuesList> {
   static const Body enum_value = Body_PlayingCuesList;
-};
-
-template<> struct BodyTraits<SplayApi::GetRestoreUpdateStatus> {
-  static const Body enum_value = Body_GetRestoreUpdateStatus;
 };
 
 bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body type);
@@ -373,8 +366,8 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const SplayApi::GetAllCuesRes *body_as_GetAllCuesRes() const {
     return body_type() == SplayApi::Body_GetAllCuesRes ? static_cast<const SplayApi::GetAllCuesRes *>(body()) : nullptr;
   }
-  const SplayApi::GetFirmwareUpdateStatus *body_as_GetFirmwareUpdateStatus() const {
-    return body_type() == SplayApi::Body_GetFirmwareUpdateStatus ? static_cast<const SplayApi::GetFirmwareUpdateStatus *>(body()) : nullptr;
+  const SplayApi::GetUploadStatus *body_as_GetUploadStatus() const {
+    return body_type() == SplayApi::Body_GetUploadStatus ? static_cast<const SplayApi::GetUploadStatus *>(body()) : nullptr;
   }
   const SplayApi::SystemInfo *body_as_SystemInfo() const {
     return body_type() == SplayApi::Body_SystemInfo ? static_cast<const SplayApi::SystemInfo *>(body()) : nullptr;
@@ -396,9 +389,6 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   }
   const SplayApi::PlayingCuesList *body_as_PlayingCuesList() const {
     return body_type() == SplayApi::Body_PlayingCuesList ? static_cast<const SplayApi::PlayingCuesList *>(body()) : nullptr;
-  }
-  const SplayApi::GetRestoreUpdateStatus *body_as_GetRestoreUpdateStatus() const {
-    return body_type() == SplayApi::Body_GetRestoreUpdateStatus ? static_cast<const SplayApi::GetRestoreUpdateStatus *>(body()) : nullptr;
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -459,8 +449,8 @@ template<> inline const SplayApi::GetAllCuesRes *Message::body_as<SplayApi::GetA
   return body_as_GetAllCuesRes();
 }
 
-template<> inline const SplayApi::GetFirmwareUpdateStatus *Message::body_as<SplayApi::GetFirmwareUpdateStatus>() const {
-  return body_as_GetFirmwareUpdateStatus();
+template<> inline const SplayApi::GetUploadStatus *Message::body_as<SplayApi::GetUploadStatus>() const {
+  return body_as_GetUploadStatus();
 }
 
 template<> inline const SplayApi::SystemInfo *Message::body_as<SplayApi::SystemInfo>() const {
@@ -489,10 +479,6 @@ template<> inline const SplayApi::RecordStop *Message::body_as<SplayApi::RecordS
 
 template<> inline const SplayApi::PlayingCuesList *Message::body_as<SplayApi::PlayingCuesList>() const {
   return body_as_PlayingCuesList();
-}
-
-template<> inline const SplayApi::GetRestoreUpdateStatus *Message::body_as<SplayApi::GetRestoreUpdateStatus>() const {
-  return body_as_GetRestoreUpdateStatus();
 }
 
 struct MessageBuilder {
@@ -585,8 +571,8 @@ inline bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body ty
       auto ptr = reinterpret_cast<const SplayApi::GetAllCuesRes *>(obj);
       return verifier.VerifyTable(ptr);
     }
-    case Body_GetFirmwareUpdateStatus: {
-      auto ptr = reinterpret_cast<const SplayApi::GetFirmwareUpdateStatus *>(obj);
+    case Body_GetUploadStatus: {
+      auto ptr = reinterpret_cast<const SplayApi::GetUploadStatus *>(obj);
       return verifier.VerifyTable(ptr);
     }
     case Body_SystemInfo: {
@@ -615,10 +601,6 @@ inline bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body ty
     }
     case Body_PlayingCuesList: {
       auto ptr = reinterpret_cast<const SplayApi::PlayingCuesList *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case Body_GetRestoreUpdateStatus: {
-      auto ptr = reinterpret_cast<const SplayApi::GetRestoreUpdateStatus *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

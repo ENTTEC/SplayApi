@@ -26,7 +26,7 @@ union Body {
   GetCueRes,
   GetAllCuesReq,
   GetAllCuesRes,
-  GetFirmwareUpdateStatus,
+  GetUploadStatus,
   SystemInfo,
   RestorePackage,
   BackupInfo,
@@ -34,7 +34,6 @@ union Body {
   DmxFrame,
   RecordStop,
   PlayingCuesList,
-  GetRestoreUpdateStatus,
 }
 
 table Message {

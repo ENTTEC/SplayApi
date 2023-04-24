@@ -53,15 +53,10 @@ enum SETTING:uint8 {
   DB_VERSION = 26,
 }
 
-table GetFirmwareUpdateStatus
+table GetUploadStatus
 {
   progress: uint8;
-  error: string;
-}
-
-table GetRestoreUpdateStatus
-{
-  progress: uint8;
+  sequence: uint16;
   error: string;
 }
 
@@ -77,6 +72,13 @@ table RestorePackage
   current_sequence: uint16;
   last_sequence: uint16;
   destination: string;
+  data: [byte];
+}
+
+table FirmwarePackage
+{
+  current_sequence: uint16;
+  last_sequence: uint16;
   data: [byte];
 }
 
