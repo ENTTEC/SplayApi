@@ -45,11 +45,12 @@ enum Body {
   Body_DmxFrame = 18,
   Body_RecordStop = 19,
   Body_PlayingCuesList = 20,
+  Body_FirmwarePackage = 21,
   Body_MIN = Body_NONE,
-  Body_MAX = Body_PlayingCuesList
+  Body_MAX = Body_FirmwarePackage
 };
 
-inline const Body (&EnumValuesBody())[21] {
+inline const Body (&EnumValuesBody())[22] {
   static const Body values[] = {
     Body_NONE,
     Body_StatusRes,
@@ -71,13 +72,14 @@ inline const Body (&EnumValuesBody())[21] {
     Body_DiscoveryInfo,
     Body_DmxFrame,
     Body_RecordStop,
-    Body_PlayingCuesList
+    Body_PlayingCuesList,
+    Body_FirmwarePackage
   };
   return values;
 }
 
 inline const char * const *EnumNamesBody() {
-  static const char * const names[22] = {
+  static const char * const names[23] = {
     "NONE",
     "StatusRes",
     "PlayPlaylistReq",
@@ -99,13 +101,14 @@ inline const char * const *EnumNamesBody() {
     "DmxFrame",
     "RecordStop",
     "PlayingCuesList",
+    "FirmwarePackage",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameBody(Body e) {
-  if (flatbuffers::IsOutRange(e, Body_NONE, Body_PlayingCuesList)) return "";
+  if (flatbuffers::IsOutRange(e, Body_NONE, Body_FirmwarePackage)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesBody()[index];
 }
@@ -192,6 +195,10 @@ template<> struct BodyTraits<SplayApi::RecordStop> {
 
 template<> struct BodyTraits<SplayApi::PlayingCuesList> {
   static const Body enum_value = Body_PlayingCuesList;
+};
+
+template<> struct BodyTraits<SplayApi::FirmwarePackage> {
+  static const Body enum_value = Body_FirmwarePackage;
 };
 
 bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body type);
@@ -390,6 +397,9 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const SplayApi::PlayingCuesList *body_as_PlayingCuesList() const {
     return body_type() == SplayApi::Body_PlayingCuesList ? static_cast<const SplayApi::PlayingCuesList *>(body()) : nullptr;
   }
+  const SplayApi::FirmwarePackage *body_as_FirmwarePackage() const {
+    return body_type() == SplayApi::Body_FirmwarePackage ? static_cast<const SplayApi::FirmwarePackage *>(body()) : nullptr;
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_HEADER) &&
@@ -479,6 +489,10 @@ template<> inline const SplayApi::RecordStop *Message::body_as<SplayApi::RecordS
 
 template<> inline const SplayApi::PlayingCuesList *Message::body_as<SplayApi::PlayingCuesList>() const {
   return body_as_PlayingCuesList();
+}
+
+template<> inline const SplayApi::FirmwarePackage *Message::body_as<SplayApi::FirmwarePackage>() const {
+  return body_as_FirmwarePackage();
 }
 
 struct MessageBuilder {
@@ -601,6 +615,10 @@ inline bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body ty
     }
     case Body_PlayingCuesList: {
       auto ptr = reinterpret_cast<const SplayApi::PlayingCuesList *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case Body_FirmwarePackage: {
+      auto ptr = reinterpret_cast<const SplayApi::FirmwarePackage *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;
