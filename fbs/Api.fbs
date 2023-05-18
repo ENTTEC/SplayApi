@@ -35,6 +35,7 @@ union Body {
   RecordStop,
   PlayingCuesList,
   FirmwarePackage,
+  StatusInfo
 }
 
 table Message {

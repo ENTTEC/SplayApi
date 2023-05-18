@@ -191,6 +191,24 @@ SplayApi.SETTINGName = {
 };
 
 /**
+ * @enum {number}
+ */
+SplayApi.STATUS_TYPE = {
+  MESSAGE: 0,
+  WARNING: 1,
+  ERROR: 2
+};
+
+/**
+ * @enum {string}
+ */
+SplayApi.STATUS_TYPEName = {
+  '0': 'MESSAGE',
+  '1': 'WARNING',
+  '2': 'ERROR'
+};
+
+/**
  * @constructor
  */
 SplayApi.GetUploadStatus = function() {
@@ -1191,6 +1209,113 @@ SplayApi.DiscoveryInfo.createDiscoveryInfo = function(builder, splayDevicesOffse
   SplayApi.DiscoveryInfo.startDiscoveryInfo(builder);
   SplayApi.DiscoveryInfo.addSplayDevices(builder, splayDevicesOffset);
   return SplayApi.DiscoveryInfo.endDiscoveryInfo(builder);
+}
+
+/**
+ * @constructor
+ */
+SplayApi.StatusInfo = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {SplayApi.StatusInfo}
+ */
+SplayApi.StatusInfo.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.StatusInfo=} obj
+ * @returns {SplayApi.StatusInfo}
+ */
+SplayApi.StatusInfo.getRootAsStatusInfo = function(bb, obj) {
+  return (obj || new SplayApi.StatusInfo).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.StatusInfo=} obj
+ * @returns {SplayApi.StatusInfo}
+ */
+SplayApi.StatusInfo.getSizePrefixedRootAsStatusInfo = function(bb, obj) {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new SplayApi.StatusInfo).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {SplayApi.STATUS_TYPE}
+ */
+SplayApi.StatusInfo.prototype.type = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? /** @type {SplayApi.STATUS_TYPE} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.STATUS_TYPE.MESSAGE;
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+SplayApi.StatusInfo.prototype.text = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+SplayApi.StatusInfo.startStatusInfo = function(builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {SplayApi.STATUS_TYPE} type
+ */
+SplayApi.StatusInfo.addType = function(builder, type) {
+  builder.addFieldInt8(0, type, SplayApi.STATUS_TYPE.MESSAGE);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} textOffset
+ */
+SplayApi.StatusInfo.addText = function(builder, textOffset) {
+  builder.addFieldOffset(1, textOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.StatusInfo.endStatusInfo = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {SplayApi.STATUS_TYPE} type
+ * @param {flatbuffers.Offset} textOffset
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.StatusInfo.createStatusInfo = function(builder, type, textOffset) {
+  SplayApi.StatusInfo.startStatusInfo(builder);
+  SplayApi.StatusInfo.addType(builder, type);
+  SplayApi.StatusInfo.addText(builder, textOffset);
+  return SplayApi.StatusInfo.endStatusInfo(builder);
 }
 
 // Exports for ECMAScript6 Modules

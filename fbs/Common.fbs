@@ -101,3 +101,14 @@ table DiscoveryInfo
 {
   splay_devices: [SplayDevice];
 }
+
+enum STATUS_TYPE:uint8 {
+  MESSAGE,
+  WARNING,
+  ERROR,
+}
+
+table StatusInfo {
+  type:STATUS_TYPE;
+  text:string;
+}

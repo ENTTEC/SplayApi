@@ -29,6 +29,9 @@ struct SplayDeviceBuilder;
 struct DiscoveryInfo;
 struct DiscoveryInfoBuilder;
 
+struct StatusInfo;
+struct StatusInfoBuilder;
+
 enum UNIVERSE_TYPE {
   UNIVERSE_TYPE_DMX = 0,
   UNIVERSE_TYPE_ARTNET = 1,
@@ -322,6 +325,39 @@ inline const char *EnumNameSETTING(SETTING e) {
   if (flatbuffers::IsOutRange(e, SETTING_IS_SPARE, SETTING_DB_VERSION)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesSETTING()[index];
+}
+
+enum STATUS_TYPE {
+  STATUS_TYPE_MESSAGE = 0,
+  STATUS_TYPE_WARNING = 1,
+  STATUS_TYPE_ERROR = 2,
+  STATUS_TYPE_MIN = STATUS_TYPE_MESSAGE,
+  STATUS_TYPE_MAX = STATUS_TYPE_ERROR
+};
+
+inline const STATUS_TYPE (&EnumValuesSTATUS_TYPE())[3] {
+  static const STATUS_TYPE values[] = {
+    STATUS_TYPE_MESSAGE,
+    STATUS_TYPE_WARNING,
+    STATUS_TYPE_ERROR
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesSTATUS_TYPE() {
+  static const char * const names[4] = {
+    "MESSAGE",
+    "WARNING",
+    "ERROR",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameSTATUS_TYPE(STATUS_TYPE e) {
+  if (flatbuffers::IsOutRange(e, STATUS_TYPE_MESSAGE, STATUS_TYPE_ERROR)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesSTATUS_TYPE()[index];
 }
 
 struct GetUploadStatus FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -879,6 +915,70 @@ inline flatbuffers::Offset<DiscoveryInfo> CreateDiscoveryInfoDirect(
   return SplayApi::CreateDiscoveryInfo(
       _fbb,
       splay_devices__);
+}
+
+struct StatusInfo FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef StatusInfoBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_TYPE = 4,
+    VT_TEXT = 6
+  };
+  SplayApi::STATUS_TYPE type() const {
+    return static_cast<SplayApi::STATUS_TYPE>(GetField<uint8_t>(VT_TYPE, 0));
+  }
+  const flatbuffers::String *text() const {
+    return GetPointer<const flatbuffers::String *>(VT_TEXT);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_TYPE) &&
+           VerifyOffset(verifier, VT_TEXT) &&
+           verifier.VerifyString(text()) &&
+           verifier.EndTable();
+  }
+};
+
+struct StatusInfoBuilder {
+  typedef StatusInfo Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_type(SplayApi::STATUS_TYPE type) {
+    fbb_.AddElement<uint8_t>(StatusInfo::VT_TYPE, static_cast<uint8_t>(type), 0);
+  }
+  void add_text(flatbuffers::Offset<flatbuffers::String> text) {
+    fbb_.AddOffset(StatusInfo::VT_TEXT, text);
+  }
+  explicit StatusInfoBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  StatusInfoBuilder &operator=(const StatusInfoBuilder &);
+  flatbuffers::Offset<StatusInfo> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<StatusInfo>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<StatusInfo> CreateStatusInfo(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    SplayApi::STATUS_TYPE type = SplayApi::STATUS_TYPE_MESSAGE,
+    flatbuffers::Offset<flatbuffers::String> text = 0) {
+  StatusInfoBuilder builder_(_fbb);
+  builder_.add_text(text);
+  builder_.add_type(type);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<StatusInfo> CreateStatusInfoDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    SplayApi::STATUS_TYPE type = SplayApi::STATUS_TYPE_MESSAGE,
+    const char *text = nullptr) {
+  auto text__ = text ? _fbb.CreateString(text) : 0;
+  return SplayApi::CreateStatusInfo(
+      _fbb,
+      type,
+      text__);
 }
 
 }  // namespace SplayApi

@@ -31,7 +31,8 @@ SplayApi.Body = {
   DmxFrame: 18,
   RecordStop: 19,
   PlayingCuesList: 20,
-  FirmwarePackage: 21
+  FirmwarePackage: 21,
+  StatusInfo: 22
 };
 
 /**
@@ -59,7 +60,8 @@ SplayApi.BodyName = {
   '18': 'DmxFrame',
   '19': 'RecordStop',
   '20': 'PlayingCuesList',
-  '21': 'FirmwarePackage'
+  '21': 'FirmwarePackage',
+  '22': 'StatusInfo'
 };
 
 /**
