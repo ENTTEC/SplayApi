@@ -15,6 +15,7 @@ enum TRIGGER_TYPE:uint8 {
   SACN,
   POWERUP,
   UDP,
+  BUTTON
  }
 
 enum EVENT_TYPE:uint8 {

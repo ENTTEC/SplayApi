@@ -54,11 +54,12 @@ enum TRIGGER_TYPE {
   TRIGGER_TYPE_SACN = 6,
   TRIGGER_TYPE_POWERUP = 7,
   TRIGGER_TYPE_UDP = 8,
+  TRIGGER_TYPE_BUTTON = 9,
   TRIGGER_TYPE_MIN = TRIGGER_TYPE_NONE,
-  TRIGGER_TYPE_MAX = TRIGGER_TYPE_UDP
+  TRIGGER_TYPE_MAX = TRIGGER_TYPE_BUTTON
 };
 
-inline const TRIGGER_TYPE (&EnumValuesTRIGGER_TYPE())[9] {
+inline const TRIGGER_TYPE (&EnumValuesTRIGGER_TYPE())[10] {
   static const TRIGGER_TYPE values[] = {
     TRIGGER_TYPE_NONE,
     TRIGGER_TYPE_OSC,
@@ -68,13 +69,14 @@ inline const TRIGGER_TYPE (&EnumValuesTRIGGER_TYPE())[9] {
     TRIGGER_TYPE_DMX,
     TRIGGER_TYPE_SACN,
     TRIGGER_TYPE_POWERUP,
-    TRIGGER_TYPE_UDP
+    TRIGGER_TYPE_UDP,
+    TRIGGER_TYPE_BUTTON
   };
   return values;
 }
 
 inline const char * const *EnumNamesTRIGGER_TYPE() {
-  static const char * const names[10] = {
+  static const char * const names[11] = {
     "NONE",
     "OSC",
     "RS232",
@@ -84,13 +86,14 @@ inline const char * const *EnumNamesTRIGGER_TYPE() {
     "SACN",
     "POWERUP",
     "UDP",
+    "BUTTON",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameTRIGGER_TYPE(TRIGGER_TYPE e) {
-  if (flatbuffers::IsOutRange(e, TRIGGER_TYPE_NONE, TRIGGER_TYPE_UDP)) return "";
+  if (flatbuffers::IsOutRange(e, TRIGGER_TYPE_NONE, TRIGGER_TYPE_BUTTON)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesTRIGGER_TYPE()[index];
 }

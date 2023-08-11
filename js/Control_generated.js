@@ -34,7 +34,8 @@ SplayApi.TRIGGER_TYPE = {
   DMX: 5,
   SACN: 6,
   POWERUP: 7,
-  UDP: 8
+  UDP: 8,
+  BUTTON: 9
 };
 
 /**
@@ -49,7 +50,8 @@ SplayApi.TRIGGER_TYPEName = {
   '5': 'DMX',
   '6': 'SACN',
   '7': 'POWERUP',
-  '8': 'UDP'
+  '8': 'UDP',
+  '9': 'BUTTON'
 };
 
 /**

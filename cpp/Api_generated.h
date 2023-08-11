@@ -37,7 +37,7 @@ enum Body {
   Body_GetCueRes = 10,
   Body_GetAllCuesReq = 11,
   Body_GetAllCuesRes = 12,
-  Body_GetFirmwareUpdateStatus = 13,
+  Body_GetUploadStatus = 13,
   Body_SystemInfo = 14,
   Body_RestorePackage = 15,
   Body_BackupInfo = 16,
@@ -45,11 +45,13 @@ enum Body {
   Body_DmxFrame = 18,
   Body_RecordStop = 19,
   Body_PlayingCuesList = 20,
+  Body_FirmwarePackage = 21,
+  Body_StatusInfo = 22,
   Body_MIN = Body_NONE,
-  Body_MAX = Body_PlayingCuesList
+  Body_MAX = Body_StatusInfo
 };
 
-inline const Body (&EnumValuesBody())[21] {
+inline const Body (&EnumValuesBody())[23] {
   static const Body values[] = {
     Body_NONE,
     Body_StatusRes,
@@ -64,20 +66,22 @@ inline const Body (&EnumValuesBody())[21] {
     Body_GetCueRes,
     Body_GetAllCuesReq,
     Body_GetAllCuesRes,
-    Body_GetFirmwareUpdateStatus,
+    Body_GetUploadStatus,
     Body_SystemInfo,
     Body_RestorePackage,
     Body_BackupInfo,
     Body_DiscoveryInfo,
     Body_DmxFrame,
     Body_RecordStop,
-    Body_PlayingCuesList
+    Body_PlayingCuesList,
+    Body_FirmwarePackage,
+    Body_StatusInfo
   };
   return values;
 }
 
 inline const char * const *EnumNamesBody() {
-  static const char * const names[22] = {
+  static const char * const names[24] = {
     "NONE",
     "StatusRes",
     "PlayPlaylistReq",
@@ -91,7 +95,7 @@ inline const char * const *EnumNamesBody() {
     "GetCueRes",
     "GetAllCuesReq",
     "GetAllCuesRes",
-    "GetFirmwareUpdateStatus",
+    "GetUploadStatus",
     "SystemInfo",
     "RestorePackage",
     "BackupInfo",
@@ -99,13 +103,15 @@ inline const char * const *EnumNamesBody() {
     "DmxFrame",
     "RecordStop",
     "PlayingCuesList",
+    "FirmwarePackage",
+    "StatusInfo",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameBody(Body e) {
-  if (flatbuffers::IsOutRange(e, Body_NONE, Body_PlayingCuesList)) return "";
+  if (flatbuffers::IsOutRange(e, Body_NONE, Body_StatusInfo)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesBody()[index];
 }
@@ -162,8 +168,8 @@ template<> struct BodyTraits<SplayApi::GetAllCuesRes> {
   static const Body enum_value = Body_GetAllCuesRes;
 };
 
-template<> struct BodyTraits<SplayApi::GetFirmwareUpdateStatus> {
-  static const Body enum_value = Body_GetFirmwareUpdateStatus;
+template<> struct BodyTraits<SplayApi::GetUploadStatus> {
+  static const Body enum_value = Body_GetUploadStatus;
 };
 
 template<> struct BodyTraits<SplayApi::SystemInfo> {
@@ -192,6 +198,14 @@ template<> struct BodyTraits<SplayApi::RecordStop> {
 
 template<> struct BodyTraits<SplayApi::PlayingCuesList> {
   static const Body enum_value = Body_PlayingCuesList;
+};
+
+template<> struct BodyTraits<SplayApi::FirmwarePackage> {
+  static const Body enum_value = Body_FirmwarePackage;
+};
+
+template<> struct BodyTraits<SplayApi::StatusInfo> {
+  static const Body enum_value = Body_StatusInfo;
 };
 
 bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body type);
@@ -366,8 +380,8 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const SplayApi::GetAllCuesRes *body_as_GetAllCuesRes() const {
     return body_type() == SplayApi::Body_GetAllCuesRes ? static_cast<const SplayApi::GetAllCuesRes *>(body()) : nullptr;
   }
-  const SplayApi::GetFirmwareUpdateStatus *body_as_GetFirmwareUpdateStatus() const {
-    return body_type() == SplayApi::Body_GetFirmwareUpdateStatus ? static_cast<const SplayApi::GetFirmwareUpdateStatus *>(body()) : nullptr;
+  const SplayApi::GetUploadStatus *body_as_GetUploadStatus() const {
+    return body_type() == SplayApi::Body_GetUploadStatus ? static_cast<const SplayApi::GetUploadStatus *>(body()) : nullptr;
   }
   const SplayApi::SystemInfo *body_as_SystemInfo() const {
     return body_type() == SplayApi::Body_SystemInfo ? static_cast<const SplayApi::SystemInfo *>(body()) : nullptr;
@@ -389,6 +403,12 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   }
   const SplayApi::PlayingCuesList *body_as_PlayingCuesList() const {
     return body_type() == SplayApi::Body_PlayingCuesList ? static_cast<const SplayApi::PlayingCuesList *>(body()) : nullptr;
+  }
+  const SplayApi::FirmwarePackage *body_as_FirmwarePackage() const {
+    return body_type() == SplayApi::Body_FirmwarePackage ? static_cast<const SplayApi::FirmwarePackage *>(body()) : nullptr;
+  }
+  const SplayApi::StatusInfo *body_as_StatusInfo() const {
+    return body_type() == SplayApi::Body_StatusInfo ? static_cast<const SplayApi::StatusInfo *>(body()) : nullptr;
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -449,8 +469,8 @@ template<> inline const SplayApi::GetAllCuesRes *Message::body_as<SplayApi::GetA
   return body_as_GetAllCuesRes();
 }
 
-template<> inline const SplayApi::GetFirmwareUpdateStatus *Message::body_as<SplayApi::GetFirmwareUpdateStatus>() const {
-  return body_as_GetFirmwareUpdateStatus();
+template<> inline const SplayApi::GetUploadStatus *Message::body_as<SplayApi::GetUploadStatus>() const {
+  return body_as_GetUploadStatus();
 }
 
 template<> inline const SplayApi::SystemInfo *Message::body_as<SplayApi::SystemInfo>() const {
@@ -479,6 +499,14 @@ template<> inline const SplayApi::RecordStop *Message::body_as<SplayApi::RecordS
 
 template<> inline const SplayApi::PlayingCuesList *Message::body_as<SplayApi::PlayingCuesList>() const {
   return body_as_PlayingCuesList();
+}
+
+template<> inline const SplayApi::FirmwarePackage *Message::body_as<SplayApi::FirmwarePackage>() const {
+  return body_as_FirmwarePackage();
+}
+
+template<> inline const SplayApi::StatusInfo *Message::body_as<SplayApi::StatusInfo>() const {
+  return body_as_StatusInfo();
 }
 
 struct MessageBuilder {
@@ -571,8 +599,8 @@ inline bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body ty
       auto ptr = reinterpret_cast<const SplayApi::GetAllCuesRes *>(obj);
       return verifier.VerifyTable(ptr);
     }
-    case Body_GetFirmwareUpdateStatus: {
-      auto ptr = reinterpret_cast<const SplayApi::GetFirmwareUpdateStatus *>(obj);
+    case Body_GetUploadStatus: {
+      auto ptr = reinterpret_cast<const SplayApi::GetUploadStatus *>(obj);
       return verifier.VerifyTable(ptr);
     }
     case Body_SystemInfo: {
@@ -601,6 +629,14 @@ inline bool VerifyBody(flatbuffers::Verifier &verifier, const void *obj, Body ty
     }
     case Body_PlayingCuesList: {
       auto ptr = reinterpret_cast<const SplayApi::PlayingCuesList *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case Body_FirmwarePackage: {
+      auto ptr = reinterpret_cast<const SplayApi::FirmwarePackage *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case Body_StatusInfo: {
+      auto ptr = reinterpret_cast<const SplayApi::StatusInfo *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

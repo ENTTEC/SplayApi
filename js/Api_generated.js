@@ -23,14 +23,16 @@ SplayApi.Body = {
   GetCueRes: 10,
   GetAllCuesReq: 11,
   GetAllCuesRes: 12,
-  GetFirmwareUpdateStatus: 13,
+  GetUploadStatus: 13,
   SystemInfo: 14,
   RestorePackage: 15,
   BackupInfo: 16,
   DiscoveryInfo: 17,
   DmxFrame: 18,
   RecordStop: 19,
-  PlayingCuesList: 20
+  PlayingCuesList: 20,
+  FirmwarePackage: 21,
+  StatusInfo: 22
 };
 
 /**
@@ -50,14 +52,16 @@ SplayApi.BodyName = {
   '10': 'GetCueRes',
   '11': 'GetAllCuesReq',
   '12': 'GetAllCuesRes',
-  '13': 'GetFirmwareUpdateStatus',
+  '13': 'GetUploadStatus',
   '14': 'SystemInfo',
   '15': 'RestorePackage',
   '16': 'BackupInfo',
   '17': 'DiscoveryInfo',
   '18': 'DmxFrame',
   '19': 'RecordStop',
-  '20': 'PlayingCuesList'
+  '20': 'PlayingCuesList',
+  '21': 'FirmwarePackage',
+  '22': 'StatusInfo'
 };
 
 /**

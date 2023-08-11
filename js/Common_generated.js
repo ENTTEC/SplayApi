@@ -191,9 +191,27 @@ SplayApi.SETTINGName = {
 };
 
 /**
+ * @enum {number}
+ */
+SplayApi.STATUS_TYPE = {
+  MESSAGE: 0,
+  WARNING: 1,
+  ERROR: 2
+};
+
+/**
+ * @enum {string}
+ */
+SplayApi.STATUS_TYPEName = {
+  '0': 'MESSAGE',
+  '1': 'WARNING',
+  '2': 'ERROR'
+};
+
+/**
  * @constructor
  */
-SplayApi.GetFirmwareUpdateStatus = function() {
+SplayApi.GetUploadStatus = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
    */
@@ -208,9 +226,9 @@ SplayApi.GetFirmwareUpdateStatus = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {SplayApi.GetFirmwareUpdateStatus}
+ * @returns {SplayApi.GetUploadStatus}
  */
-SplayApi.GetFirmwareUpdateStatus.prototype.__init = function(i, bb) {
+SplayApi.GetUploadStatus.prototype.__init = function(i, bb) {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -218,68 +236,84 @@ SplayApi.GetFirmwareUpdateStatus.prototype.__init = function(i, bb) {
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {SplayApi.GetFirmwareUpdateStatus=} obj
- * @returns {SplayApi.GetFirmwareUpdateStatus}
+ * @param {SplayApi.GetUploadStatus=} obj
+ * @returns {SplayApi.GetUploadStatus}
  */
-SplayApi.GetFirmwareUpdateStatus.getRootAsGetFirmwareUpdateStatus = function(bb, obj) {
-  return (obj || new SplayApi.GetFirmwareUpdateStatus).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+SplayApi.GetUploadStatus.getRootAsGetUploadStatus = function(bb, obj) {
+  return (obj || new SplayApi.GetUploadStatus).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {SplayApi.GetFirmwareUpdateStatus=} obj
- * @returns {SplayApi.GetFirmwareUpdateStatus}
+ * @param {SplayApi.GetUploadStatus=} obj
+ * @returns {SplayApi.GetUploadStatus}
  */
-SplayApi.GetFirmwareUpdateStatus.getSizePrefixedRootAsGetFirmwareUpdateStatus = function(bb, obj) {
+SplayApi.GetUploadStatus.getSizePrefixedRootAsGetUploadStatus = function(bb, obj) {
   bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
-  return (obj || new SplayApi.GetFirmwareUpdateStatus).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+  return (obj || new SplayApi.GetUploadStatus).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @returns {number}
  */
-SplayApi.GetFirmwareUpdateStatus.prototype.progress = function() {
+SplayApi.GetUploadStatus.prototype.progress = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {number}
+ */
+SplayApi.GetUploadStatus.prototype.sequence = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
 
 /**
  * @param {flatbuffers.Encoding=} optionalEncoding
  * @returns {string|Uint8Array|null}
  */
-SplayApi.GetFirmwareUpdateStatus.prototype.error = function(optionalEncoding) {
-  var offset = this.bb.__offset(this.bb_pos, 6);
+SplayApi.GetUploadStatus.prototype.error = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 8);
   return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  */
-SplayApi.GetFirmwareUpdateStatus.startGetFirmwareUpdateStatus = function(builder) {
-  builder.startObject(2);
+SplayApi.GetUploadStatus.startGetUploadStatus = function(builder) {
+  builder.startObject(3);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  * @param {number} progress
  */
-SplayApi.GetFirmwareUpdateStatus.addProgress = function(builder, progress) {
+SplayApi.GetUploadStatus.addProgress = function(builder, progress) {
   builder.addFieldInt8(0, progress, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} sequence
+ */
+SplayApi.GetUploadStatus.addSequence = function(builder, sequence) {
+  builder.addFieldInt16(1, sequence, 0);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} errorOffset
  */
-SplayApi.GetFirmwareUpdateStatus.addError = function(builder, errorOffset) {
-  builder.addFieldOffset(1, errorOffset, 0);
+SplayApi.GetUploadStatus.addError = function(builder, errorOffset) {
+  builder.addFieldOffset(2, errorOffset, 0);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
-SplayApi.GetFirmwareUpdateStatus.endGetFirmwareUpdateStatus = function(builder) {
+SplayApi.GetUploadStatus.endGetUploadStatus = function(builder) {
   var offset = builder.endObject();
   return offset;
 };
@@ -287,14 +321,16 @@ SplayApi.GetFirmwareUpdateStatus.endGetFirmwareUpdateStatus = function(builder) 
 /**
  * @param {flatbuffers.Builder} builder
  * @param {number} progress
+ * @param {number} sequence
  * @param {flatbuffers.Offset} errorOffset
  * @returns {flatbuffers.Offset}
  */
-SplayApi.GetFirmwareUpdateStatus.createGetFirmwareUpdateStatus = function(builder, progress, errorOffset) {
-  SplayApi.GetFirmwareUpdateStatus.startGetFirmwareUpdateStatus(builder);
-  SplayApi.GetFirmwareUpdateStatus.addProgress(builder, progress);
-  SplayApi.GetFirmwareUpdateStatus.addError(builder, errorOffset);
-  return SplayApi.GetFirmwareUpdateStatus.endGetFirmwareUpdateStatus(builder);
+SplayApi.GetUploadStatus.createGetUploadStatus = function(builder, progress, sequence, errorOffset) {
+  SplayApi.GetUploadStatus.startGetUploadStatus(builder);
+  SplayApi.GetUploadStatus.addProgress(builder, progress);
+  SplayApi.GetUploadStatus.addSequence(builder, sequence);
+  SplayApi.GetUploadStatus.addError(builder, errorOffset);
+  return SplayApi.GetUploadStatus.endGetUploadStatus(builder);
 }
 
 /**
@@ -468,26 +504,18 @@ SplayApi.RestorePackage.getSizePrefixedRootAsRestorePackage = function(bb, obj) 
 };
 
 /**
- * @returns {boolean}
+ * @returns {number}
  */
-SplayApi.RestorePackage.prototype.isStart = function() {
+SplayApi.RestorePackage.prototype.currentSequence = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? !!this.bb.readInt8(this.bb_pos + offset) : false;
-};
-
-/**
- * @returns {boolean}
- */
-SplayApi.RestorePackage.prototype.isEnd = function() {
-  var offset = this.bb.__offset(this.bb_pos, 6);
-  return offset ? !!this.bb.readInt8(this.bb_pos + offset) : false;
+  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
 
 /**
  * @returns {number}
  */
-SplayApi.RestorePackage.prototype.sequence = function() {
-  var offset = this.bb.__offset(this.bb_pos, 8);
+SplayApi.RestorePackage.prototype.lastSequence = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
   return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
 
@@ -496,7 +524,7 @@ SplayApi.RestorePackage.prototype.sequence = function() {
  * @returns {string|Uint8Array|null}
  */
 SplayApi.RestorePackage.prototype.destination = function(optionalEncoding) {
-  var offset = this.bb.__offset(this.bb_pos, 10);
+  var offset = this.bb.__offset(this.bb_pos, 8);
   return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
@@ -505,7 +533,7 @@ SplayApi.RestorePackage.prototype.destination = function(optionalEncoding) {
  * @returns {number}
  */
 SplayApi.RestorePackage.prototype.data = function(index) {
-  var offset = this.bb.__offset(this.bb_pos, 12);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? this.bb.readInt8(this.bb.__vector(this.bb_pos + offset) + index) : 0;
 };
 
@@ -513,7 +541,7 @@ SplayApi.RestorePackage.prototype.data = function(index) {
  * @returns {number}
  */
 SplayApi.RestorePackage.prototype.dataLength = function() {
-  var offset = this.bb.__offset(this.bb_pos, 12);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -521,7 +549,7 @@ SplayApi.RestorePackage.prototype.dataLength = function() {
  * @returns {Int8Array}
  */
 SplayApi.RestorePackage.prototype.dataArray = function() {
-  var offset = this.bb.__offset(this.bb_pos, 12);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? new Int8Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
 };
 
@@ -529,31 +557,23 @@ SplayApi.RestorePackage.prototype.dataArray = function() {
  * @param {flatbuffers.Builder} builder
  */
 SplayApi.RestorePackage.startRestorePackage = function(builder) {
-  builder.startObject(5);
+  builder.startObject(4);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {boolean} isStart
+ * @param {number} currentSequence
  */
-SplayApi.RestorePackage.addIsStart = function(builder, isStart) {
-  builder.addFieldInt8(0, +isStart, +false);
+SplayApi.RestorePackage.addCurrentSequence = function(builder, currentSequence) {
+  builder.addFieldInt16(0, currentSequence, 0);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {boolean} isEnd
+ * @param {number} lastSequence
  */
-SplayApi.RestorePackage.addIsEnd = function(builder, isEnd) {
-  builder.addFieldInt8(1, +isEnd, +false);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {number} sequence
- */
-SplayApi.RestorePackage.addSequence = function(builder, sequence) {
-  builder.addFieldInt16(2, sequence, 0);
+SplayApi.RestorePackage.addLastSequence = function(builder, lastSequence) {
+  builder.addFieldInt16(1, lastSequence, 0);
 };
 
 /**
@@ -561,7 +581,7 @@ SplayApi.RestorePackage.addSequence = function(builder, sequence) {
  * @param {flatbuffers.Offset} destinationOffset
  */
 SplayApi.RestorePackage.addDestination = function(builder, destinationOffset) {
-  builder.addFieldOffset(3, destinationOffset, 0);
+  builder.addFieldOffset(2, destinationOffset, 0);
 };
 
 /**
@@ -569,7 +589,7 @@ SplayApi.RestorePackage.addDestination = function(builder, destinationOffset) {
  * @param {flatbuffers.Offset} dataOffset
  */
 SplayApi.RestorePackage.addData = function(builder, dataOffset) {
-  builder.addFieldOffset(4, dataOffset, 0);
+  builder.addFieldOffset(3, dataOffset, 0);
 };
 
 /**
@@ -604,21 +624,181 @@ SplayApi.RestorePackage.endRestorePackage = function(builder) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {boolean} isStart
- * @param {boolean} isEnd
- * @param {number} sequence
+ * @param {number} currentSequence
+ * @param {number} lastSequence
  * @param {flatbuffers.Offset} destinationOffset
  * @param {flatbuffers.Offset} dataOffset
  * @returns {flatbuffers.Offset}
  */
-SplayApi.RestorePackage.createRestorePackage = function(builder, isStart, isEnd, sequence, destinationOffset, dataOffset) {
+SplayApi.RestorePackage.createRestorePackage = function(builder, currentSequence, lastSequence, destinationOffset, dataOffset) {
   SplayApi.RestorePackage.startRestorePackage(builder);
-  SplayApi.RestorePackage.addIsStart(builder, isStart);
-  SplayApi.RestorePackage.addIsEnd(builder, isEnd);
-  SplayApi.RestorePackage.addSequence(builder, sequence);
+  SplayApi.RestorePackage.addCurrentSequence(builder, currentSequence);
+  SplayApi.RestorePackage.addLastSequence(builder, lastSequence);
   SplayApi.RestorePackage.addDestination(builder, destinationOffset);
   SplayApi.RestorePackage.addData(builder, dataOffset);
   return SplayApi.RestorePackage.endRestorePackage(builder);
+}
+
+/**
+ * @constructor
+ */
+SplayApi.FirmwarePackage = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {SplayApi.FirmwarePackage}
+ */
+SplayApi.FirmwarePackage.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.FirmwarePackage=} obj
+ * @returns {SplayApi.FirmwarePackage}
+ */
+SplayApi.FirmwarePackage.getRootAsFirmwarePackage = function(bb, obj) {
+  return (obj || new SplayApi.FirmwarePackage).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.FirmwarePackage=} obj
+ * @returns {SplayApi.FirmwarePackage}
+ */
+SplayApi.FirmwarePackage.getSizePrefixedRootAsFirmwarePackage = function(bb, obj) {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new SplayApi.FirmwarePackage).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {number}
+ */
+SplayApi.FirmwarePackage.prototype.currentSequence = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {number}
+ */
+SplayApi.FirmwarePackage.prototype.lastSequence = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param {number} index
+ * @returns {number}
+ */
+SplayApi.FirmwarePackage.prototype.data = function(index) {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.readInt8(this.bb.__vector(this.bb_pos + offset) + index) : 0;
+};
+
+/**
+ * @returns {number}
+ */
+SplayApi.FirmwarePackage.prototype.dataLength = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {Int8Array}
+ */
+SplayApi.FirmwarePackage.prototype.dataArray = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? new Int8Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+SplayApi.FirmwarePackage.startFirmwarePackage = function(builder) {
+  builder.startObject(3);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} currentSequence
+ */
+SplayApi.FirmwarePackage.addCurrentSequence = function(builder, currentSequence) {
+  builder.addFieldInt16(0, currentSequence, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} lastSequence
+ */
+SplayApi.FirmwarePackage.addLastSequence = function(builder, lastSequence) {
+  builder.addFieldInt16(1, lastSequence, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} dataOffset
+ */
+SplayApi.FirmwarePackage.addData = function(builder, dataOffset) {
+  builder.addFieldOffset(2, dataOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {Array.<number>} data
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.FirmwarePackage.createDataVector = function(builder, data) {
+  builder.startVector(1, data.length, 1);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} numElems
+ */
+SplayApi.FirmwarePackage.startDataVector = function(builder, numElems) {
+  builder.startVector(1, numElems, 1);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.FirmwarePackage.endFirmwarePackage = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} currentSequence
+ * @param {number} lastSequence
+ * @param {flatbuffers.Offset} dataOffset
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.FirmwarePackage.createFirmwarePackage = function(builder, currentSequence, lastSequence, dataOffset) {
+  SplayApi.FirmwarePackage.startFirmwarePackage(builder);
+  SplayApi.FirmwarePackage.addCurrentSequence(builder, currentSequence);
+  SplayApi.FirmwarePackage.addLastSequence(builder, lastSequence);
+  SplayApi.FirmwarePackage.addData(builder, dataOffset);
+  return SplayApi.FirmwarePackage.endFirmwarePackage(builder);
 }
 
 /**
@@ -1029,6 +1209,113 @@ SplayApi.DiscoveryInfo.createDiscoveryInfo = function(builder, splayDevicesOffse
   SplayApi.DiscoveryInfo.startDiscoveryInfo(builder);
   SplayApi.DiscoveryInfo.addSplayDevices(builder, splayDevicesOffset);
   return SplayApi.DiscoveryInfo.endDiscoveryInfo(builder);
+}
+
+/**
+ * @constructor
+ */
+SplayApi.StatusInfo = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {SplayApi.StatusInfo}
+ */
+SplayApi.StatusInfo.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.StatusInfo=} obj
+ * @returns {SplayApi.StatusInfo}
+ */
+SplayApi.StatusInfo.getRootAsStatusInfo = function(bb, obj) {
+  return (obj || new SplayApi.StatusInfo).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {SplayApi.StatusInfo=} obj
+ * @returns {SplayApi.StatusInfo}
+ */
+SplayApi.StatusInfo.getSizePrefixedRootAsStatusInfo = function(bb, obj) {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new SplayApi.StatusInfo).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {SplayApi.STATUS_TYPE}
+ */
+SplayApi.StatusInfo.prototype.type = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? /** @type {SplayApi.STATUS_TYPE} */ (this.bb.readUint8(this.bb_pos + offset)) : SplayApi.STATUS_TYPE.MESSAGE;
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+SplayApi.StatusInfo.prototype.text = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+SplayApi.StatusInfo.startStatusInfo = function(builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {SplayApi.STATUS_TYPE} type
+ */
+SplayApi.StatusInfo.addType = function(builder, type) {
+  builder.addFieldInt8(0, type, SplayApi.STATUS_TYPE.MESSAGE);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} textOffset
+ */
+SplayApi.StatusInfo.addText = function(builder, textOffset) {
+  builder.addFieldOffset(1, textOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.StatusInfo.endStatusInfo = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {SplayApi.STATUS_TYPE} type
+ * @param {flatbuffers.Offset} textOffset
+ * @returns {flatbuffers.Offset}
+ */
+SplayApi.StatusInfo.createStatusInfo = function(builder, type, textOffset) {
+  SplayApi.StatusInfo.startStatusInfo(builder);
+  SplayApi.StatusInfo.addType(builder, type);
+  SplayApi.StatusInfo.addText(builder, textOffset);
+  return SplayApi.StatusInfo.endStatusInfo(builder);
 }
 
 // Exports for ECMAScript6 Modules
